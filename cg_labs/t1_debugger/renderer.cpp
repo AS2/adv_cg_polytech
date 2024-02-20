@@ -592,4 +592,5 @@ HRESULT Renderer::ResizeWindow(const HWND& g_hWnd) {
 
     input.Resize(width, height);
   }
+  return S_OK;
 }

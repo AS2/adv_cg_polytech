@@ -40,7 +40,7 @@
       <Filter>Исходные файлы\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="resource1.h">
-      <Filter>Файлы ресурсов</Filter>
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -64,5 +64,10 @@
     <FxCompile Include="cube_PS.hlsl">
       <Filter>Исходные файлы\Shaders\Cube</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="t1_debugger.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
