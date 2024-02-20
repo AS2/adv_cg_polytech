@@ -50,8 +50,9 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   UINT width = rc.right - rc.left;
   UINT height = rc.bottom - rc.top;
 
-  UINT createDeviceFlags = 0;
 
+  // Create debug layer with DEBUG
+  UINT createDeviceFlags = 0;
 #ifdef _DEBUG
   createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -484,21 +485,66 @@ void Renderer::CleanupDevice() {
   camera.Realese();
   input.Realese();
 
-  if (g_pRasterizerState) g_pRasterizerState->Release();
-  if (g_pWorldMatrixBuffer) g_pWorldMatrixBuffer->Release();
-  if (g_pSceneMatrixBuffer) g_pSceneMatrixBuffer->Release();
-  if (g_pIndexBuffer) g_pIndexBuffer->Release();
-  if (g_pVertexBuffer) g_pVertexBuffer->Release();
-  if (g_pVertexLayout) g_pVertexLayout->Release();
-  if (g_pVertexShader) g_pVertexShader->Release();
-  if (g_pPixelShader) g_pPixelShader->Release();
-  if (g_pRenderTargetView) g_pRenderTargetView->Release();
-  if (g_pSwapChain) g_pSwapChain->Release();
-  if (g_pSwapChain1) g_pSwapChain1->Release();
-  if (g_pImmediateContext1) g_pImmediateContext1->Release();
-  if (g_pImmediateContext) g_pImmediateContext->Release();
-  if (g_pd3dDevice1) g_pd3dDevice1->Release(); 
+  ULONG refCount = 0;
+  if (g_pRasterizerState) 
+      refCount = g_pRasterizerState->Release();
+  assert(refCount == 0);
+
+  if (g_pSceneMatrixBuffer)
+      refCount = g_pSceneMatrixBuffer->Release();
+  assert(refCount == 0);
+
+  if (g_pWorldMatrixBuffer)
+      refCount = g_pWorldMatrixBuffer->Release();
+  assert(refCount == 0);
+
+  if (g_pIndexBuffer)
+      refCount = g_pIndexBuffer->Release();
+  assert(refCount == 0);
+  if (g_pVertexBuffer)
+      refCount = g_pVertexBuffer->Release();
+  assert(refCount == 0);
+  if (g_pVertexLayout)
+      refCount = g_pVertexLayout->Release();
+  assert(refCount == 0);
+  if (g_pVertexShader)
+      refCount = g_pVertexShader->Release();
+  assert(refCount == 0);
+  if (g_pPixelShader)
+      refCount = g_pPixelShader->Release();
+  assert(refCount == 0);
+  if (g_pRenderTargetView)
+      refCount = g_pRenderTargetView->Release();
+  assert(refCount == 0);
+
+  if (g_pSwapChain1)
+      refCount = g_pSwapChain1->Release();
+  //assert(refCount == 0);
+  if (g_pSwapChain)
+      refCount = g_pSwapChain->Release();
+  assert(refCount == 0);
+  if (g_pImmediateContext1)
+      refCount = g_pImmediateContext1->Release();
+  //assert(refCount == 0);
+  if (g_pImmediateContext)
+      refCount = g_pImmediateContext->Release();
+  assert(refCount == 0);
+  if (g_pd3dDevice1)
+      refCount = g_pd3dDevice1->Release();
+  //assert(refCount == 0);
+
+#ifdef _DEBUG
+  ID3D11Debug* d3dDebug = nullptr;
+  g_pd3dDevice->QueryInterface(IID_PPV_ARGS(&d3dDebug));
+
+  UINT references = g_pd3dDevice->Release();
+  if (references > 1) {
+      d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+  }
+  d3dDebug->Release();
+#else
   if (g_pd3dDevice) g_pd3dDevice->Release();
+#endif
 }
 
 HRESULT Renderer::ResizeWindow(const HWND& g_hWnd) {

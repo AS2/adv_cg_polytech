@@ -112,7 +112,8 @@ bool Input::ReadKeyboard() {
   result = keyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
   if (FAILED(result)) {
     if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
-      keyboard->Acquire();
+      if (FAILED(keyboard->Acquire()))
+          return false;
     else
       return false;
   }
@@ -126,7 +127,8 @@ bool Input::ReadMouse() {
   result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);
   if (FAILED(result)) {
     if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
-      mouse->Acquire();
+      if (FAILED(mouse->Acquire()))
+          return false;
     else
       return false;
   }
