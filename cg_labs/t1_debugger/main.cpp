@@ -86,7 +86,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
   }
   
   // Init Device
-  if (FAILED(Renderer::GetInstance().Init(g_hWnd, g_hInst, START_W, START_H)))
+  auto hr = Renderer::GetInstance().Init(g_hWnd, g_hInst, START_W, START_H);
+  if (FAILED(hr))
   {
     Renderer::GetInstance().CleanupDevice();
     return 0;
@@ -102,7 +103,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
       DispatchMessage(&msg);
     }
     if (Renderer::GetInstance().Frame())
-      Renderer::GetInstance().Render();
+      if (FAILED(Renderer::GetInstance().Render()))
+          break;
   }
 
   Renderer::GetInstance().CleanupDevice();
@@ -137,7 +139,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
   case WM_SIZE:
-    Renderer::GetInstance().ResizeWindow(g_hWnd);
+    if (FAILED(Renderer::GetInstance().ResizeWindow(g_hWnd)))
+      PostQuitMessage(0);
     break;
 
   default:

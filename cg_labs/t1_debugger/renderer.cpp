@@ -24,8 +24,8 @@ HRESULT Renderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryP
 #endif
 
   ID3DBlob* pErrorBlob = nullptr;
-  hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
-    dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+  hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel, dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+
   if (FAILED(hr))
   {
     if (pErrorBlob)
@@ -35,7 +35,9 @@ HRESULT Renderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryP
     }
     return hr;
   }
-  if (pErrorBlob) pErrorBlob->Release();
+
+  if (pErrorBlob)
+      pErrorBlob->Release();
 
   return S_OK;
 }
@@ -49,6 +51,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   UINT height = rc.bottom - rc.top;
 
   UINT createDeviceFlags = 0;
+
 #ifdef _DEBUG
   createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -86,6 +89,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
     if (SUCCEEDED(hr))
       break;
   }
+
   if (FAILED(hr))
     return hr;
 
@@ -112,7 +116,8 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   // Create swap chain
   IDXGIFactory2* dxgiFactory2 = nullptr;
   hr = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
-  if (dxgiFactory2)
+  
+  if (dxgiFactory2) // <-- this check is equal to check on "SUCCESED(hr)", saw in documentation
   {
     // DirectX 11.1 or later
     hr = g_pd3dDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&g_pd3dDevice1));
@@ -166,6 +171,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
 
   dxgiFactory->Release();
 
+  // Checks for >=11.1 and 11.0 versions
   if (FAILED(hr))
     return hr;
 
@@ -219,8 +225,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   UINT numElements = ARRAYSIZE(layout);
 
   // Create the input layout
-  hr = g_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
-    pVSBlob->GetBufferSize(), &g_pVertexLayout);
+  hr = g_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &g_pVertexLayout);
   pVSBlob->Release();
   if (FAILED(hr))
     return hr;
@@ -389,11 +394,6 @@ void Renderer::HandleInput() {
   // handle camera rotations
   XMFLOAT3 mouseMove = input.IsMouseUsed();
   camera.Move(mouseMove.x, mouseMove.y, mouseMove.z);
-
-  // handle world matrix rotation
-  //float sign = input.IsPlusMinusPressed();
-  //angle_velocity += sign * 0.0001f;
-  //angle_velocity = min(max(angle_velocity, 0.f), 30.f);
 }
 
 // Update frame method
@@ -429,7 +429,7 @@ bool Renderer::Frame() {
   return SUCCEEDED(hr);
 }
 
-void Renderer::Render() {
+HRESULT Renderer::Render() {
   g_pImmediateContext->ClearState();
 
   ID3D11RenderTargetView* views[] = { g_pRenderTargetView };
@@ -477,14 +477,12 @@ void Renderer::Render() {
   g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
   g_pImmediateContext->DrawIndexed(36, 0, 0);
 
-  g_pSwapChain->Present(0, 0);
+  return g_pSwapChain->Present(0, 0);
 }
 
 void Renderer::CleanupDevice() {
   camera.Realese();
   input.Realese();
-
-  if (g_pImmediateContext) g_pImmediateContext->ClearState();
 
   if (g_pRasterizerState) g_pRasterizerState->Release();
   if (g_pWorldMatrixBuffer) g_pWorldMatrixBuffer->Release();
@@ -495,15 +493,15 @@ void Renderer::CleanupDevice() {
   if (g_pVertexShader) g_pVertexShader->Release();
   if (g_pPixelShader) g_pPixelShader->Release();
   if (g_pRenderTargetView) g_pRenderTargetView->Release();
-  if (g_pSwapChain1) g_pSwapChain1->Release();
   if (g_pSwapChain) g_pSwapChain->Release();
+  if (g_pSwapChain1) g_pSwapChain1->Release();
   if (g_pImmediateContext1) g_pImmediateContext1->Release();
   if (g_pImmediateContext) g_pImmediateContext->Release();
-  if (g_pd3dDevice1) g_pd3dDevice1->Release();
+  if (g_pd3dDevice1) g_pd3dDevice1->Release(); 
   if (g_pd3dDevice) g_pd3dDevice->Release();
 }
 
-void Renderer::ResizeWindow(const HWND& g_hWnd) {
+HRESULT Renderer::ResizeWindow(const HWND& g_hWnd) {
   if (g_pSwapChain)
   {
     g_pImmediateContext->OMSetRenderTargets(0, 0, 0);
@@ -515,16 +513,19 @@ void Renderer::ResizeWindow(const HWND& g_hWnd) {
     // Preserve the existing buffer count and format.
     // Automatically choose the width and height to match the client rect for HWNDs.
     hr = g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+    if (FAILED(hr))
+      return hr;
 
     // Get buffer and create a render-target-view.
     ID3D11Texture2D* pBuffer;
-    hr = g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
-      (void**)&pBuffer);
+    hr = g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
+    if (FAILED(hr) || !pBuffer)
+       return hr;
     
-    hr = g_pd3dDevice->CreateRenderTargetView(pBuffer, NULL,
-      &g_pRenderTargetView);
-    
+    hr = g_pd3dDevice->CreateRenderTargetView(pBuffer, NULL, &g_pRenderTargetView);
     pBuffer->Release();
+    if (FAILED(hr))
+        return hr;
 
     g_pImmediateContext->OMSetRenderTargets(1, &g_pRenderTargetView, NULL);
 

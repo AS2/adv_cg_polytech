@@ -41,13 +41,13 @@ public:
   bool Frame();
 
   // Scene render method
-  void Render();
+  HRESULT Render();
 
   // Device cleaner method
   void CleanupDevice();
 
   // Window resize method
-  void ResizeWindow(const HWND& g_hWnd);
+  HRESULT ResizeWindow(const HWND& g_hWnd);
 
 private:
   // Private constructor (for singleton)
@@ -89,5 +89,5 @@ private:
   Input input;
 
   // Velocity of world matrix rotation
-  float angle_velocity = 3.1415926f;
+  const float angle_velocity = 3.1415926f;
 };
