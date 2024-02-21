@@ -1,3 +1,5 @@
+#include <string>
+
 #include "renderer.h"
 
 using namespace DirectX;
@@ -42,11 +44,11 @@ HRESULT Renderer::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryP
   return S_OK;
 }
 
-HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
+HRESULT Renderer::InitDevice(const HWND& hWnd) {
   HRESULT hr = S_OK;
 
   RECT rc;
-  GetClientRect(g_hWnd, &rc);
+  GetClientRect(hWnd, &rc);
   UINT width = rc.right - rc.left;
   UINT height = rc.bottom - rc.top;
 
@@ -76,15 +78,15 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
 
   for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
   {
-    g_driverType = driverTypes[driverTypeIndex];
-    hr = D3D11CreateDevice(nullptr, g_driverType, nullptr, createDeviceFlags, featureLevels, numFeatureLevels,
-      D3D11_SDK_VERSION, &g_pd3dDevice, &g_featureLevel, &g_pImmediateContext);
+    driverType = driverTypes[driverTypeIndex];
+    hr = D3D11CreateDevice(nullptr, driverType, nullptr, createDeviceFlags, featureLevels, numFeatureLevels,
+      D3D11_SDK_VERSION, &pd3dDevice, &featureLevel, &pImmediateContext);
 
     if (hr == E_INVALIDARG)
     {
       // DirectX 11.0 platforms will not recognize D3D_FEATURE_LEVEL_11_1 so we need to retry without it
-      hr = D3D11CreateDevice(nullptr, g_driverType, nullptr, createDeviceFlags, &featureLevels[1], numFeatureLevels - 1,
-        D3D11_SDK_VERSION, &g_pd3dDevice, &g_featureLevel, &g_pImmediateContext);
+      hr = D3D11CreateDevice(nullptr, driverType, nullptr, createDeviceFlags, &featureLevels[1], numFeatureLevels - 1,
+        D3D11_SDK_VERSION, &pd3dDevice, &featureLevel, &pImmediateContext);
     }
 
     if (SUCCEEDED(hr))
@@ -98,7 +100,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   IDXGIFactory1* dxgiFactory = nullptr;
   {
     IDXGIDevice* dxgiDevice = nullptr;
-    hr = g_pd3dDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice));
+    hr = pd3dDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice));
     if (SUCCEEDED(hr))
     {
       IDXGIAdapter* adapter = nullptr;
@@ -121,10 +123,10 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   if (dxgiFactory2) // <-- this check is equal to check on "SUCCESED(hr)", saw in documentation
   {
     // DirectX 11.1 or later
-    hr = g_pd3dDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&g_pd3dDevice1));
+    hr = pd3dDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&pd3dDevice1));
     if (SUCCEEDED(hr))
     {
-      (void)g_pImmediateContext->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&g_pImmediateContext1));
+      (void)pImmediateContext->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&pImmediateContext1));
     }
 
     DXGI_SWAP_CHAIN_DESC1 sd;
@@ -138,10 +140,10 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
     sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
     sd.BufferCount = 2;
 
-    hr = dxgiFactory2->CreateSwapChainForHwnd(g_pd3dDevice, g_hWnd, &sd, nullptr, nullptr, &g_pSwapChain1);
+    hr = dxgiFactory2->CreateSwapChainForHwnd(pd3dDevice, hWnd, &sd, nullptr, nullptr, &pSwapChain1);
     if (SUCCEEDED(hr))
     {
-      hr = g_pSwapChain1->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void**>(&g_pSwapChain));
+      hr = pSwapChain1->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void**>(&pSwapChain));
     }
 
     dxgiFactory2->Release();
@@ -158,17 +160,17 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = g_hWnd;
+    sd.OutputWindow = hWnd;
     sd.SampleDesc.Count = 1;
     sd.SampleDesc.Quality = 0;
     sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
     sd.Windowed = TRUE;
 
-    hr = dxgiFactory->CreateSwapChain(g_pd3dDevice, &sd, &g_pSwapChain);
+    hr = dxgiFactory->CreateSwapChain(pd3dDevice, &sd, &pSwapChain);
   }
 
   // Note this tutorial doesn't handle full-screen swapchains so we block the ALT+ENTER shortcut
-  dxgiFactory->MakeWindowAssociation(g_hWnd, DXGI_MWA_NO_ALT_ENTER);
+  dxgiFactory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
 
   dxgiFactory->Release();
 
@@ -178,16 +180,16 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
 
   // Create a render target view
   ID3D11Texture2D* pBackBuffer = nullptr;
-  hr = g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
+  hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
   if (FAILED(hr))
     return hr;
 
-  hr = g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_pRenderTargetView);
+  hr = pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &pRenderTargetView);
   pBackBuffer->Release();
   if (FAILED(hr))
     return hr;
 
-  g_pImmediateContext->OMSetRenderTargets(1, &g_pRenderTargetView, nullptr);
+  pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);
 
   // Setup the viewport
   D3D11_VIEWPORT vp;
@@ -197,7 +199,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   vp.MaxDepth = 1.0f;
   vp.TopLeftX = 0;
   vp.TopLeftY = 0;
-  g_pImmediateContext->RSSetViewports(1, &vp);
+  pImmediateContext->RSSetViewports(1, &vp);
 
   // Compile the vertex shader
   ID3DBlob* pVSBlob = nullptr;
@@ -210,7 +212,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   }
 
   // Create the vertex shader
-  hr = g_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &g_pVertexShader);
+  hr = pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &pVertexShader);
   if (FAILED(hr))
   {
     pVSBlob->Release();
@@ -226,13 +228,13 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   UINT numElements = ARRAYSIZE(layout);
 
   // Create the input layout
-  hr = g_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &g_pVertexLayout);
+  hr = pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &pVertexLayout);
   pVSBlob->Release();
   if (FAILED(hr))
     return hr;
 
   // Set the input layout
-  g_pImmediateContext->IASetInputLayout(g_pVertexLayout);
+  pImmediateContext->IASetInputLayout(pVertexLayout);
 
   // Compile the pixel shader
   ID3DBlob* pPSBlob = nullptr;
@@ -245,7 +247,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   }
 
   // Create the pixel shader
-  hr = g_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &g_pPixelShader);
+  hr = pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &pPixelShader);
   pPSBlob->Release();
   if (FAILED(hr))
     return hr;
@@ -298,7 +300,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   InitData.SysMemPitch = sizeof(vertices);
   InitData.SysMemSlicePitch = 0;
 
-  hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
+  hr = pd3dDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer);
   if (FAILED(hr))
     return hr;
 
@@ -318,7 +320,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   InitData1.SysMemPitch = sizeof(indices);
   InitData1.SysMemSlicePitch = 0;
 
-  hr = g_pd3dDevice->CreateBuffer(&bd1, &InitData1, &g_pIndexBuffer);
+  hr = pd3dDevice->CreateBuffer(&bd1, &InitData1, &pIndexBuffer);
   if (FAILED(hr))
     return hr;
 
@@ -339,7 +341,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   data.SysMemPitch = sizeof(worldMatrixBuffer);
   data.SysMemSlicePitch = 0;
 
-  hr = g_pd3dDevice->CreateBuffer(&descWMB, &data, &g_pWorldMatrixBuffer);
+  hr = pd3dDevice->CreateBuffer(&descWMB, &data, &pWorldMatrixBuffer);
   if (FAILED(hr))
     return hr;
 
@@ -351,7 +353,7 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   descSMB.MiscFlags = 0;
   descSMB.StructureByteStride = 0;
 
-  hr = g_pd3dDevice->CreateBuffer(&descSMB, nullptr, &g_pSceneMatrixBuffer);
+  hr = pd3dDevice->CreateBuffer(&descSMB, nullptr, &pSceneMatrixBuffer);
   if (FAILED(hr))
     return hr;
 
@@ -368,15 +370,15 @@ HRESULT Renderer::InitDevice(const HWND& g_hWnd) {
   descRastr.MultisampleEnable = false;
   descRastr.SlopeScaledDepthBias = 0.0f;
 
-  hr = g_pd3dDevice->CreateRasterizerState(&descRastr, &g_pRasterizerState);
+  hr = pd3dDevice->CreateRasterizerState(&descRastr, &pRasterizerState);
   if (FAILED(hr))
     return hr;
 
   return S_OK;
 }
 
-HRESULT Renderer::Init(const HWND& g_hWnd, const HINSTANCE& g_hInstance, UINT screenWidth, UINT screenHeight) {
-  HRESULT hr = input.InitInputs(g_hInstance, g_hWnd, screenWidth, screenHeight);
+HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screenWidth, UINT screenHeight) {
+  HRESULT hr = input.InitInputs(hInstance, hWnd, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;
 
@@ -384,9 +386,15 @@ HRESULT Renderer::Init(const HWND& g_hWnd, const HINSTANCE& g_hInstance, UINT sc
   if (FAILED(hr))
     return hr;
 
-  hr = InitDevice(g_hWnd);
+  hr = InitDevice(hWnd);
   if (FAILED(hr))
     return hr;
+
+#ifdef _DEBUG
+  hr = pImmediateContext->QueryInterface(__uuidof(pAnnotation), reinterpret_cast<void**>(&pAnnotation));
+  if (FAILED(hr))
+    return hr;
+#endif
 
   return S_OK;
 }
@@ -411,7 +419,7 @@ bool Renderer::Frame() {
 
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = XMMatrixRotationY((float)duration * angle_velocity);
-  g_pImmediateContext->UpdateSubresource(g_pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
+  pImmediateContext->UpdateSubresource(pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
 
   // Get the view matrix
   XMMATRIX mView;
@@ -419,22 +427,22 @@ bool Renderer::Frame() {
   // Get the projection matrix
   XMMATRIX mProjection = XMMatrixPerspectiveFovLH(XM_PIDIV2, (FLOAT)input.GetWidth() / (FLOAT)input.GetHeight(), 0.01f, 100.0f);
   D3D11_MAPPED_SUBRESOURCE subresource;
-  HRESULT hr = g_pImmediateContext->Map(g_pSceneMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
+  HRESULT hr = pImmediateContext->Map(pSceneMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
   if (FAILED(hr))
     return FAILED(hr);
 
   SceneMatrixBuffer& sceneBuffer = *reinterpret_cast<SceneMatrixBuffer*>(subresource.pData);
   sceneBuffer.viewProjectionMatrix = XMMatrixMultiply(mView, mProjection);
-  g_pImmediateContext->Unmap(g_pSceneMatrixBuffer, 0);
+  pImmediateContext->Unmap(pSceneMatrixBuffer, 0);
 
   return SUCCEEDED(hr);
 }
 
 HRESULT Renderer::Render() {
-  g_pImmediateContext->ClearState();
+  pImmediateContext->ClearState();
 
-  ID3D11RenderTargetView* views[] = { g_pRenderTargetView };
-  g_pImmediateContext->OMSetRenderTargets(1, views, nullptr);
+  ID3D11RenderTargetView* views[] = { pRenderTargetView };
+  pImmediateContext->OMSetRenderTargets(1, views, nullptr);
 
   // Just clear the backbuffer
   auto duration = (1.0 * clock() - init_time) / CLOCKS_PER_SEC;
@@ -444,7 +452,14 @@ HRESULT Renderer::Render() {
     float(0.5 + 0.5 * sin(0.3 * duration)),
     float(0.5 + 0.5 * sin(0.5 * duration)), 1 }; // RGBA
 
-  g_pImmediateContext->ClearRenderTargetView(g_pRenderTargetView, ClearColor);
+
+#ifdef _DEBUG
+  pAnnotation->BeginEvent((LPCWSTR)("Clear background"));
+#endif
+  pImmediateContext->ClearRenderTargetView(pRenderTargetView, ClearColor);
+#ifdef _DEBUG
+  pAnnotation->EndEvent();
+#endif
 
   D3D11_VIEWPORT viewport;
   viewport.TopLeftX = 0;
@@ -453,131 +468,116 @@ HRESULT Renderer::Render() {
   viewport.Height = (FLOAT)input.GetHeight();
   viewport.MinDepth = 0.0f;
   viewport.MaxDepth = 1.0f;
-  g_pImmediateContext->RSSetViewports(1, &viewport);
+  pImmediateContext->RSSetViewports(1, &viewport);
 
   D3D11_RECT rect;
   rect.left = 0;
   rect.top = 0;
   rect.right = input.GetWidth();
   rect.bottom = input.GetHeight();
-  g_pImmediateContext->RSSetScissorRects(1, &rect);
+  pImmediateContext->RSSetScissorRects(1, &rect);
 
-  g_pImmediateContext->RSSetState(g_pRasterizerState);
+  pImmediateContext->RSSetState(pRasterizerState);
 
   // Render a cube
-  g_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-  ID3D11Buffer* vertexBuffers[] = { g_pVertexBuffer };
+  // Primitive example of debug markers...
+#ifdef _DEBUG
+  pAnnotation->BeginEvent((LPCWSTR)"Draw Cube");
+  std::string indexBufferName = "Indexes buffer", vertexBufferName = "Vertexes buffer";
+  pIndexBuffer->SetPrivateData(WKPDID_D3DDebugObjectName, indexBufferName.size(), indexBufferName.c_str());
+  pVertexBuffer->SetPrivateData(WKPDID_D3DDebugObjectName, vertexBufferName.size(), vertexBufferName.c_str());
+#endif
+
+  pImmediateContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+  ID3D11Buffer* vertexBuffers[] = { pVertexBuffer };
   UINT strides[] = { 16 };
   UINT offsets[] = { 0 };
-  g_pImmediateContext->IASetVertexBuffers(0, 1, vertexBuffers, strides, offsets);
-  g_pImmediateContext->IASetInputLayout(g_pVertexLayout);
-  g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-  g_pImmediateContext->VSSetShader(g_pVertexShader, nullptr, 0);
-  g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
-  g_pImmediateContext->VSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
-  g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
-  g_pImmediateContext->DrawIndexed(36, 0, 0);
+  pImmediateContext->IASetVertexBuffers(0, 1, vertexBuffers, strides, offsets);
+  pImmediateContext->IASetInputLayout(pVertexLayout);
+  pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
+  pImmediateContext->VSSetConstantBuffers(0, 1, &pWorldMatrixBuffer);
+  pImmediateContext->VSSetConstantBuffers(1, 1, &pSceneMatrixBuffer);
+  pImmediateContext->PSSetShader(pPixelShader, nullptr, 0);
+  pImmediateContext->DrawIndexed(36, 0, 0);
 
-  return g_pSwapChain->Present(0, 0);
+#ifdef _DEBUG
+  pAnnotation->EndEvent();
+#endif
+
+  return pSwapChain->Present(0, 0);
 }
 
 void Renderer::CleanupDevice() {
   camera.Realese();
   input.Realese();
 
-  ULONG refCount = 0;
-  if (g_pRasterizerState) 
-      refCount = g_pRasterizerState->Release();
-  assert(refCount == 0);
+#ifdef _DEBUG
+  if (pAnnotation) pAnnotation->Release();
+#endif
 
-  if (g_pSceneMatrixBuffer)
-      refCount = g_pSceneMatrixBuffer->Release();
-  assert(refCount == 0);
-
-  if (g_pWorldMatrixBuffer)
-      refCount = g_pWorldMatrixBuffer->Release();
-  assert(refCount == 0);
-
-  if (g_pIndexBuffer)
-      refCount = g_pIndexBuffer->Release();
-  assert(refCount == 0);
-  if (g_pVertexBuffer)
-      refCount = g_pVertexBuffer->Release();
-  assert(refCount == 0);
-  if (g_pVertexLayout)
-      refCount = g_pVertexLayout->Release();
-  assert(refCount == 0);
-  if (g_pVertexShader)
-      refCount = g_pVertexShader->Release();
-  assert(refCount == 0);
-  if (g_pPixelShader)
-      refCount = g_pPixelShader->Release();
-  assert(refCount == 0);
-  if (g_pRenderTargetView)
-      refCount = g_pRenderTargetView->Release();
-  assert(refCount == 0);
-
-  if (g_pSwapChain1)
-      refCount = g_pSwapChain1->Release();
-  //assert(refCount == 0);
-  if (g_pSwapChain)
-      refCount = g_pSwapChain->Release();
-  assert(refCount == 0);
-  if (g_pImmediateContext1)
-      refCount = g_pImmediateContext1->Release();
-  //assert(refCount == 0);
-  if (g_pImmediateContext)
-      refCount = g_pImmediateContext->Release();
-  assert(refCount == 0);
-  if (g_pd3dDevice1)
-      refCount = g_pd3dDevice1->Release();
-  //assert(refCount == 0);
-
+  if (pRasterizerState) pRasterizerState->Release();
+  if (pSceneMatrixBuffer) pSceneMatrixBuffer->Release();
+  if (pWorldMatrixBuffer) pWorldMatrixBuffer->Release();
+  
+  if (pIndexBuffer) pIndexBuffer->Release();
+  if (pVertexBuffer) pVertexBuffer->Release();
+  if (pVertexLayout) pVertexLayout->Release();
+  if (pVertexShader) pVertexShader->Release();
+  if (pPixelShader) pPixelShader->Release();
+  if (pRenderTargetView) pRenderTargetView->Release();
+  
+  if (pSwapChain1) pSwapChain1->Release();
+  if (pSwapChain) pSwapChain->Release();
+  if (pImmediateContext1) pImmediateContext1->Release();
+  if (pImmediateContext) pImmediateContext->Release();
+  if (pd3dDevice1) pd3dDevice1->Release();
+  
 #ifdef _DEBUG
   ID3D11Debug* d3dDebug = nullptr;
-  g_pd3dDevice->QueryInterface(IID_PPV_ARGS(&d3dDebug));
+  pd3dDevice->QueryInterface(IID_PPV_ARGS(&d3dDebug));
 
-  UINT references = g_pd3dDevice->Release();
+  UINT references = pd3dDevice->Release();
   if (references > 1) {
       d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
   }
   d3dDebug->Release();
 #else
-  if (g_pd3dDevice) g_pd3dDevice->Release();
+  if (pd3dDevice) pd3dDevice->Release();
 #endif
 }
 
-HRESULT Renderer::ResizeWindow(const HWND& g_hWnd) {
-  if (g_pSwapChain)
+HRESULT Renderer::ResizeWindow(const HWND& hWnd) {
+  if (pSwapChain)
   {
-    g_pImmediateContext->OMSetRenderTargets(0, 0, 0);
+    pImmediateContext->OMSetRenderTargets(0, 0, 0);
 
     // Release all outstanding references to the swap chain's buffers.
-    g_pRenderTargetView->Release();
+    pRenderTargetView->Release();
 
     HRESULT hr;
     // Preserve the existing buffer count and format.
     // Automatically choose the width and height to match the client rect for HWNDs.
-    hr = g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+    hr = pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
     if (FAILED(hr))
       return hr;
 
     // Get buffer and create a render-target-view.
     ID3D11Texture2D* pBuffer;
-    hr = g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
+    hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
     if (FAILED(hr) || !pBuffer)
        return hr;
     
-    hr = g_pd3dDevice->CreateRenderTargetView(pBuffer, NULL, &g_pRenderTargetView);
+    hr = pd3dDevice->CreateRenderTargetView(pBuffer, NULL, &pRenderTargetView);
     pBuffer->Release();
     if (FAILED(hr))
         return hr;
 
-    g_pImmediateContext->OMSetRenderTargets(1, &g_pRenderTargetView, NULL);
+    pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, NULL);
 
     // Set up the viewport.
     RECT rc;
-    GetClientRect(g_hWnd, &rc);
+    GetClientRect(hWnd, &rc);
     UINT width = rc.right - rc.left;
     UINT height = rc.bottom - rc.top;
 
@@ -588,7 +588,7 @@ HRESULT Renderer::ResizeWindow(const HWND& g_hWnd) {
     vp.MaxDepth = 1.0f;
     vp.TopLeftX = 0;
     vp.TopLeftY = 0;
-    g_pImmediateContext->RSSetViewports(1, &vp);
+    pImmediateContext->RSSetViewports(1, &vp);
 
     input.Resize(width, height);
   }
