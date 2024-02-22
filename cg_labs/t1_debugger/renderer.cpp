@@ -454,7 +454,7 @@ HRESULT Renderer::Render() {
 
 
 #ifdef _DEBUG
-  pAnnotation->BeginEvent((LPCWSTR)("Clear background"));
+  pAnnotation->BeginEvent((LPCWSTR)(L"Clear background"));
 #endif
   pImmediateContext->ClearRenderTargetView(pRenderTargetView, ClearColor);
 #ifdef _DEBUG
@@ -482,7 +482,7 @@ HRESULT Renderer::Render() {
   // Render a cube
   // Primitive example of debug markers...
 #ifdef _DEBUG
-  pAnnotation->BeginEvent((LPCWSTR)"Draw Cube");
+  pAnnotation->BeginEvent((LPCWSTR)L"Draw Cube");
   std::string indexBufferName = "Indexes buffer", vertexBufferName = "Vertexes buffer";
   pIndexBuffer->SetPrivateData(WKPDID_D3DDebugObjectName, indexBufferName.size(), indexBufferName.c_str());
   pVertexBuffer->SetPrivateData(WKPDID_D3DDebugObjectName, vertexBufferName.size(), vertexBufferName.c_str());
