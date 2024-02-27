@@ -9,22 +9,8 @@
 #include <ctime>
 
 #include "camera.h"
+#include "scene.h"
 #include "input.h"
-
-
-struct SimpleVertex
-{
-  float x, y, z;
-  COLORREF color;
-};
-
-struct WorldMatrixBuffer {
-  XMMATRIX worldMatrix;
-};
-
-struct SceneMatrixBuffer {
-  XMMATRIX viewProjectionMatrix;
-};
 
 // Make renderer class
 class Renderer {
@@ -56,8 +42,6 @@ private:
   // Initialization device method
   HRESULT InitDevice(const HWND& hWnd);
 
-  HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
-
   void HandleInput();
 
   // DirectX11 variables
@@ -71,16 +55,6 @@ private:
   IDXGISwapChain1*        pSwapChain1 = nullptr;
   ID3D11RenderTargetView* pRenderTargetView = nullptr;
 
-  ID3D11VertexShader* pVertexShader = nullptr;
-  ID3D11PixelShader* pPixelShader = nullptr;
-  ID3D11InputLayout* pVertexLayout = nullptr;
-
-  ID3D11Buffer* pVertexBuffer = nullptr;
-  ID3D11Buffer* pIndexBuffer = nullptr;
-  ID3D11Buffer* pWorldMatrixBuffer = nullptr;
-  ID3D11Buffer* pSceneMatrixBuffer = nullptr;
-  ID3D11RasterizerState* pRasterizerState = nullptr;
-
 #ifdef _DEBUG
   ID3DUserDefinedAnnotation* pAnnotation = nullptr;
 #endif
@@ -90,6 +64,7 @@ private:
 
   // initialization other thinngs (camera, input devices, etc.)
   Camera camera;
+  Scene sc;
   Input input;
 
   // Velocity of world matrix rotation

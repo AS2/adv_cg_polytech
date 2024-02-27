@@ -20,7 +20,7 @@ public:
   bool Frame();
 
   // Release method
-  void Realese();
+  void Release();
 
   // Useful methods
   XMFLOAT3 IsMouseUsed() const;

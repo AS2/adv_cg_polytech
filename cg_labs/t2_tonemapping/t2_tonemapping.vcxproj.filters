@@ -28,6 +28,24 @@
     <Filter Include="Исходные файлы\Shaders\Cube">
       <UniqueIdentifier>{72b860e7-69dd-43ac-992b-a25df9b051c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Scene">
+      <UniqueIdentifier>{53e743d6-20df-4c06-aaeb-49dc9252de00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Light">
+      <UniqueIdentifier>{b1a4c9cf-a865-4c45-b1bb-281bdd719169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Box">
+      <UniqueIdentifier>{feb18c61-634f-4007-b341-8144078e5492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Light">
+      <UniqueIdentifier>{d25b49f8-2c11-4155-b9bd-af699dcb59ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Materials">
+      <UniqueIdentifier>{f38193ee-46a3-4a23-bb95-d95281cb68f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3DInclude">
+      <UniqueIdentifier>{56e30636-d3f9-4d1e-8fb6-4662cb3bd51c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h">
@@ -41,6 +59,27 @@
     </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>Исходные файлы\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>Исходные файлы\Scene\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Исходные файлы\Scene\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="def.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneConstantBuffer.h">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="lightCalc.h">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DInclude.h">
+      <Filter>D3DInclude</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +95,18 @@
     <ClCompile Include="renderer.cpp">
       <Filter>Исходные файлы\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Исходные файлы\Scene\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>Исходные файлы\Scene\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DInclude.cpp">
+      <Filter>D3DInclude</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="t2_tonemapping.rc">
@@ -68,6 +119,12 @@
     </FxCompile>
     <FxCompile Include="cube_VS.hlsl">
       <Filter>Исходные файлы\Shaders\Cube</Filter>
+    </FxCompile>
+    <FxCompile Include="light_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\Light</Filter>
+    </FxCompile>
+    <FxCompile Include="light_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\Light</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

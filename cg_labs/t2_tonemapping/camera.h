@@ -18,7 +18,9 @@ public:
   void Frame();
 
   // Release method
-  void Realese() {};
+  void Release() {};
+
+  XMVECTOR GetPos() const { return pos; };
 
   // Get view matrix method
   void GetBaseViewMatrix(XMMATRIX& viewMatrix);

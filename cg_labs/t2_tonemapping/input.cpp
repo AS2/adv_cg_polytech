@@ -16,11 +16,11 @@ HRESULT Input::InitInputs(const HINSTANCE& g_hInstance, const HWND& hwnd, UINT s
   hr = keyboard->SetDataFormat(&c_dfDIKeyboard);
   if (FAILED(hr))
     return hr;
-  
+
   hr = keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
   if (FAILED(hr))
     return hr;
-  
+
   hr = keyboard->Acquire();
   if (FAILED(hr))
     return hr;
@@ -28,11 +28,11 @@ HRESULT Input::InitInputs(const HINSTANCE& g_hInstance, const HWND& hwnd, UINT s
   hr = directInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
   if (FAILED(hr))
     return hr;
-  
+
   hr = mouse->SetDataFormat(&c_dfDIMouse);
   if (FAILED(hr))
     return hr;
-  
+
   hr = mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
   if (FAILED(hr))
     return hr;
@@ -61,7 +61,7 @@ bool Input::Frame() {
 }
 
 // Release method
-void Input::Realese() {
+void Input::Release() {
   // Release the mouse
   if (mouse) {
     mouse->Unacquire();

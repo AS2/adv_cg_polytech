@@ -1,9 +1,9 @@
 ﻿#include <windows.h>
 #include <xstring>
+#include <mmsystem.h>
 
 #include "resource1.h"
 #include "renderer.h"
-
 
 #define START_W 1280
 #define START_H 720
@@ -24,39 +24,39 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 // Register class and create window
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
-    // Register class
-    WNDCLASSEX wcex;
-    wcex.cbSize = sizeof(WNDCLASSEX);
-    wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-    wcex.lpfnWndProc = WndProc;
-    wcex.cbClsExtra = 0;
-    wcex.cbWndExtra = 0;
-    wcex.hInstance = hInstance;
-    wcex.hIcon = nullptr;
-    wcex.hIconSm = nullptr;
-    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wcex.lpszMenuName = nullptr;
-    wcex.lpszClassName = L"WindowClass";
-    if (!RegisterClassEx(&wcex))
-        return E_FAIL;
+  // Register class
+  WNDCLASSEX wcex;
+  wcex.cbSize = sizeof(WNDCLASSEX);
+  wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+  wcex.lpfnWndProc = WndProc;
+  wcex.cbClsExtra = 0;
+  wcex.cbWndExtra = 0;
+  wcex.hInstance = hInstance;
+  wcex.hIcon = nullptr;
+  wcex.hIconSm = nullptr;
+  wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+  wcex.lpszMenuName = nullptr;
+  wcex.lpszClassName = L"WindowClass";
+  if (!RegisterClassEx(&wcex))
+    return E_FAIL;
 
-    // Create window
-    g_hInst = hInstance;
-    RECT rc = { 0, 0, START_W, START_H };
-    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-    g_hWnd = CreateWindow(L"WindowClass", L"T1 - debugging practice, 5040102/30201",
-        WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX,
-        CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
-        nullptr);
-    if (!g_hWnd)
-        return E_FAIL;
+  // Create window
+  g_hInst = hInstance;
+  RECT rc = { 0, 0, START_W, START_H };
+  AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+  g_hWnd = CreateWindow(L"WindowClass", L"T6, Sachuk Aleksander Sergeevich, 5030102/90201",
+    WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX,
+    CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+    nullptr);
+  if (!g_hWnd)
+    return E_FAIL;
 
-    ShowWindow(g_hWnd, nCmdShow);
-    SetForegroundWindow(g_hWnd);
-    SetFocus(g_hWnd);
+  ShowWindow(g_hWnd, nCmdShow);
+  SetForegroundWindow(g_hWnd);
+  SetFocus(g_hWnd);
 
-    return S_OK;
+  return S_OK;
 }
 
 // Entry point to the program. Initializes everything and goes into a message processing 
@@ -67,7 +67,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     if (FAILED(InitWindow(hInstance, nCmdShow)))
-        return 0;
+      return 0;
 
 
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -80,9 +80,9 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     size_t configPos = dir.find(L"x64");
     if (configPos != std::wstring::npos)
     {
-        dir.resize(configPos);
-        dir += szTitle;
-        SetCurrentDirectory(dir.c_str());
+      dir.resize(configPos);
+      dir += szTitle;
+      SetCurrentDirectory(dir.c_str());
     }
 
     // Init Device
