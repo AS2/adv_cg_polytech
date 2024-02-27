@@ -400,9 +400,7 @@ HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screen
 }
 
 void Renderer::HandleInput() {
-  // handle camera rotations
-  XMFLOAT3 mouseMove = input.IsMouseUsed();
-  camera.Move(mouseMove.x, mouseMove.y, mouseMove.z);
+  camera.ProvideInput(input);
 }
 
 // Update frame method
@@ -415,11 +413,11 @@ bool Renderer::Frame() {
   camera.Frame();
 
   // Update world matrix angle
-  auto duration = (1.0 * clock() - init_time) / CLOCKS_PER_SEC;
+  /*auto duration = (1.0 * clock() - init_time) / CLOCKS_PER_SEC;
 
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = XMMatrixRotationY((float)duration * angle_velocity);
-  pImmediateContext->UpdateSubresource(pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
+  pImmediateContext->UpdateSubresource(pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);*/
 
   // Get the view matrix
   XMMATRIX mView;

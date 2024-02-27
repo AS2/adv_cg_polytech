@@ -23,8 +23,9 @@ public:
   void Realese();
 
   // Useful methods
-  XMFLOAT3 IsMouseUsed();
-  float IsPlusMinusPressed();
+  XMFLOAT3 IsMouseUsed() const;
+  float IsPlusMinusPressed() const;
+  bool IsKeyPressed(UCHAR keyCode) const;
 
   void Resize(UINT screenWidth, UINT screenHeight);
   UINT GetWidth() { return wWidth; }

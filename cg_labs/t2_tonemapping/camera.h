@@ -3,6 +3,8 @@
 #include <d3d11.h>
 #include <directxmath.h>
 
+#include "input.h"
+
 using namespace DirectX;
 
 #define MOVEMENT_DOWNSHIFTING 300.f
@@ -21,10 +23,14 @@ public:
   // Get view matrix method
   void GetBaseViewMatrix(XMMATRIX& viewMatrix);
 
-  // Move camera with mouse method
-  void Move(float dx, float dy, float wheel);
-
+  void ProvideInput(const Input& input);
 private:
+  // Rotate camera with mouse method around point of interest
+  void Rotate(float dx, float dy, float wheel);
+
+  // Move camera with keyboards pressed buttons
+  void Move(float dx, float dy, float dz);
+
   XMMATRIX viewMatrix;
   XMFLOAT3 pointOfInterest;
 

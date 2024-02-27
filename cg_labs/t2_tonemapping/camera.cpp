@@ -37,14 +37,39 @@ void Camera::Frame() {
   );
 }
 
-void Camera::Move(float dx, float dy, float wheel) {
-  phi -= dx / MOVEMENT_DOWNSHIFTING;
+void Camera::ProvideInput(const Input& input) {
+  // handle camera rotations
+  XMFLOAT3 mouseMove = input.IsMouseUsed();
+  Rotate(mouseMove.x / MOVEMENT_DOWNSHIFTING, mouseMove.y / MOVEMENT_DOWNSHIFTING, mouseMove.z / MOVEMENT_DOWNSHIFTING);
 
-  theta += dy / MOVEMENT_DOWNSHIFTING;
+  // handle camera moving
+  float dx = 0, dz = 0;
+  if (input.IsKeyPressed(DIK_W))
+    dx += 10;
+  if (input.IsKeyPressed(DIK_S))
+    dx -= 10;
+  if (input.IsKeyPressed(DIK_A))
+    dz += 10;
+  if (input.IsKeyPressed(DIK_D))
+    dz -= 10;
+  Move(dx / MOVEMENT_DOWNSHIFTING, 0, dz / MOVEMENT_DOWNSHIFTING);
+}
+
+void Camera::Rotate(float dx, float dy, float wheel) {
+  phi -= dx;
+
+  theta += dy;
   theta = min(max(theta, -XM_PIDIV2), XM_PIDIV2);
 
-  distanceToPoint -= wheel / MOVEMENT_DOWNSHIFTING;
+  distanceToPoint -= wheel;
   distanceToPoint = max(distanceToPoint, 1.0f);
+}
+
+
+void Camera::Move(float dx, float dy, float dz) {
+    pointOfInterest.x += dx;
+    pointOfInterest.y += dy;
+    pointOfInterest.z += dz;
 }
 
 // Get view matrix method

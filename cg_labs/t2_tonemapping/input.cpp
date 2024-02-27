@@ -84,13 +84,13 @@ void Input::Realese() {
 }
 
 // Useful methods
-XMFLOAT3 Input::IsMouseUsed() {
+XMFLOAT3 Input::IsMouseUsed() const {
   if (mouseState.rgbButtons[0] || mouseState.rgbButtons[1] || mouseState.rgbButtons[2] & 0x80)
     return XMFLOAT3((float)mouseState.lX, (float)mouseState.lY, (float)mouseState.lZ);
   return XMFLOAT3(0.0f, 0.0f, 0.0f);
 };
 
-float Input::IsPlusMinusPressed() {
+float Input::IsPlusMinusPressed() const {
   if (keyboardState[DIK_ADD] & 0x80)
     return 1.f;
   else if (keyboardState[DIK_MINUS] & 0x80)
@@ -102,6 +102,10 @@ float Input::IsPlusMinusPressed() {
 void Input::Resize(UINT screenWidth, UINT screenHeight) {
   wWidth = screenWidth;
   wHeight = screenHeight;
+}
+
+bool Input::IsKeyPressed(UCHAR keyCode) const {
+  return keyboardState[keyCode] & 0x80;
 }
 
 
