@@ -32,9 +32,8 @@ private:
   void Move(float dx, float dy, float dz);
 
   XMMATRIX viewMatrix;
-  XMFLOAT3 pointOfInterest;
 
-  float distanceToPoint;
-  float phi;
-  float theta;
+  XMVECTOR pointOfInterest;
+  XMVECTOR pos;
+  XMVECTOR up;
 };
