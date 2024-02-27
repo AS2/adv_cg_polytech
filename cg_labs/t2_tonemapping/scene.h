@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-
+#include "input.h"
 #include "light.h"
 #include "box.h"
 
@@ -23,6 +23,8 @@ public:
   void Resize(int screenWidth, int screenHeight);
 
   void Render(ID3D11DeviceContext* context);
+
+  void ProvideInput(const Input &input);
 
   bool Frame(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
 

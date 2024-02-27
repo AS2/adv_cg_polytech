@@ -45,9 +45,9 @@ void Camera::ProvideInput(const Input& input) {
     dz -= 1;
 
   if (input.IsKeyPressed(DIK_A))  // right
-    dx += 1;
-  if (input.IsKeyPressed(DIK_D))  // left
     dx -= 1;
+  if (input.IsKeyPressed(DIK_D))  // left
+    dx += 1;
 
   if (input.IsKeyPressed(DIK_LCONTROL)) // down
     dy -= 1;

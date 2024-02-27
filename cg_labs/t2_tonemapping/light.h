@@ -8,6 +8,7 @@
 
 #include "D3DInclude.h"
 #include "def.h"
+#include "input.h"
 
 using namespace DirectX;
 
@@ -21,6 +22,8 @@ public:
 
   void Render(ID3D11DeviceContext* context);
   
+  void ProvideInput(const Input& input);
+
   bool Frame(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
 
   XMFLOAT4 GetColor() { return color; };
@@ -43,6 +46,8 @@ private:
   UINT numSphereVertices = 0;
   UINT numSphereFaces = 0;
   float radius = 0.1f;
+
+  const float MIN_I = 0.1f, MAX_I = 10.f;
 
   XMFLOAT4 color;
   XMFLOAT4 position;

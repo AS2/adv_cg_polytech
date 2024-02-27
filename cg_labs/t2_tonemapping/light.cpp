@@ -218,6 +218,19 @@ HRESULT Light::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
   return hr;
 }
 
+void Light::ProvideInput(const Input& input) {
+  auto status = input.IsPlusMinusPressed();
+  color.w += status * 0.1f;
+  color.w = max(min(color.w, MAX_I), MIN_I);
+
+  if (input.IsKeyPressed(DIKEYBOARD_1))
+    color.w = 0.1f;
+  if (input.IsKeyPressed(DIKEYBOARD_2))
+    color.w = 1.0f;
+  if (input.IsKeyPressed(DIKEYBOARD_3))
+    color.w = 10.f;
+}
+
 void Light::Release() {
   if (g_pRasterizerState) g_pRasterizerState->Release();
   if (g_pWorldMatrixBuffer) g_pWorldMatrixBuffer->Release();

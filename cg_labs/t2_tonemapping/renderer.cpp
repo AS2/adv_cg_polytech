@@ -197,6 +197,7 @@ HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screen
 
 void Renderer::HandleInput() {
   camera.ProvideInput(input);
+  sc.ProvideInput(input);
 }
 
 // Update frame method

@@ -17,7 +17,7 @@ float3 CalculateColor(in float3 objColor, in float3 objNormal, in float3 pos, in
     if (trans && dot(lightDir, objNormal) < 0.0) {
       norm = -norm;
     }
-    finalColor += objColor * max(dot(lightDir, norm), 0) * atten * lightColor[i].xyz;
+    finalColor += objColor * max(dot(lightDir, norm), 0) * atten * lightColor[i].xyz * lightColor[i].w;
 
     float3 viewDir = normalize(cameraPos.xyz - pos);
     float3 reflectDir = reflect(-lightDir, norm);
