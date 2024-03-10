@@ -231,7 +231,7 @@ HRESULT Renderer::Render() {
 #ifdef _DEBUG
   pAnnotation->BeginEvent((LPCWSTR)(L"Clear background"));
 #endif
-  pRenderedSceneTexture->clear(0.1f, 0.1f, 0.1f, pd3dDevice, pImmediateContext);
+  pRenderedSceneTexture->clear(1.0f, 1.0f, 1.0f, pd3dDevice, pImmediateContext);
 #ifdef _DEBUG
   pAnnotation->EndEvent();
 #endif

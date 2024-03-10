@@ -18,11 +18,20 @@ public:
 		ID3D11Device* const& pDevice,
 		ID3D11DeviceContext* const& pContext) const;
 	
+	void setAsResource(
+		ID3D11Device* const& pDevice,
+		ID3D11DeviceContext* const& pContext) const;
+	
 	void clear(
 		float red, float green, float blue,
 		ID3D11Device* const& pDevice,
 		ID3D11DeviceContext* const& pContext);
 	
+	void copyToTexture(
+		ID3D11Texture2D* const& target,
+		ID3D11Device* const& pDevice,
+		ID3D11DeviceContext* const& pContext) const;
+
 	void setScreenSize(int height, int width) {
 		this->height = height;
 		this->width = width;

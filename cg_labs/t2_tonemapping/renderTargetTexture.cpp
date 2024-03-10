@@ -66,12 +66,25 @@ void RenderTargetTexture::set(
 	pContext->RSSetViewports(1u, &vp);
 }
 
+void RenderTargetTexture::setAsResource(
+	ID3D11Device* const& pDevice,
+	ID3D11DeviceContext* const& pContext) const {
+	pContext->PSSetShaderResources(0u, 1u, &pShaderResourceView);
+}
+
 void RenderTargetTexture::clear(
 	float red, float green, float blue,
 	ID3D11Device* const& pDevice,
 	ID3D11DeviceContext* const& pContext) {
 	const float color[] = { red, green, blue, 1.0f };
 	pContext->ClearRenderTargetView(pRenderTargetView, color);
+}
+
+void RenderTargetTexture::copyToTexture(
+	ID3D11Texture2D* const& target,
+	ID3D11Device* const& pDevice,
+	ID3D11DeviceContext* const& pContext) const {
+	pContext->CopyResource(target, pTexture2D);
 }
 
 void RenderTargetTexture::Release() {
