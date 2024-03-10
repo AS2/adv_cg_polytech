@@ -46,6 +46,12 @@
     <Filter Include="D3DInclude">
       <UniqueIdentifier>{56e30636-d3f9-4d1e-8fb6-4662cb3bd51c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Renderer\RenderTargetTexture">
+      <UniqueIdentifier>{a7809914-416f-4e6c-bfe4-e673e4feb814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer\PostProcessing">
+      <UniqueIdentifier>{8716eeea-9f37-45c1-8ccf-84ff2d9966da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h">
@@ -81,6 +87,12 @@
     <ClInclude Include="D3DInclude.h">
       <Filter>D3DInclude</Filter>
     </ClInclude>
+    <ClInclude Include="postprocessing.h">
+      <Filter>Исходные файлы\Renderer\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="renderTargetTexture.h">
+      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -106,6 +118,12 @@
     </ClCompile>
     <ClCompile Include="D3DInclude.cpp">
       <Filter>D3DInclude</Filter>
+    </ClCompile>
+    <ClCompile Include="postprocessing.cpp">
+      <Filter>Исходные файлы\Renderer\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="renderTargetTexture.cpp">
+      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

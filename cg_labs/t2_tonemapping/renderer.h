@@ -12,6 +12,8 @@
 #include "scene.h"
 #include "input.h"
 
+#include "renderTargetTexture.h"
+
 // Make renderer class
 class Renderer {
 public:
@@ -47,13 +49,18 @@ private:
   // DirectX11 variables
   D3D_DRIVER_TYPE         driverType = D3D_DRIVER_TYPE_NULL;
   D3D_FEATURE_LEVEL       featureLevel = D3D_FEATURE_LEVEL_11_0;
+  
   ID3D11Device*           pd3dDevice = nullptr;
   ID3D11Device1*          pd3dDevice1 = nullptr;
+  
   ID3D11DeviceContext*    pImmediateContext = nullptr;
   ID3D11DeviceContext1*   pImmediateContext1 = nullptr;
+  
   IDXGISwapChain*         pSwapChain = nullptr;
   IDXGISwapChain1*        pSwapChain1 = nullptr;
-  ID3D11RenderTargetView* pRenderTargetView = nullptr;
+
+  RenderTargetTexture* pRenderedSceneTexture;
+  RenderTargetTexture* pPostProcessedTexture;
 
 #ifdef _DEBUG
   ID3DUserDefinedAnnotation* pAnnotation = nullptr;

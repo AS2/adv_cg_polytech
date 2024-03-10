@@ -23,7 +23,7 @@ float3 CalculateColor(in float3 objColor, in float3 objNormal, in float3 pos, in
     float3 reflectDir = reflect(-lightDir, norm);
     float spec = shine > 0 ? pow(max(dot(viewDir, reflectDir), 0.0), shine.x) : 0.0;
 
-    finalColor += objColor * spec * lightColor[i].xyz;
+    finalColor += objColor * spec * lightColor[i].xyz * lightColor[i].w;
   }
 
   return finalColor;

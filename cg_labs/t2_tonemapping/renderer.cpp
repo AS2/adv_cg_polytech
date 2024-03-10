@@ -149,23 +149,23 @@ HRESULT Renderer::InitDevice(const HWND& hWnd) {
   if (FAILED(hr))
     return hr;
 
-  hr = pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &pRenderTargetView);
-  pBackBuffer->Release();
+  
+  pRenderedSceneTexture = new RenderTargetTexture(width, height);
+  hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
   if (FAILED(hr))
     return hr;
 
-  pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);
+  /*pRenderedSceneTexture = new RenderTargetTexture(width, height);
+  hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext);
+  if (FAILED(hr))
+    return hr;
 
-  // Setup the viewport
-  D3D11_VIEWPORT vp;
-  vp.Width = (FLOAT)width;
-  vp.Height = (FLOAT)height;
-  vp.MinDepth = 0.0f;
-  vp.MaxDepth = 1.0f;
-  vp.TopLeftX = 0;
-  vp.TopLeftY = 0;
-  pImmediateContext->RSSetViewports(1, &vp);
+  pPostProcessedTexture = new RenderTargetTexture(width, height);
+  hr = pPostProcessedTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
+  if (FAILED(hr))
+    return hr;*/
 
+  pBackBuffer->Release();
   return S_OK;
 }
 
@@ -224,18 +224,14 @@ bool Renderer::Frame() {
 
 HRESULT Renderer::Render() {
   pImmediateContext->ClearState();
-
-  ID3D11RenderTargetView* views[] = { pRenderTargetView };
-  pImmediateContext->OMSetRenderTargets(1, views, nullptr);
-
-  float ClearColor[4] = {
-    0.1f, 0.1f, 0.1f, 1.0f }; // RGBA
-
+  ID3D11ShaderResourceView* nullSRV = nullptr;
+  pImmediateContext->PSSetShaderResources(0, 1, &nullSRV);
+  pRenderedSceneTexture->set(pd3dDevice, pImmediateContext);
 
 #ifdef _DEBUG
   pAnnotation->BeginEvent((LPCWSTR)(L"Clear background"));
 #endif
-  pImmediateContext->ClearRenderTargetView(pRenderTargetView, ClearColor);
+  pRenderedSceneTexture->clear(0.1f, 0.1f, 0.1f, pd3dDevice, pImmediateContext);
 #ifdef _DEBUG
   pAnnotation->EndEvent();
 #endif
@@ -270,7 +266,8 @@ void Renderer::CleanupDevice() {
   if (pAnnotation) pAnnotation->Release();
 #endif
 
-  if (pRenderTargetView) pRenderTargetView->Release();
+  if (pRenderedSceneTexture) 
+    delete pRenderedSceneTexture;
   
   if (pSwapChain1) pSwapChain1->Release();
   if (pSwapChain) pSwapChain->Release();
@@ -303,15 +300,28 @@ HRESULT Renderer::ResizeWindow(const HWND& hWnd) {
 
     if ((width != input.GetWidth() || height != input.GetHeight())) {
 
-      if (pRenderTargetView)
-        pRenderTargetView->Release();
+      if (pRenderedSceneTexture)
+        pRenderedSceneTexture->Release();
 
       HRESULT hr = pSwapChain->ResizeBuffers(2, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
       if (SUCCEEDED(hr)) {
         input.Resize(width, height);
-
-        input.Resize(width, height);
         sc.Resize(width, height);
+      }
+
+      // Create a render target view
+      ID3D11Texture2D* pBackBuffer = nullptr;
+      hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
+      if (FAILED(hr))
+        return hr;
+      
+      if (pRenderedSceneTexture) {
+        pRenderedSceneTexture->setScreenSize(height, width);
+        hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
+        if (FAILED(hr))
+          return hr;
+
+        pBackBuffer->Release();
       }
       return SUCCEEDED(hr);
     }

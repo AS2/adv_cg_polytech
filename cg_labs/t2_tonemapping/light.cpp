@@ -224,11 +224,11 @@ void Light::ProvideInput(const Input& input) {
   color.w = max(min(color.w, MAX_I), MIN_I);
 
   if (input.IsKeyPressed(DIKEYBOARD_1))
-    color.w = 0.1f;
-  if (input.IsKeyPressed(DIKEYBOARD_2))
     color.w = 1.0f;
+  if (input.IsKeyPressed(DIKEYBOARD_2))
+    color.w = 10.0f;
   if (input.IsKeyPressed(DIKEYBOARD_3))
-    color.w = 10.f;
+    color.w = 100.f;
 }
 
 void Light::Release() {
