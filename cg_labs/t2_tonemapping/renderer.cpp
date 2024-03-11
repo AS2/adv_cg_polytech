@@ -149,13 +149,24 @@ HRESULT Renderer::InitDevice(const HWND& hWnd) {
   if (FAILED(hr))
     return hr;
 
+  D3D11_VIEWPORT viewport;
+  viewport.TopLeftX = 0;
+  viewport.TopLeftY = 0;
+  viewport.Width = (FLOAT)input.GetWidth();
+  viewport.Height = (FLOAT)input.GetHeight();
+  viewport.MinDepth = 0.0f;
+  viewport.MaxDepth = 1.0f;
+  pImmediateContext->RSSetViewports(1, &viewport);
+
+  D3D11_RECT rect;
+  rect.left = 0;
+  rect.top = 0;
+  rect.right = input.GetWidth();
+  rect.bottom = input.GetHeight();
+  pImmediateContext->RSSetScissorRects(1, &rect);
+
   
   pRenderedSceneTexture = new RenderTargetTexture(width, height);
-  hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
-  if (FAILED(hr))
-    return hr;
-
-  /*pRenderedSceneTexture = new RenderTargetTexture(width, height);
   hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext);
   if (FAILED(hr))
     return hr;
@@ -163,7 +174,7 @@ HRESULT Renderer::InitDevice(const HWND& hWnd) {
   pPostProcessedTexture = new RenderTargetTexture(width, height);
   hr = pPostProcessedTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
   if (FAILED(hr))
-    return hr;*/
+    return hr;
 
   pBackBuffer->Release();
   return S_OK;
@@ -183,6 +194,10 @@ HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screen
     return hr;
 
   hr = sc.Init(pd3dDevice, pImmediateContext, screenWidth, screenHeight);
+  if (FAILED(hr))
+    return hr;
+
+  hr = PP.Init(pd3dDevice, pImmediateContext);
   if (FAILED(hr))
     return hr;
 
@@ -208,6 +223,7 @@ bool Renderer::Frame() {
   // update camera
   HandleInput();
   camera.Frame();
+  PP.Update(pd3dDevice, pImmediateContext);
 
   // Get the view matrix
   XMMATRIX mView;
@@ -253,6 +269,8 @@ HRESULT Renderer::Render() {
   pImmediateContext->RSSetScissorRects(1, &rect);
 
   sc.Render(pImmediateContext);
+
+  PP.applyTonemapEffect(pd3dDevice, pImmediateContext, pAnnotation, pRenderedSceneTexture, pPostProcessedTexture);
 
   return pSwapChain->Present(0, 0);
 }
@@ -303,6 +321,9 @@ HRESULT Renderer::ResizeWindow(const HWND& hWnd) {
       if (pRenderedSceneTexture)
         pRenderedSceneTexture->Release();
 
+      if (pPostProcessedTexture)
+        pPostProcessedTexture->Release();
+
       HRESULT hr = pSwapChain->ResizeBuffers(2, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
       if (SUCCEEDED(hr)) {
         input.Resize(width, height);
@@ -316,8 +337,13 @@ HRESULT Renderer::ResizeWindow(const HWND& hWnd) {
         return hr;
       
       if (pRenderedSceneTexture) {
-        pRenderedSceneTexture->setScreenSize(height, width);
-        hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
+        pRenderedSceneTexture->setScreenSize(width, height);
+        hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext);
+        if (FAILED(hr))
+          return hr;
+
+        pPostProcessedTexture->setScreenSize(width, height);
+        hr = pPostProcessedTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
         if (FAILED(hr))
           return hr;
 

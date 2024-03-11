@@ -52,6 +52,15 @@
     <Filter Include="Исходные файлы\Renderer\PostProcessing">
       <UniqueIdentifier>{8716eeea-9f37-45c1-8ccf-84ff2d9966da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Renderer\ScreenPlane">
+      <UniqueIdentifier>{d9c98511-c78f-4d57-b9ae-4b31265c6c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Postprocessing">
+      <UniqueIdentifier>{e8e12d51-a460-4cc3-a9e0-82cbd2890740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Postprocessing\Tonemapping">
+      <UniqueIdentifier>{5f5c7085-c304-4914-99dd-2e604d8fc616}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h">
@@ -87,11 +96,14 @@
     <ClInclude Include="D3DInclude.h">
       <Filter>D3DInclude</Filter>
     </ClInclude>
+    <ClInclude Include="renderTargetTexture.h">
+      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
+    </ClInclude>
     <ClInclude Include="postprocessing.h">
       <Filter>Исходные файлы\Renderer\PostProcessing</Filter>
     </ClInclude>
-    <ClInclude Include="renderTargetTexture.h">
-      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
+    <ClInclude Include="screenplane.h">
+      <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,11 +131,14 @@
     <ClCompile Include="D3DInclude.cpp">
       <Filter>D3DInclude</Filter>
     </ClCompile>
+    <ClCompile Include="renderTargetTexture.cpp">
+      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
+    </ClCompile>
     <ClCompile Include="postprocessing.cpp">
       <Filter>Исходные файлы\Renderer\PostProcessing</Filter>
     </ClCompile>
-    <ClCompile Include="renderTargetTexture.cpp">
-      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
+    <ClCompile Include="screenplane.cpp">
+      <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +158,18 @@
     </FxCompile>
     <FxCompile Include="light_VS.hlsl">
       <Filter>Исходные файлы\Shaders\Light</Filter>
+    </FxCompile>
+    <FxCompile Include="BrightnessCalc.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing\Tonemapping</Filter>
+    </FxCompile>
+    <FxCompile Include="HDR.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing\Tonemapping</Filter>
+    </FxCompile>
+    <FxCompile Include="sampling_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing\Tonemapping</Filter>
+    </FxCompile>
+    <FxCompile Include="screen_plane_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

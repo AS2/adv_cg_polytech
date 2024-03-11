@@ -13,6 +13,7 @@
 #include "input.h"
 
 #include "renderTargetTexture.h"
+#include "postprocessing.h"
 
 // Make renderer class
 class Renderer {
@@ -62,18 +63,13 @@ private:
   RenderTargetTexture* pRenderedSceneTexture;
   RenderTargetTexture* pPostProcessedTexture;
 
-#ifdef _DEBUG
   ID3DUserDefinedAnnotation* pAnnotation = nullptr;
-#endif
 
-  // initialization clock
-  std::clock_t init_time;
-
-  // initialization other thinngs (camera, input devices, etc.)
+  // initialization other things (camera, input devices, etc.)
   Camera camera;
   Scene sc;
   Input input;
 
-  // Velocity of world matrix rotation
-  const float angle_velocity = 3.1415926f;
+  // initialization postprocessing pipeline
+  Postprocessing PP;
 };

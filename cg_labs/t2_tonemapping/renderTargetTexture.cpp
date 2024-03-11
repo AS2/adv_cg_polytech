@@ -1,6 +1,6 @@
 #include "renderTargetTexture.h"
 
-RenderTargetTexture::RenderTargetTexture(int height, int width) : height(height), width(width) {
+RenderTargetTexture::RenderTargetTexture(int width, int height) : width(width), height(height) {
 	vp.Width = (FLOAT)width;
 	vp.Height = (FLOAT)height;
 	vp.MinDepth = 0.0f;
@@ -10,8 +10,8 @@ RenderTargetTexture::RenderTargetTexture(int height, int width) : height(height)
 }
 
 HRESULT RenderTargetTexture::initResource(
-	ID3D11Device* const& pDevice,
-	ID3D11DeviceContext* const& pContext,
+	ID3D11Device* pDevice,
+	ID3D11DeviceContext* pContext,
 	ID3D11Resource* pBackBuffer)
 {
 	D3D11_TEXTURE2D_DESC td;
@@ -59,31 +59,31 @@ HRESULT RenderTargetTexture::initResource(
 }
 
 void RenderTargetTexture::set(
-	ID3D11Device* const& pDevice,
-	ID3D11DeviceContext* const& pContext) const
+	ID3D11Device* pDevice,
+	ID3D11DeviceContext* pContext) const
 {
 	pContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);
 	pContext->RSSetViewports(1u, &vp);
 }
 
 void RenderTargetTexture::setAsResource(
-	ID3D11Device* const& pDevice,
-	ID3D11DeviceContext* const& pContext) const {
+	ID3D11Device* pDevice,
+	ID3D11DeviceContext* pContext) const {
 	pContext->PSSetShaderResources(0u, 1u, &pShaderResourceView);
 }
 
 void RenderTargetTexture::clear(
 	float red, float green, float blue,
-	ID3D11Device* const& pDevice,
-	ID3D11DeviceContext* const& pContext) {
+	ID3D11Device* pDevice,
+	ID3D11DeviceContext* pContext) {
 	const float color[] = { red, green, blue, 1.0f };
 	pContext->ClearRenderTargetView(pRenderTargetView, color);
 }
 
 void RenderTargetTexture::copyToTexture(
-	ID3D11Texture2D* const& target,
-	ID3D11Device* const& pDevice,
-	ID3D11DeviceContext* const& pContext) const {
+	ID3D11Texture2D* target,
+	ID3D11Device* pDevice,
+	ID3D11DeviceContext* pContext) const {
 	pContext->CopyResource(target, pTexture2D);
 }
 

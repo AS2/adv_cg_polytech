@@ -2,39 +2,40 @@
 
 #include <vector>
 #include <d3d11_1.h>
-#include "WinDef.h"
 
 class RenderTargetTexture
 {
 public:
-	RenderTargetTexture(int height, int width);
+	RenderTargetTexture(int width, int height);
 
 	HRESULT initResource(
-		ID3D11Device* const& pDevice,
-		ID3D11DeviceContext* const& pContext,
+		ID3D11Device* pDevice,
+		ID3D11DeviceContext* pContext,
 		ID3D11Resource* pBackBuffer = nullptr);
 	
 	void set(
-		ID3D11Device* const& pDevice,
-		ID3D11DeviceContext* const& pContext) const;
+		ID3D11Device* pDevice,
+		ID3D11DeviceContext* pContext) const;
 	
 	void setAsResource(
-		ID3D11Device* const& pDevice,
-		ID3D11DeviceContext* const& pContext) const;
+		ID3D11Device* pDevice,
+		ID3D11DeviceContext* pContext) const;
 	
 	void clear(
 		float red, float green, float blue,
-		ID3D11Device* const& pDevice,
-		ID3D11DeviceContext* const& pContext);
+		ID3D11Device* pDevice,
+		ID3D11DeviceContext* pContext);
 	
 	void copyToTexture(
-		ID3D11Texture2D* const& target,
-		ID3D11Device* const& pDevice,
-		ID3D11DeviceContext* const& pContext) const;
+		ID3D11Texture2D* target,
+		ID3D11Device* pDevice,
+		ID3D11DeviceContext* pContext) const;
 
-	void setScreenSize(int height, int width) {
-		this->height = height;
+	void setScreenSize(int width, int height) {
 		this->width = width;
+		this->height = height;
+		vp.Width = (FLOAT)width;
+		vp.Height = (FLOAT)height;
 	}
 
 	void Release();
@@ -42,7 +43,7 @@ public:
 	~RenderTargetTexture();
 
 private:
-  int height, width;
+  int width, height;
   
 	ID3D11Texture2D* pTexture2D;
 	ID3D11RenderTargetView* pRenderTargetView;
