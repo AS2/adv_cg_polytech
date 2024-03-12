@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "D3DInclude.h"
-#include "def.h"
 #include "input.h"
 
 using namespace DirectX;
@@ -29,6 +28,11 @@ public:
   XMFLOAT4 GetColor() { return color; };
   XMFLOAT4 GetPosition() { return position; };
 private:
+  struct SimpleVertex
+  {
+    float x, y, z;      // positional coords
+  };
+
   void GenerateSphere(UINT LatLines, UINT LongLines, std::vector<SimpleVertex>& vertices, std::vector<UINT>& indices);
 
   // dx11 vars
@@ -51,4 +55,13 @@ private:
 
   XMFLOAT4 color;
   XMFLOAT4 position;
+
+  struct SceneMatrixBuffer {
+    XMMATRIX viewProjectionMatrix;
+  };
+
+  struct WorldMatrixBuffer {
+    XMMATRIX worldMatrix;
+    XMFLOAT4 color;
+  };
 };

@@ -146,7 +146,6 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="D3DInclude.h" />
-    <ClInclude Include="def.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="lightCalc.h" />

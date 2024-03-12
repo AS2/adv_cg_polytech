@@ -7,7 +7,7 @@
 
 using namespace DirectX;
 
-#define MOVEMENT_DOWNSHIFTING 300.f
+#define MOVEMENT_DOWNSHIFTING 1000.f
 
 class Camera {
 public:

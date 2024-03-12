@@ -84,9 +84,6 @@
     <ClInclude Include="light.h">
       <Filter>Исходные файлы\Scene\Light</Filter>
     </ClInclude>
-    <ClInclude Include="def.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="sceneConstantBuffer.h">
       <Filter>Исходные файлы\Shaders</Filter>
     </ClInclude>
