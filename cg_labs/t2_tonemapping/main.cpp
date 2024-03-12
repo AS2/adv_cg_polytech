@@ -102,7 +102,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        if (Renderer::GetInstance().Frame())
+        if (Renderer::GetInstance().Update())
             if (FAILED(Renderer::GetInstance().Render()))
                 break;
     }

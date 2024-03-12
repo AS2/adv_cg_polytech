@@ -26,18 +26,15 @@ public:
 
   void ProvideInput(const Input &input);
 
-  bool Frame(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
+  bool Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
 
 private:
-  bool FrameBoxes(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
+  bool UpdateBoxes(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
 
 #ifdef _DEBUG
   ID3DUserDefinedAnnotation* pAnnotation = nullptr;
 #endif
 
-  Box box;
+  Box box = Box({0.0f});
   std::vector<Light> lights;
-  
-  // Velocity of world matrix rotation
-  float angle_velocity = 3.1415926f;
 };

@@ -17,7 +17,7 @@ public:
   HRESULT InitInputs(const HINSTANCE & g_hInstance, const HWND &hwnd, UINT screenWidth, UINT screenHeight);
 
   // Update frame method
-  bool Frame();
+  bool Update();
 
   // Release method
   void Release();

@@ -1,47 +1,9 @@
 #include "box.h"
 
-HRESULT Box::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
-{
-  HRESULT hr = S_OK;
-
-  DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#ifdef _DEBUG
-  // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-  // Setting this flag improves the shader debugging experience, but still allows 
-  // the shaders to be optimized and to run exactly the way they will run in 
-  // the release configuration of this program.
-  dwShaderFlags |= D3DCOMPILE_DEBUG;
-
-  // Disable optimizations to further improve shader debugging
-  dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-  D3DInclude includeObj;
-
-  ID3DBlob* pErrorBlob = nullptr;
-  hr = D3DCompileFromFile(szFileName, nullptr, &includeObj, szEntryPoint, szShaderModel, dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
-
-  if (FAILED(hr))
-  {
-    if (pErrorBlob)
-    {
-      OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
-      pErrorBlob->Release();
-    }
-    return hr;
-  }
-
-  if (pErrorBlob)
-    pErrorBlob->Release();
-
-  return S_OK;
-}
-
-HRESULT Box::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight, Material material) {
-  boxMaterial = material; 
-
+HRESULT Box::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight) {
   // Compile the vertex shader
   ID3DBlob* pVSBlob = nullptr;
-  HRESULT hr = CompileShaderFromFile(L"cube_VS.hlsl", "main", "vs_5_0", &pVSBlob);
+  HRESULT hr = CompileShaderFromFile(L"box_VS.hlsl", "main", "vs_5_0", &pVSBlob);
   if (FAILED(hr))
   {
     MessageBox(nullptr,
@@ -78,7 +40,7 @@ HRESULT Box::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screen
 
   // Compile the pixel shader
   ID3DBlob* pPSBlob = nullptr;
-  hr = CompileShaderFromFile(L"cube_PS.hlsl", "main", "ps_5_0", &pPSBlob);
+  hr = CompileShaderFromFile(L"box_PS.hlsl", "main", "ps_5_0", &pPSBlob);
   if (FAILED(hr))
   {
     MessageBox(nullptr,
@@ -93,52 +55,10 @@ HRESULT Box::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screen
     return hr;
 
   // Create vertex buffer
-  // Create vertex buffer
-  BoxVertex vertices[] = {
-    {{-5, -5,  5}, {0, -1, 0}, {1, 0, 0}},
-    {{ 5, -5,  5}, {0, -1, 0}, {1, 0, 0}},
-    {{ 5, -5, -5}, {0, -1, 0}, {1, 0, 0}},
-    {{-5, -5, -5}, {0, -1, 0}, {1, 0, 0}},
-
-    {{-5,  5, -5}, {0, 1, 0}, {1, 0, 0}},
-    {{ 5,  5, -5}, {0, 1, 0}, {1, 0, 0}},
-    {{ 5,  5,  5}, {0, 1, 0}, {1, 0, 0}},
-    {{-5,  5,  5}, {0, 1, 0}, {1, 0, 0}},
-
-    {{ 5, -5, -5}, {1, 0, 0}, {0, 0, 1}},
-    {{ 5, -5,  5}, {1, 0, 0}, {0, 0, 1}},
-    {{ 5,  5,  5}, {1, 0, 0}, {0, 0, 1}},
-    {{ 5,  5, -5}, {1, 0, 0}, {0, 0, 1}},
-
-    {{-5, -5,  5}, {-1, 0, 0}, {0, 0, -1}},
-    {{-5, -5, -5}, {-1, 0, 0}, {0, 0, -1}},
-    {{-5,  5, -5}, {-1, 0, 0}, {0, 0, -1}},
-    {{-5,  5,  5}, {-1, 0, 0}, {0, 0, -1}},
-
-    {{ 5, -5,  5}, {0, 0, 1}, {-1, 0, 0}},
-    {{-5, -5,  5}, {0, 0, 1}, {-1, 0, 0}},
-    {{-5,  5,  5}, {0, 0, 1}, {-1, 0, 0}},
-    {{ 5,  5,  5}, {0, 0, 1}, {-1, 0, 0}},
-
-    {{-5, -5, -5}, {0, 0, -1}, {1, 0, 0}},
-    {{ 5, -5, -5}, {0, 0, -1}, {1, 0, 0}},
-    {{ 5,  5, -5}, {0, 0, -1}, {1, 0, 0}},
-    {{-5,  5, -5}, {0, 0, -1}, {1, 0, 0}}
-  };
-
-  USHORT indices[] = {
-        0, 2, 1, 0, 3, 2,
-        4, 6, 5, 4, 7, 6,
-        8, 10, 9, 8, 11, 10,
-        12, 14, 13, 12, 15, 14,
-        16, 18, 17, 16, 19, 18,
-        20, 22, 21, 20, 23, 22
-  };
-
   D3D11_BUFFER_DESC bd;
   ZeroMemory(&bd, sizeof(bd));
   bd.Usage = D3D11_USAGE_IMMUTABLE;
-  bd.ByteWidth = sizeof(vertices);
+  bd.ByteWidth = sizeof(BoxVertex) * vertices.size();
   bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
   bd.CPUAccessFlags = 0;
   bd.MiscFlags = 0;
@@ -146,9 +66,9 @@ HRESULT Box::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screen
 
   D3D11_SUBRESOURCE_DATA InitData;
   ZeroMemory(&InitData, sizeof(InitData));
-  InitData.pSysMem = &vertices;
-  InitData.SysMemPitch = sizeof(vertices);
-  InitData.SysMemSlicePitch = 0;
+  InitData.pSysMem = &vertices[0];
+  /*InitData.SysMemPitch = sizeof(vertices);
+  InitData.SysMemSlicePitch = 0;*/
 
   hr = device->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
   if (FAILED(hr))
@@ -158,7 +78,7 @@ HRESULT Box::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screen
   D3D11_BUFFER_DESC bd1;
   ZeroMemory(&bd1, sizeof(bd1));
   bd1.Usage = D3D11_USAGE_IMMUTABLE;
-  bd1.ByteWidth = sizeof(indices);
+  bd1.ByteWidth = sizeof(unsigned short) * indices.size();
   bd1.BindFlags = D3D11_BIND_INDEX_BUFFER;
   bd1.CPUAccessFlags = 0;
   bd1.MiscFlags = 0;
@@ -166,9 +86,9 @@ HRESULT Box::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screen
 
   D3D11_SUBRESOURCE_DATA InitData1;
   ZeroMemory(&InitData1, sizeof(InitData1));
-  InitData1.pSysMem = &indices;
-  InitData1.SysMemPitch = sizeof(indices);
-  InitData1.SysMemSlicePitch = 0;
+  InitData1.pSysMem = &indices[0];
+  //InitData1.SysMemPitch = sizeof(indices);
+  //InitData1.SysMemSlicePitch = 0;
 
   hr = device->CreateBuffer(&bd1, &InitData1, &g_pIndexBuffer);
   if (FAILED(hr))
@@ -253,12 +173,12 @@ void Box::Render(ID3D11DeviceContext* context) {
   context->IASetInputLayout(g_pVertexLayout);
   context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   context->VSSetShader(g_pVertexShader, nullptr, 0);
-  // TODO : Check for correct scene matrix buffer
+  
   context->VSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
   context->VSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
 
   context->PSSetShader(g_pPixelShader, nullptr, 0);
-  // TODO : Check for correct scene matrix buffer
+  
   context->PSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
   context->PSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
   
@@ -266,7 +186,7 @@ void Box::Render(ID3D11DeviceContext* context) {
 }
 
 
-bool Box::Frame(ID3D11DeviceContext* context, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, std::vector<Light>& lights) {
+HRESULT Box::Update(ID3D11DeviceContext* context, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, std::vector<Light>& lights) {
   // Update world matrix angle of first cube
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = worldMatrix;
@@ -282,11 +202,11 @@ bool Box::Frame(ID3D11DeviceContext* context, XMMATRIX& worldMatrix, XMMATRIX& v
   LightableSceneMatrixBuffer& sceneBuffer = *reinterpret_cast<LightableSceneMatrixBuffer*>(subresource.pData);
   sceneBuffer.viewProjectionMatrix = XMMatrixMultiply(viewMatrix, projectionMatrix);
   sceneBuffer.cameraPos = XMFLOAT4(XMVectorGetX(cameraPos), XMVectorGetY(cameraPos), XMVectorGetZ(cameraPos), 1.0f);
-  sceneBuffer.ambientColor = XMFLOAT4(0.6f, 0.6f, 0.3f, 1.0f);
+  sceneBuffer.ambientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
   sceneBuffer.lightCount = XMINT4((int32_t)lights.size(), 0, 0, 0);
   for (int i = 0; i < lights.size(); i++) {
-    sceneBuffer.lightPos[i] = lights[i].GetPosition();
-    sceneBuffer.lightColor[i] = lights[i].GetColor();
+    sceneBuffer.lightPos[i] = lights[i].GetLightPosition();
+    sceneBuffer.lightColor[i] = lights[i].GetLightColor();
   }
 
   context->Unmap(g_pSceneMatrixBuffer, 0);

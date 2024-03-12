@@ -27,7 +27,7 @@ public:
   HRESULT Init(const HWND& hWnd, const HINSTANCE& g_hInstance, UINT screenWidth, UINT screenHeight);
 
   // Update frame method
-  bool Frame();
+  bool Update();
 
   // Scene render method
   HRESULT Render();

@@ -25,17 +25,8 @@
     <Filter Include="Исходные файлы\Shaders">
       <UniqueIdentifier>{cd3b70e3-fd1a-4623-b3b5-8ce31dcbf2d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\Shaders\Cube">
-      <UniqueIdentifier>{72b860e7-69dd-43ac-992b-a25df9b051c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Исходные файлы\Scene">
       <UniqueIdentifier>{53e743d6-20df-4c06-aaeb-49dc9252de00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Scene\Light">
-      <UniqueIdentifier>{b1a4c9cf-a865-4c45-b1bb-281bdd719169}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Scene\Box">
-      <UniqueIdentifier>{feb18c61-634f-4007-b341-8144078e5492}</UniqueIdentifier>
     </Filter>
     <Filter Include="Исходные файлы\Shaders\Light">
       <UniqueIdentifier>{d25b49f8-2c11-4155-b9bd-af699dcb59ca}</UniqueIdentifier>
@@ -58,6 +49,33 @@
     <Filter Include="Исходные файлы\Shaders\Postprocessing\Tonemapping">
       <UniqueIdentifier>{5f5c7085-c304-4914-99dd-2e604d8fc616}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\GeomPrimitives">
+      <UniqueIdentifier>{5f782c16-013a-4c4c-b1e7-d2ab6eee1a7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\GeomPrimitives\Box">
+      <UniqueIdentifier>{cafa99f5-666e-40e6-9b3b-862267fa305c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\GeomPrimitives\Sphere">
+      <UniqueIdentifier>{c757b504-6ba5-4591-910f-6456e93a0406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives">
+      <UniqueIdentifier>{2507c943-aa20-4a65-ac1e-92a847851a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives\Base class">
+      <UniqueIdentifier>{db3a518d-6c99-473d-a15c-4a14d927fafc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives\Box">
+      <UniqueIdentifier>{feb18c61-634f-4007-b341-8144078e5492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives\Sphere">
+      <UniqueIdentifier>{64909006-55a6-4067-9fe8-de3ef60e8048}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered light">
+      <UniqueIdentifier>{75fd7c99-dc4e-4d3f-964e-118436a4b963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Box">
+      <UniqueIdentifier>{72b860e7-69dd-43ac-992b-a25df9b051c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h">
@@ -76,10 +94,7 @@
       <Filter>Исходные файлы\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
-      <Filter>Исходные файлы\Scene\Box</Filter>
-    </ClInclude>
-    <ClInclude Include="light.h">
-      <Filter>Исходные файлы\Scene\Light</Filter>
+      <Filter>Исходные файлы\Scene\Rendered primitives\Box</Filter>
     </ClInclude>
     <ClInclude Include="sceneConstantBuffer.h">
       <Filter>Исходные файлы\Shaders</Filter>
@@ -99,6 +114,21 @@
     <ClInclude Include="screenplane.h">
       <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
     </ClInclude>
+    <ClInclude Include="rendered.h">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Base class</Filter>
+    </ClInclude>
+    <ClInclude Include="geomBox.h">
+      <Filter>Исходные файлы\GeomPrimitives\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="geomSphere.h">
+      <Filter>Исходные файлы\GeomPrimitives\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Исходные файлы\Scene\Rendered light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -117,10 +147,7 @@
       <Filter>Исходные файлы\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Box.cpp">
-      <Filter>Исходные файлы\Scene\Box</Filter>
-    </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>Исходные файлы\Scene\Light</Filter>
+      <Filter>Исходные файлы\Scene\Rendered primitives\Box</Filter>
     </ClCompile>
     <ClCompile Include="D3DInclude.cpp">
       <Filter>D3DInclude</Filter>
@@ -134,6 +161,21 @@
     <ClCompile Include="screenplane.cpp">
       <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
     </ClCompile>
+    <ClCompile Include="geomBox.cpp">
+      <Filter>Исходные файлы\GeomPrimitives\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="geomSphere.cpp">
+      <Filter>Исходные файлы\GeomPrimitives\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>Исходные файлы\Scene\Rendered light</Filter>
+    </ClCompile>
+    <ClCompile Include="rendered.cpp">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Base class</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Sphere</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="t2_tonemapping.rc">
@@ -141,16 +183,16 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="cube_PS.hlsl">
-      <Filter>Исходные файлы\Shaders\Cube</Filter>
+    <FxCompile Include="box_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\Box</Filter>
     </FxCompile>
-    <FxCompile Include="cube_VS.hlsl">
-      <Filter>Исходные файлы\Shaders\Cube</Filter>
+    <FxCompile Include="box_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\Box</Filter>
     </FxCompile>
-    <FxCompile Include="light_PS.hlsl">
+    <FxCompile Include="sphere_PS.hlsl">
       <Filter>Исходные файлы\Shaders\Light</Filter>
     </FxCompile>
-    <FxCompile Include="light_VS.hlsl">
+    <FxCompile Include="sphere_VS.hlsl">
       <Filter>Исходные файлы\Shaders\Light</Filter>
     </FxCompile>
     <FxCompile Include="BrightnessCalc.hlsl">

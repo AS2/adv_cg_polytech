@@ -216,13 +216,13 @@ void Renderer::HandleInput() {
 }
 
 // Update frame method
-bool Renderer::Frame() {
+bool Renderer::Update() {
   // update inputs
-  input.Frame();
+  input.Update();
   
   // update camera
   HandleInput();
-  camera.Frame();
+  camera.Update();
   PP.Update(pd3dDevice, pImmediateContext);
 
   // Get the view matrix
@@ -231,7 +231,7 @@ bool Renderer::Frame() {
   // Get the projection matrix
   XMMATRIX mProjection = XMMatrixPerspectiveFovLH(XM_PIDIV2, (FLOAT)input.GetWidth() / (FLOAT)input.GetHeight(), 0.01f, 100.0f);
   
-  HRESULT hr = sc.Frame(pImmediateContext, mView, mProjection, camera.GetPos());
+  HRESULT hr = sc.Update(pImmediateContext, mView, mProjection, camera.GetPos());
   if (FAILED(hr))
     return SUCCEEDED(hr);
 

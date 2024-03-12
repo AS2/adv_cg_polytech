@@ -2,20 +2,31 @@
 
 HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight) {
   // Init box
-  HRESULT hr = box.Init(device, context, screenWidth, screenHeight, {0.0f});
+  box = Box({ 0.0f });
+  box.Scale(3.0f);
+  box.Replace(0.0f, 2.0f, 0.0f);
+
+  HRESULT hr = box.Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;
 
   // Init lights
-  lights = std::vector<Light>(3);
-  hr = lights[0].Init(device, context, screenWidth, screenHeight, 
-    XMFLOAT4(1.f, 0.f, 0.0f, 1.0f), XMFLOAT4(0.f, 5.5f, 0.8f, 1.f));
-  hr = lights[1].Init(device, context, screenWidth, screenHeight, 
-    XMFLOAT4(0.f, 1.f, 0.0f, 5.0f), XMFLOAT4(0.8f, 5.5f, 0.f, 1.f));
-  hr = lights[2].Init(device, context, screenWidth, screenHeight, 
-    XMFLOAT4(0.f, 0.f, 1.0f, 10.0f), XMFLOAT4(0.0f, 5.5f, -0.8f, 1.f));
-  /*hr = lights[3].Init(device, context, screenWidth, screenHeight,
-    XMFLOAT4(1.f, 1.f, 1.0f, 1.f), XMFLOAT4(0.0f, 0.f, 0.f, 1.f));*/
+  lights.reserve(3);
+  lights.push_back(Light(XMFLOAT4(1.f, 0.f, 0.0f, 1.0f), 1.0f, 10U, 10U, 0.f, 5.5f, 0.8f));
+  lights.push_back(Light(XMFLOAT4(0.f, 1.f, 0.0f, 1.0f), 1.0f, 10U, 10U, 0.8f, 5.5f, 0.f));
+  lights.push_back(Light(XMFLOAT4(0.f, 0.f, 1.0f, 1.0f), 1.0f, 10U, 10U, 0.0f, 5.5f, -0.8f));
+  
+  hr = lights[0].Init(device, context, screenWidth, screenHeight);
+  if (FAILED(hr))
+    return hr;
+
+  hr = lights[1].Init(device, context, screenWidth, screenHeight);
+  if (FAILED(hr))
+    return hr; 
+  
+  hr = lights[2].Init(device, context, screenWidth, screenHeight);
+  if (FAILED(hr))
+    return hr;
 
 #ifdef _DEBUG
   hr = context->QueryInterface(__uuidof(pAnnotation), reinterpret_cast<void**>(&pAnnotation));
@@ -54,34 +65,31 @@ void Scene::Render(ID3D11DeviceContext* context) {
 #endif
 
   // Comment because depth buffer isnt implementet yet!
-  /*
-  for (auto& light : lights)
-    light.Render(context);
-  */
- }
+  /*for (auto& light : lights)
+    light.Render(context);*/
+}
 
-bool Scene::FrameBoxes(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
+bool Scene::UpdateBoxes(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
   // Update world matrix angle of first cube
   auto duration = 1.0f;// Timer::GetInstance().Clock();
   XMMATRIX worldMatrix = XMMatrixIdentity(); //XMMatrixRotationY((float)duration * angle_velocity * 0.5f)*XMMatrixRotationZ((float)(sin(duration * angle_velocity * 0.30) * 0.25f));
 
   // Update world matrix angle of second cube
-  box.Frame(context, worldMatrix, viewMatrix, projectionMatrix, cameraPos, lights);
+  box.Update(context, worldMatrix, viewMatrix, projectionMatrix, cameraPos, lights);
 
   return true;
 }
 
 
-bool Scene::Frame(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
-  FrameBoxes(context, viewMatrix, projectionMatrix, cameraPos);
+bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
+  UpdateBoxes(context, viewMatrix, projectionMatrix, cameraPos);
   
   for (auto& light : lights)
-    light.Frame(context, viewMatrix, projectionMatrix, cameraPos);
+    light.Update(context, viewMatrix, projectionMatrix, cameraPos);
   return true;
 }
 
 void Scene::Resize(int screenWidth, int screenHeight) {
-  box.Resize(screenWidth, screenHeight);
-  for (auto& light : lights)
-    light.Resize(screenWidth, screenHeight);
+  /*for (auto& light : lights)
+    light.Resize(screenWidth, screenHeight);*/
 };

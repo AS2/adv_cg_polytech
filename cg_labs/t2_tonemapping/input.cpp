@@ -46,7 +46,7 @@ HRESULT Input::InitInputs(const HINSTANCE& g_hInstance, const HWND& hwnd, UINT s
 }
 
 // Function to read the current state into state buffers
-bool Input::Frame() {
+bool Input::Update() {
   bool result;
 
   result = ReadKeyboard();

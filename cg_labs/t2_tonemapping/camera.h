@@ -7,7 +7,7 @@
 
 using namespace DirectX;
 
-#define MOVEMENT_DOWNSHIFTING 1000.f
+#define MOVEMENT_DOWNSHIFTING 300.f
 
 class Camera {
 public:
@@ -15,7 +15,7 @@ public:
   HRESULT InitCamera();
 
   // Update frame method
-  void Frame();
+  void Update();
 
   // Release method
   void Release() {};

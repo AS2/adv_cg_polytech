@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "rendered.h"
+#include "geomBox.h"
 #include "light.h"
 #include "D3DInclude.h"
 
@@ -14,38 +16,40 @@
 
 using namespace DirectX;
 
-class Box {
+class Box : public GeomBox, Rendered {
 private:
   struct Material {
     float shine;
   };
 
 public:
-  HRESULT Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight, Material material);
+  Box(Material material, float xCenter = 0.0f, float yCenter = 0.0f, float zCenter = 0.0f, float scale = 1.0f, float xAngel = 0.0f, float yAngel = 0.0f, float zAngel = 0.0f)
+    : GeomBox(xCenter, yCenter, zCenter, scale, xAngel, yAngel, zAngel), boxMaterial(material) {};
 
-  void Release();
+  HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, std::vector<Light>& lights);
 
-  void Resize(int screenWidth, int screenHeight) {};
+  HRESULT Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight);
 
   void Render(ID3D11DeviceContext* context);
 
-  bool Frame(ID3D11DeviceContext* context, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, std::vector<Light>& lights);
-
+  void Release();
 private:
-  struct BoxVertex
-  {
-    XMFLOAT3 pos;       // positional coords
-    XMFLOAT3 normal;    // normal vec
-    XMFLOAT3 tangent;   // tangent vec
-  };
-
+  // Box buffers
   struct WorldMatrixBuffer {
     XMMATRIX worldMatrix;
     XMFLOAT4 color;
   };
+  struct LightableSceneMatrixBuffer {
+    XMMATRIX viewProjectionMatrix;
+    XMFLOAT4 cameraPos;
+    XMINT4 lightCount;
+    XMFLOAT4 lightPos[MAX_LIGHT_SOURCES];
+    XMFLOAT4 lightColor[MAX_LIGHT_SOURCES];
+    XMFLOAT4 ambientColor;
+  };
 
-  HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
-  Material boxMaterial;
+  // Box data
+  Material boxMaterial = { 0.0f };
 
   // dx11 vars
   ID3D11VertexShader* g_pVertexShader = nullptr;
@@ -57,13 +61,4 @@ private:
   ID3D11Buffer* g_pSceneMatrixBuffer = nullptr;
   ID3D11RasterizerState* g_pRasterizerState = nullptr;
   ID3D11Buffer *g_pWorldMatrixBuffer = nullptr;
-
-  struct LightableSceneMatrixBuffer {
-    XMMATRIX viewProjectionMatrix;
-    XMFLOAT4 cameraPos;
-    XMINT4 lightCount;
-    XMFLOAT4 lightPos[MAX_LIGHT_SOURCES];
-    XMFLOAT4 lightColor[MAX_LIGHT_SOURCES];
-    XMFLOAT4 ambientColor;
-  };
 };

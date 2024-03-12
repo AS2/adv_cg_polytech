@@ -23,13 +23,13 @@ HRESULT Camera::InitCamera() {
     cosf(upTheta) * sinf(phi), 0.0f
   );
 
-  Frame();
+  Update();
 
   return S_OK;
 }
 
 // Update frame method
-void Camera::Frame() {
+void Camera::Update() {
   viewMatrix = DirectX::XMMatrixLookAtLH(pos, pointOfInterest, up);
 }
 

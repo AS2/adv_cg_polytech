@@ -84,12 +84,12 @@ HRESULT ScreenPlane::Init(
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.CPUAccessFlags = 0u;
 	bd.MiscFlags = 0u;
-	bd.ByteWidth = sizeof(m_vertices);
+	bd.ByteWidth = sizeof(vertices);
 	bd.StructureByteStride = sizeof(ProcessTextureVertex);
 
 	D3D11_SUBRESOURCE_DATA sd = {};
 	ZeroMemory(&sd, sizeof(sd));
-	sd.pSysMem = m_vertices;
+	sd.pSysMem = vertices;
 
 	hr = pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer);
 	if (FAILED(hr))
@@ -101,10 +101,10 @@ HRESULT ScreenPlane::Init(
 	ibd.Usage = D3D11_USAGE_DEFAULT;
 	ibd.CPUAccessFlags = 0u;
 	ibd.MiscFlags = 0u;
-	ibd.ByteWidth = sizeof(m_indices);
+	ibd.ByteWidth = sizeof(indices);
 	ibd.StructureByteStride = sizeof(unsigned short);
 	D3D11_SUBRESOURCE_DATA isd = {};
-	isd.pSysMem = m_indices;
+	isd.pSysMem = indices;
 
 	hr = pDevice->CreateBuffer(&ibd, &isd, &pIndexBuffer);
 	if (FAILED(hr))
@@ -121,7 +121,7 @@ void ScreenPlane::Render(
 
 	pContext->IASetVertexBuffers(0u, 1u, &pVertexBuffer, &stride, &offset);
 	pContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0u);
-	pContext->DrawIndexed((UINT)std::size(m_indices), 0u, 0u);
+	pContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);
 }
 
 void ScreenPlane::Release() {
