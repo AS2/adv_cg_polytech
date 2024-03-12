@@ -276,6 +276,7 @@ HRESULT Renderer::Render() {
 }
 
 void Renderer::CleanupDevice() {
+  PP.Release();
   camera.Release();
   input.Release();
   sc.Release();
@@ -283,6 +284,8 @@ void Renderer::CleanupDevice() {
 #ifdef _DEBUG
   if (pAnnotation) pAnnotation->Release();
 #endif
+  if (pPostProcessedTexture)
+    delete pPostProcessedTexture;
 
   if (pRenderedSceneTexture) 
     delete pRenderedSceneTexture;

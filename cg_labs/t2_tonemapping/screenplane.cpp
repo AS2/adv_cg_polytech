@@ -125,10 +125,10 @@ void ScreenPlane::Render(
 }
 
 void ScreenPlane::Release() {
-	if (pVertexBuffer) pVertexBuffer->Release();
 	if (pIndexBuffer) pIndexBuffer->Release();
-	if (pVertexShader) pVertexShader->Release();
+	if (pVertexBuffer) pVertexBuffer->Release();
 	if (pProcessTextureLayout) pProcessTextureLayout->Release();
+	if (pVertexShader) pVertexShader->Release();
 }
 
 void ScreenPlane::setVS(

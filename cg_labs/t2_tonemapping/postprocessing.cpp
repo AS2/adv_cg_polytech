@@ -287,15 +287,19 @@ void Postprocessing::processTexture(
 }
 
 void Postprocessing::Release() {
+	clearScaledHDRTargets();
+
 	if (PSConstantBuffer) PSConstantBuffer->Release();
+
+	screenPlane.Release();
+
 	if (pSamplerState) pSamplerState->Release();
+
 	if (pAverageLumenCPUTexture) pAverageLumenCPUTexture->Release();
+
 	if (PSHdr) PSHdr->Release();
 	if (PSCopy) PSCopy->Release();
 	if (PSBrightness) PSBrightness->Release();
-
-	screenPlane.Release();
-	clearScaledHDRTargets();
 }
 
 void Postprocessing::clearScaledHDRTargets() {
@@ -303,8 +307,4 @@ void Postprocessing::clearScaledHDRTargets() {
 		delete scaledHDRTargets[i];
 	}
 	scaledHDRTargets.clear();
-}
-
-Postprocessing::~Postprocessing() {
-	Release();
 }
