@@ -62,7 +62,7 @@ private:
 
 	std::chrono::steady_clock::time_point last; 
 	float prevExposure = 0;
-	const float eyeAdaptationS = .5f;
+	const float eyeAdaptationS = .30f;
 	ID3D11Buffer* PSConstantBuffer;
 
 	struct HDRConstantBuffer

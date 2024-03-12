@@ -219,16 +219,20 @@ HRESULT Light::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
 }
 
 void Light::ProvideInput(const Input& input) {
-  /*auto status = input.IsPlusMinusPressed();
-  color.w += status * 0.1f;
-  color.w = max(min(color.w, MAX_I), MIN_I);*/
+  // Presets: 0 - off, 1-9 = 2^key - 1
+  std::vector<UINT> keys_codes = { DIKEYBOARD_0, 
+    DIKEYBOARD_1, DIKEYBOARD_2, DIKEYBOARD_3, 
+    DIKEYBOARD_4, DIKEYBOARD_5, DIKEYBOARD_6, 
+    DIKEYBOARD_7, DIKEYBOARD_8, DIKEYBOARD_9 };
 
-  UINT keys_codes[] = {DIKEYBOARD_1, DIKEYBOARD_2, DIKEYBOARD_3, DIKEYBOARD_4,
-    DIKEYBOARD_5, DIKEYBOARD_6, DIKEYBOARD_7, DIKEYBOARD_8, DIKEYBOARD_9};
-
-  for (int i = 0; i < 9; i++)
+  for (int i = 0; i < keys_codes.size(); i++)
     if (input.IsKeyPressed(keys_codes[i]))
-      color.w = (float)std::pow(3, i) - 1.f;
+      color.w = (float)(std::pow(2, i) - 1.f);
+
+  // Smooth light changing
+  auto status = input.IsPlusMinusPressed();
+  color.w += status * 1.f;
+  color.w = max(min(color.w, MAX_I), MIN_I);
 }
 
 void Light::Release() {

@@ -51,7 +51,7 @@ private:
   UINT numSphereFaces = 0;
   float radius = 0.1f;
 
-  const float MIN_I = 0.1f, MAX_I = 2048.f;
+  const float MIN_I = 0.0f, MAX_I = 2048.f;
 
   XMFLOAT4 color;
   XMFLOAT4 position;
