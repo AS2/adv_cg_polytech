@@ -11,6 +11,7 @@ public:
 	HRESULT initResource(
 		ID3D11Device* pDevice,
 		ID3D11DeviceContext* pContext,
+		ID3D11DepthStencilView* _depthStencilView = nullptr,
 		ID3D11Resource* pBackBuffer = nullptr);
 	
 	void set(
@@ -45,9 +46,11 @@ public:
 private:
   int width, height;
   
-	ID3D11Texture2D* pTexture2D;
-	ID3D11RenderTargetView* pRenderTargetView;
-	ID3D11ShaderResourceView* pShaderResourceView;
+	ID3D11Texture2D* pTexture2D = nullptr;
+	ID3D11RenderTargetView* pRenderTargetView = nullptr;
+	ID3D11ShaderResourceView* pShaderResourceView = nullptr;
+
+	ID3D11DepthStencilView* depthStencilView = nullptr;
 
   D3D11_VIEWPORT vp;
 };

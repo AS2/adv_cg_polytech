@@ -45,6 +45,9 @@ private:
   // Initialization device method
   HRESULT InitDevice(const HWND& hWnd);
 
+  // Initialization device method
+  HRESULT InitDepthBuffer();
+
   void HandleInput();
 
   // DirectX11 variables
@@ -59,6 +62,9 @@ private:
   
   IDXGISwapChain*         pSwapChain = nullptr;
   IDXGISwapChain1*        pSwapChain1 = nullptr;
+
+  ID3D11Texture2D* pDepthBuffer = nullptr;
+  ID3D11DepthStencilView* pDepthBufferDSV = nullptr;
 
   RenderTargetTexture* pRenderedSceneTexture;
   RenderTargetTexture* pPostProcessedTexture;

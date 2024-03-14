@@ -273,8 +273,7 @@ void Postprocessing::processTexture(
 	ID3D11DeviceContext* pContext)
 {
 	ID3D11ShaderResourceView* const pSRV[1] = { nullptr };
-	//pContext->PSSetShaderResources(0u, 1u, pSRV);
-
+	
 	pContext->OMSetRenderTargets(0, nullptr, nullptr);
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

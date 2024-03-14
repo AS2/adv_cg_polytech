@@ -52,6 +52,30 @@
     <Filter Include="D3DInclude">
       <UniqueIdentifier>{f087653f-ae33-4704-a8f6-aaceef22d4dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Renderer\Postprocessing">
+      <UniqueIdentifier>{972d8f0c-a9eb-4fe6-a0d8-bda74cea6fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer\SceenPlane">
+      <UniqueIdentifier>{2760bf0e-da49-46f1-aeb2-53c58f8e9cc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer\RenderTargetTexture">
+      <UniqueIdentifier>{63cace9a-dee7-4ece-ac00-0c773f0dbd24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered light">
+      <UniqueIdentifier>{a24a547f-a970-4dd1-b6ca-44fbde1416d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives">
+      <UniqueIdentifier>{bf82fae2-ea51-487b-b912-be27045fe79f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives\Base class">
+      <UniqueIdentifier>{bfede99c-b6c7-4b84-90bf-a92c87faae08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives\Box">
+      <UniqueIdentifier>{2bac8914-b179-4002-b98c-5871b6a694b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered primitives\Sphere">
+      <UniqueIdentifier>{6a006713-ac73-4e8d-a162-450b9b8f1fdf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h">
@@ -69,20 +93,8 @@
     <ClInclude Include="sceneConstantBuffer.h">
       <Filter>Исходные файлы\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="postprocessing.h">
-      <Filter>Исходные файлы\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>Исходные файлы\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderTargetTexture.h">
-      <Filter>Исходные файлы\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="light.h">
-      <Filter>Исходные файлы\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="rendered.h">
-      <Filter>Исходные файлы\Scene</Filter>
     </ClInclude>
     <ClInclude Include="scene.h">
       <Filter>Исходные файлы\Scene</Filter>
@@ -90,20 +102,32 @@
     <ClInclude Include="geomSphere.h">
       <Filter>Исходные файлы\GeomPrimitives\Sphere</Filter>
     </ClInclude>
-    <ClInclude Include="Box.h">
-      <Filter>Исходные файлы\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Исходные файлы\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="D3DInclude.h">
       <Filter>D3DInclude</Filter>
     </ClInclude>
     <ClInclude Include="geomBox.h">
       <Filter>Исходные файлы\GeomPrimitives\Box</Filter>
     </ClInclude>
+    <ClInclude Include="renderTargetTexture.h">
+      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
+    </ClInclude>
     <ClInclude Include="screenplane.h">
-      <Filter>Исходные файлы\Renderer</Filter>
+      <Filter>Исходные файлы\Renderer\SceenPlane</Filter>
+    </ClInclude>
+    <ClInclude Include="postprocessing.h">
+      <Filter>Исходные файлы\Renderer\Postprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="rendered.h">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Base class</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Исходные файлы\Scene\Rendered light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,20 +140,8 @@
     <ClCompile Include="input.cpp">
       <Filter>Исходные файлы\Input</Filter>
     </ClCompile>
-    <ClCompile Include="postprocessing.cpp">
-      <Filter>Исходные файлы\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer.cpp">
       <Filter>Исходные файлы\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderTargetTexture.cpp">
-      <Filter>Исходные файлы\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>Исходные файлы\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="rendered.cpp">
-      <Filter>Исходные файлы\Scene</Filter>
     </ClCompile>
     <ClCompile Include="scene.cpp">
       <Filter>Исходные файлы\Scene</Filter>
@@ -137,20 +149,32 @@
     <ClCompile Include="geomSphere.cpp">
       <Filter>Исходные файлы\GeomPrimitives\Sphere</Filter>
     </ClCompile>
-    <ClCompile Include="Box.cpp">
-      <Filter>Исходные файлы\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Исходные файлы\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="D3DInclude.cpp">
       <Filter>D3DInclude</Filter>
     </ClCompile>
     <ClCompile Include="geomBox.cpp">
       <Filter>Исходные файлы\GeomPrimitives\Box</Filter>
     </ClCompile>
+    <ClCompile Include="renderTargetTexture.cpp">
+      <Filter>Исходные файлы\Renderer\RenderTargetTexture</Filter>
+    </ClCompile>
     <ClCompile Include="screenplane.cpp">
-      <Filter>Исходные файлы\Renderer</Filter>
+      <Filter>Исходные файлы\Renderer\SceenPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="postprocessing.cpp">
+      <Filter>Исходные файлы\Renderer\Postprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="rendered.cpp">
+      <Filter>Исходные файлы\Scene\Rendered primitives\Base class</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>Исходные файлы\Scene\Rendered light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

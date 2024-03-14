@@ -12,6 +12,7 @@ RenderTargetTexture::RenderTargetTexture(int width, int height) : width(width), 
 HRESULT RenderTargetTexture::initResource(
 	ID3D11Device* pDevice,
 	ID3D11DeviceContext* pContext,
+	ID3D11DepthStencilView* _depthStencilView,
 	ID3D11Resource* pBackBuffer)
 {
 	D3D11_TEXTURE2D_DESC td;
@@ -56,13 +57,16 @@ HRESULT RenderTargetTexture::initResource(
 		if (FAILED(hr))
 			return hr;
 	}
+
+	depthStencilView = _depthStencilView;
+	return S_OK;
 }
 
 void RenderTargetTexture::set(
 	ID3D11Device* pDevice,
 	ID3D11DeviceContext* pContext) const
 {
-	pContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);
+	pContext->OMSetRenderTargets(1, &pRenderTargetView, depthStencilView);
 	pContext->RSSetViewports(1u, &vp);
 }
 

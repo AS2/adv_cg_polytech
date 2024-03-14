@@ -143,6 +143,11 @@ HRESULT Renderer::InitDevice(const HWND& hWnd) {
   if (FAILED(hr))
     return hr;
 
+  // Create depth buffer
+  hr = InitDepthBuffer();
+  if (FAILED(hr))
+    return hr;
+
   // Create a render target view
   ID3D11Texture2D* pBackBuffer = nullptr;
   hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
@@ -167,17 +172,46 @@ HRESULT Renderer::InitDevice(const HWND& hWnd) {
 
   
   pRenderedSceneTexture = new RenderTargetTexture(width, height);
-  hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext);
+  hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext, pDepthBufferDSV);
   if (FAILED(hr))
     return hr;
 
   pPostProcessedTexture = new RenderTargetTexture(width, height);
-  hr = pPostProcessedTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
+  hr = pPostProcessedTexture->initResource(pd3dDevice, pImmediateContext, pDepthBufferDSV, pBackBuffer);
   if (FAILED(hr))
     return hr;
 
   pBackBuffer->Release();
+
   return S_OK;
+}
+
+HRESULT Renderer::InitDepthBuffer() {
+  D3D11_TEXTURE2D_DESC desc = {};
+  desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+  desc.ArraySize = 1;
+  desc.MipLevels = 1;
+  desc.Usage = D3D11_USAGE_DEFAULT;
+  desc.Height = input.GetHeight();
+  desc.Width = input.GetWidth();
+  desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+  desc.CPUAccessFlags = 0;
+  desc.MiscFlags = 0;
+  desc.SampleDesc.Count = 1;
+  desc.SampleDesc.Quality = 0;
+
+  HRESULT hr = pd3dDevice->CreateTexture2D(&desc, NULL, &pDepthBuffer);
+  if (FAILED(hr))
+    return hr;
+
+  D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+  dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+  dsvDesc.Texture2D.MipSlice = 0;
+  dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+  dsvDesc.Flags = 0;
+
+  hr = pd3dDevice->CreateDepthStencilView(pDepthBuffer, &dsvDesc, &pDepthBufferDSV);
+  return hr;
 }
 
 HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screenWidth, UINT screenHeight) {
@@ -248,25 +282,11 @@ HRESULT Renderer::Render() {
   pAnnotation->BeginEvent((LPCWSTR)(L"Clear background"));
 #endif
   pRenderedSceneTexture->clear(1.0f, 1.0f, 1.0f, pd3dDevice, pImmediateContext);
+  pPostProcessedTexture->clear(1.0f, 1.0f, 1.0f, pd3dDevice, pImmediateContext);
+  pImmediateContext->ClearDepthStencilView(pDepthBufferDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 #ifdef _DEBUG
   pAnnotation->EndEvent();
 #endif
-
-  D3D11_VIEWPORT viewport;
-  viewport.TopLeftX = 0;
-  viewport.TopLeftY = 0;
-  viewport.Width = (FLOAT)input.GetWidth();
-  viewport.Height = (FLOAT)input.GetHeight();
-  viewport.MinDepth = 0.0f;
-  viewport.MaxDepth = 1.0f;
-  pImmediateContext->RSSetViewports(1, &viewport);
-
-  D3D11_RECT rect;
-  rect.left = 0;
-  rect.top = 0;
-  rect.right = input.GetWidth();
-  rect.bottom = input.GetHeight();
-  pImmediateContext->RSSetScissorRects(1, &rect);
 
   sc.Render(pImmediateContext);
 
@@ -284,6 +304,10 @@ void Renderer::CleanupDevice() {
 #ifdef _DEBUG
   if (pAnnotation) pAnnotation->Release();
 #endif
+
+  if (pDepthBufferDSV) pDepthBufferDSV->Release();
+  if (pDepthBuffer) pDepthBuffer->Release();
+
   if (pPostProcessedTexture)
     delete pPostProcessedTexture;
 
@@ -327,11 +351,21 @@ HRESULT Renderer::ResizeWindow(const HWND& hWnd) {
       if (pPostProcessedTexture)
         pPostProcessedTexture->Release();
 
+      if (pDepthBuffer)
+        pDepthBuffer->Release();
+
+      if (pDepthBufferDSV)
+        pDepthBufferDSV->Release();
+      
       HRESULT hr = pSwapChain->ResizeBuffers(2, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
       if (SUCCEEDED(hr)) {
         input.Resize(width, height);
         sc.Resize(width, height);
       }
+
+      hr = InitDepthBuffer();
+      if (FAILED(hr))
+        return hr;
 
       // Create a render target view
       ID3D11Texture2D* pBackBuffer = nullptr;
@@ -341,12 +375,12 @@ HRESULT Renderer::ResizeWindow(const HWND& hWnd) {
       
       if (pRenderedSceneTexture) {
         pRenderedSceneTexture->setScreenSize(width, height);
-        hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext);
+        hr = pRenderedSceneTexture->initResource(pd3dDevice, pImmediateContext, pDepthBufferDSV);
         if (FAILED(hr))
           return hr;
 
         pPostProcessedTexture->setScreenSize(width, height);
-        hr = pPostProcessedTexture->initResource(pd3dDevice, pImmediateContext, pBackBuffer);
+        hr = pPostProcessedTexture->initResource(pd3dDevice, pImmediateContext, pDepthBufferDSV, pBackBuffer);
         if (FAILED(hr))
           return hr;
 
