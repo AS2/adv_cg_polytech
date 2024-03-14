@@ -137,7 +137,7 @@ void Sphere::Render(ID3D11DeviceContext* context) {
   context->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
   ID3D11Buffer* vertexBuffers[] = { g_pVertexBuffer };
-  UINT strides[] = { 12 };
+  UINT strides[] = { sizeof(SphereVertex) };
   UINT offsets[] = { 0 };
 
   context->IASetVertexBuffers(0, 1, vertexBuffers, strides, offsets);

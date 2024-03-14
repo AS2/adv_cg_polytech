@@ -2,8 +2,12 @@
 
 #include <vector>
 
+using namespace DirectX;
+
 class GeomSphere {
 public:
+  GeomSphere() {};
+
   GeomSphere(float radius, unsigned int LatLines = 10, unsigned intLongLines = 10,
     float xCenter = 0.0f, float yCenter = 0.0f, float zCenter = 0.0f) noexcept;
 
@@ -18,7 +22,9 @@ protected:
   // TODO: make uniform structure of vertexes for all geom primitives
   struct SphereVertex
   {
-    float x, y, z;      // positional coords
+    XMFLOAT3 pos;          // positional coords
+    //XMFLOAT3 norm;         // normal vec
+    //XMFLOAT3 tangent;      // tangent vec
   };
 
   void GenerateSphere(unsigned int LatLines, unsigned int LongLines);
@@ -26,11 +32,11 @@ protected:
   // Sphere light geometry params
   unsigned int numSphereVertices = 0;
   unsigned int numSphereFaces = 0;
-  float radius;
+  float radius = 1.0f;
   float sphereCenterX = 0, sphereCenterY = 0, sphereCenterZ = 0;
 
 
-  unsigned short vertices_cnt;
+  unsigned int vertices_cnt = 0;
   std::vector<SphereVertex> vertices;
-  std::vector<unsigned short> indices;
+  std::vector<unsigned int> indices;
 };

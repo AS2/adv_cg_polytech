@@ -1,30 +1,28 @@
 #include "scene.h"
 
 HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight) {
-  // Init box
-  box = Box({ 0.0f });
-  box.Scale(3.0f);
-  box.Replace(0.0f, 2.0f, 0.0f);
+  int square_size = 11;
+  HRESULT hr = S_OK;
 
-  HRESULT hr = box.Init(device, context, screenWidth, screenHeight);
-  if (FAILED(hr))
-    return hr;
+  spheres.resize(square_size * square_size);
+  for (int x = 0; x < square_size; x++)
+    for (int y = 0; y < square_size; y++) {
+      spheres[x * square_size + y] = Sphere(XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), 5.5f, 15, 15, -5, -7.5f + 1.5f * x, -7.5f + 1.5f * y);
+      hr = spheres[x * square_size + y].Init(device, context, screenWidth, screenHeight);
+      if (FAILED(hr))
+        return hr;
+    }
 
   // Init lights
-  lights.reserve(3);
-  lights.push_back(Light(XMFLOAT4(1.f, 0.f, 0.0f, 1.0f), 1.0f, 10U, 10U, 0.f, 5.5f, 0.8f));
-  lights.push_back(Light(XMFLOAT4(0.f, 1.f, 0.0f, 1.0f), 1.0f, 10U, 10U, 0.8f, 5.5f, 0.f));
-  lights.push_back(Light(XMFLOAT4(0.f, 0.f, 1.0f, 1.0f), 1.0f, 10U, 10U, 0.0f, 5.5f, -0.8f));
+  lights.reserve(1);
+  lights.push_back(Light(XMFLOAT4(1.f, 1.f, 1.0f, 1.0f), 1.0f, 10U, 10U, 0.f, 0.0f, 0.0f));
   
   hr = lights[0].Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;
 
-  hr = lights[1].Init(device, context, screenWidth, screenHeight);
-  if (FAILED(hr))
-    return hr; 
-  
-  hr = lights[2].Init(device, context, screenWidth, screenHeight);
+  sb = Skybox(L"./src/skybox.dds", 30, 30);
+  hr = sb.Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;
 
@@ -46,50 +44,44 @@ void Scene::Release() {
 #ifdef _DEBUG
   if (pAnnotation) pAnnotation->Release();
 #endif
+  sb.Release();
 
-  box.Release();
-
+  for (auto& sphere : spheres)
+    sphere.Release();
+  
   for (auto& light : lights)
     light.Release();
 }
 
 void Scene::Render(ID3D11DeviceContext* context) {
-  
+  /*sb.Render(context);*/
+
 #ifdef _DEBUG
-  pAnnotation->BeginEvent((LPCWSTR)L"Draw Cube");
+  pAnnotation->BeginEvent((LPCWSTR)L"Draw Spheres");
   std::string indexBufferName = "Indexes buffer", vertexBufferName = "Vertexes buffer";
 #endif
-  box.Render(context);
+  for (auto& sphere : spheres)
+    sphere.Render(context);
 #ifdef _DEBUG
   pAnnotation->EndEvent();
 #endif
 
-  // Comment because depth buffer isnt implementet yet!
-  /*for (auto& light : lights)
-    light.Render(context);*/
+  for (auto& light : lights)
+    light.Render(context);
 }
-
-bool Scene::UpdateBoxes(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
-  // Update world matrix angle of first cube
-  auto duration = 1.0f;// Timer::GetInstance().Clock();
-  XMMATRIX worldMatrix = XMMatrixIdentity(); //XMMatrixRotationY((float)duration * angle_velocity * 0.5f)*XMMatrixRotationZ((float)(sin(duration * angle_velocity * 0.30) * 0.25f));
-
-  // Update world matrix angle of second cube
-  box.Update(context, worldMatrix, viewMatrix, projectionMatrix, cameraPos, lights);
-
-  return true;
-}
-
 
 bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
-  UpdateBoxes(context, viewMatrix, projectionMatrix, cameraPos);
-  
+  sb.Update(context, viewMatrix, projectionMatrix, XMFLOAT3(XMVectorGetX(cameraPos), XMVectorGetY(cameraPos), XMVectorGetZ(cameraPos)));
+
+  for (auto& sphere : spheres)
+    sphere.Update(context, viewMatrix, projectionMatrix, cameraPos);
+
+
   for (auto& light : lights)
     light.Update(context, viewMatrix, projectionMatrix, cameraPos);
   return true;
 }
 
 void Scene::Resize(int screenWidth, int screenHeight) {
-  /*for (auto& light : lights)
-    light.Resize(screenWidth, screenHeight);*/
+  sb.Resize(screenWidth, screenHeight);
 };

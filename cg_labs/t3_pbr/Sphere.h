@@ -15,6 +15,8 @@ using namespace DirectX;
 
 class Sphere : public Rendered, GeomSphere {
 public:
+  Sphere() {};
+
   Sphere(XMFLOAT4 color, float radius, unsigned int LatLines = 10, unsigned intLongLines = 10, float xCenter = 0.0f, float yCenter = 0.0f, float zCenter = 0.0f)
     : color(color), GeomSphere(radius, LatLines, intLongLines, xCenter, yCenter, zCenter) {};
 

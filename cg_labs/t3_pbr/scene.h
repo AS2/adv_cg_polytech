@@ -10,7 +10,9 @@
 
 #include "input.h"
 #include "light.h"
+#include "Sphere.h"
 #include "box.h"
+#include "skybox.h"
 
 using namespace DirectX;
 
@@ -29,12 +31,12 @@ public:
   bool Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
 
 private:
-  bool UpdateBoxes(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
-
+  
 #ifdef _DEBUG
   ID3DUserDefinedAnnotation* pAnnotation = nullptr;
 #endif
 
-  Box box = Box({0.0f});
+  std::vector<Sphere> spheres;
   std::vector<Light> lights;
+  Skybox sb;
 };
