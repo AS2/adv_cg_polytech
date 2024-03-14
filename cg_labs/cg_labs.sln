@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "t1_debugger", "t1_debugger\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "t2_tonemapping", "t2_tonemapping\t2_tonemapping.vcxproj", "{1AABEB2B-C5D6-47E2-979D-8688AF5DABFB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "t3_pbr", "t3_pbr\t3_pbr.vcxproj", "{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{1AABEB2B-C5D6-47E2-979D-8688AF5DABFB}.Release|x64.Build.0 = Release|x64
 		{1AABEB2B-C5D6-47E2-979D-8688AF5DABFB}.Release|x86.ActiveCfg = Release|Win32
 		{1AABEB2B-C5D6-47E2-979D-8688AF5DABFB}.Release|x86.Build.0 = Release|Win32
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Debug|x64.ActiveCfg = Debug|x64
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Debug|x64.Build.0 = Debug|x64
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Debug|x86.ActiveCfg = Debug|Win32
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Debug|x86.Build.0 = Debug|Win32
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Release|x64.ActiveCfg = Release|x64
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Release|x64.Build.0 = Release|x64
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Release|x86.ActiveCfg = Release|Win32
+		{2F3AF85E-5EB3-4CE4-86CA-8389749852C8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

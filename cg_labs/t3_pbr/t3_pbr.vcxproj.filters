@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene">
+      <UniqueIdentifier>{76d88377-dadc-4fc3-bc47-35618ca91a05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Camera">
+      <UniqueIdentifier>{9deafa3a-9f73-4608-9837-ba46407c9ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\GeomPrimitives">
+      <UniqueIdentifier>{0c697fe8-c20c-4470-b002-4abcacc17865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Input">
+      <UniqueIdentifier>{c1e683e9-aa05-4ac3-8540-c077cd46da89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer">
+      <UniqueIdentifier>{26e2ff5d-1166-46e5-95c1-07ff7947f34b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders">
+      <UniqueIdentifier>{235d0c35-332e-4597-8f22-be681d94144f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\GeomPrimitives\Box">
+      <UniqueIdentifier>{99a612e9-5564-4acf-bb2f-36ec31cffa0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\GeomPrimitives\Sphere">
+      <UniqueIdentifier>{a39ceb90-6e05-45e1-98ce-016ce709b185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Box">
+      <UniqueIdentifier>{c5e851c6-f1b1-46bd-9b74-d79de6f9d362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Light">
+      <UniqueIdentifier>{75a7bd44-8dbe-484b-8b7e-a4ca740f6df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Postprocessing">
+      <UniqueIdentifier>{ba7b2653-ef8f-4e13-a228-0138ead88fd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\Postprocessing\Tonemapping">
+      <UniqueIdentifier>{fadf7a16-ab57-42b6-9822-ec44dd6572a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3DInclude">
+      <UniqueIdentifier>{f087653f-ae33-4704-a8f6-aaceef22d4dc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource1.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Исходные файлы\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Исходные файлы\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="lightCalc.h">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneConstantBuffer.h">
+      <Filter>Исходные файлы\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="postprocessing.h">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderTargetTexture.h">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="rendered.h">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="geomSphere.h">
+      <Filter>Исходные файлы\GeomPrimitives\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DInclude.h">
+      <Filter>D3DInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="geomBox.h">
+      <Filter>Исходные файлы\GeomPrimitives\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="screenplane.h">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Исходные файлы\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Исходные файлы\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="postprocessing.cpp">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderTargetTexture.cpp">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="rendered.cpp">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="geomSphere.cpp">
+      <Filter>Исходные файлы\GeomPrimitives\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Исходные файлы\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DInclude.cpp">
+      <Filter>D3DInclude</Filter>
+    </ClCompile>
+    <ClCompile Include="geomBox.cpp">
+      <Filter>Исходные файлы\GeomPrimitives\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="screenplane.cpp">
+      <Filter>Исходные файлы\Renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="t3_pbr.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="box_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\Box</Filter>
+    </FxCompile>
+    <FxCompile Include="box_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\Box</Filter>
+    </FxCompile>
+    <FxCompile Include="sphere_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\Light</Filter>
+    </FxCompile>
+    <FxCompile Include="sphere_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\Light</Filter>
+    </FxCompile>
+    <FxCompile Include="BrightnessCalc.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing\Tonemapping</Filter>
+    </FxCompile>
+    <FxCompile Include="HDR.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing\Tonemapping</Filter>
+    </FxCompile>
+    <FxCompile Include="sampling_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing\Tonemapping</Filter>
+    </FxCompile>
+    <FxCompile Include="screen_plane_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\Postprocessing</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
