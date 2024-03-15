@@ -335,6 +335,9 @@ void Renderer::CleanupDevice() {
   if (pAnnotation) pAnnotation->Release();
 #endif
 
+  if (pDefaultDepthState) pDefaultDepthState->Release();
+  if (pNoDepthState) pNoDepthState->Release();
+
   if (pDepthBufferDSV) pDepthBufferDSV->Release();
   if (pDepthBuffer) pDepthBuffer->Release();
 
@@ -380,6 +383,12 @@ HRESULT Renderer::ResizeWindow(const HWND& hWnd) {
 
       if (pPostProcessedTexture)
         pPostProcessedTexture->Release();
+
+      if (pDefaultDepthState) 
+        pDefaultDepthState->Release();
+      
+      if (pNoDepthState) 
+        pNoDepthState->Release();
 
       if (pDepthBuffer)
         pDepthBuffer->Release();

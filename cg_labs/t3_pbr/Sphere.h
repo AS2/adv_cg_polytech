@@ -6,6 +6,7 @@
 #include <directxmath.h>
 #include <vector>
 
+#include "materials.h"
 #include "rendered.h"
 #include "geomSphere.h"
 #include "D3DInclude.h"
@@ -20,8 +21,11 @@ class Sphere : public Rendered, GeomSphere {
 public:
   Sphere() {};
 
-  Sphere(XMFLOAT4 color, float radius, XMFLOAT3 pos, unsigned int LatLines = 10, unsigned intLongLines = 10)
-    : color(color), GeomSphere(LatLines, intLongLines), pos(pos), radius(radius) {};
+  Sphere(XMFLOAT4 color, float radius, XMFLOAT3 pos, XMFLOAT3 albedo, float roughness, float metalness,
+    unsigned int LatLines = 10, unsigned intLongLines = 10)
+    : color(color), GeomSphere(LatLines, intLongLines), pos(pos), radius(radius),
+    pbrMaterial(albedo, roughness, metalness)
+  {};
 
   HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights);
 
@@ -48,6 +52,7 @@ protected:
   struct WorldMatrixBuffer {
     XMMATRIX worldMatrix;
     XMFLOAT4 color;
+    PBRMaterial pbrMaterial;
   };
 
   // dx11 vars
@@ -63,6 +68,7 @@ protected:
 
   // Sphere object params
   XMFLOAT4 color;
+  PBRMaterial pbrMaterial;
   float radius;
   XMFLOAT3 pos;
 };

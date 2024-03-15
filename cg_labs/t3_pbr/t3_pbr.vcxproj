@@ -152,6 +152,8 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="lightCalc.h" />
+    <ClInclude Include="materials.h" />
+    <ClInclude Include="PBR.h" />
     <ClInclude Include="postprocessing.h" />
     <ClInclude Include="rendered.h" />
     <ClInclude Include="renderer.h" />

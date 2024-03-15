@@ -163,6 +163,7 @@ void Sphere::Render(ID3D11DeviceContext* context) {
   context->VSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
   context->PSSetShader(g_pPixelShader, nullptr, 0);
   context->PSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
+  context->PSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
 
   context->DrawIndexed(numSphereFaces * 3, 0, 0);
 }
@@ -172,6 +173,7 @@ HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMAT
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = XMMatrixScaling(radius, radius, radius) * XMMatrixTranslation(pos.x, pos.y, pos.z);
   worldMatrixBuffer.color = color;
+  worldMatrixBuffer.pbrMaterial = pbrMaterial;
   
   context->UpdateSubresource(g_pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
 

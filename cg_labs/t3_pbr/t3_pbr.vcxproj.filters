@@ -88,14 +88,14 @@
     <Filter Include="Исходные файлы\Shaders\LightableModels">
       <UniqueIdentifier>{4edb1b69-7f37-4dd4-80de-40bc40bc5212}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\Shaders\LightableModels\LightableObjs">
-      <UniqueIdentifier>{37248fdc-f3a3-4dd3-a0c1-2545e78002b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Shaders\LightableModels\PBRColorObjs">
-      <UniqueIdentifier>{8b53c245-175b-4eeb-8c20-c559fa9363de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Исходные файлы\Shaders\RawColorfulObjs">
       <UniqueIdentifier>{f4158563-08aa-4744-adad-3fae9626a97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\LightableModels\LightableObjs">
+      <UniqueIdentifier>{8b53c245-175b-4eeb-8c20-c559fa9363de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\LightableModels\PBRColorObjs">
+      <UniqueIdentifier>{37248fdc-f3a3-4dd3-a0c1-2545e78002b0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -154,10 +154,16 @@
       <Filter>Исходные файлы\Materials\Texture\DDSLoader</Filter>
     </ClInclude>
     <ClInclude Include="lightCalc.h">
-      <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
+      <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
     </ClInclude>
     <ClInclude Include="sceneConstantBuffer.h">
       <Filter>Исходные файлы\Shaders\LightableModels</Filter>
+    </ClInclude>
+    <ClInclude Include="materials.h">
+      <Filter>Исходные файлы\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="PBR.h">
+      <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -241,16 +247,16 @@
       <Filter>Исходные файлы\Shaders\Skybox</Filter>
     </FxCompile>
     <FxCompile Include="sphere_PS.hlsl">
-      <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
+      <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
     </FxCompile>
     <FxCompile Include="sphere_VS.hlsl">
-      <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
+      <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
     </FxCompile>
     <FxCompile Include="box_PS.hlsl">
-      <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
+      <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
     </FxCompile>
     <FxCompile Include="box_VS.hlsl">
-      <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
+      <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
     </FxCompile>
     <FxCompile Include="no_lightning_VS.hlsl">
       <Filter>Исходные файлы\Shaders\RawColorfulObjs</Filter>
