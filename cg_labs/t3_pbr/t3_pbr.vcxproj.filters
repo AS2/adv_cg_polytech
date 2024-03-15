@@ -37,12 +37,6 @@
     <Filter Include="Исходные файлы\GeomPrimitives\Sphere">
       <UniqueIdentifier>{a39ceb90-6e05-45e1-98ce-016ce709b185}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\Shaders\Box">
-      <UniqueIdentifier>{c5e851c6-f1b1-46bd-9b74-d79de6f9d362}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Shaders\Light">
-      <UniqueIdentifier>{75a7bd44-8dbe-484b-8b7e-a4ca740f6df0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Исходные файлы\Shaders\Postprocessing">
       <UniqueIdentifier>{ba7b2653-ef8f-4e13-a228-0138ead88fd9}</UniqueIdentifier>
     </Filter>
@@ -91,6 +85,12 @@
     <Filter Include="Исходные файлы\Shaders\Skybox">
       <UniqueIdentifier>{ed1c6a0f-547d-4ae5-9496-6a6c6e26238e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Shaders\LightableObjs">
+      <UniqueIdentifier>{37248fdc-f3a3-4dd3-a0c1-2545e78002b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\RawColorObjs">
+      <UniqueIdentifier>{8b53c245-175b-4eeb-8c20-c559fa9363de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h">
@@ -101,12 +101,6 @@
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Исходные файлы\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="lightCalc.h">
-      <Filter>Исходные файлы\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="sceneConstantBuffer.h">
-      <Filter>Исходные файлы\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>Исходные файлы\Renderer</Filter>
@@ -152,6 +146,12 @@
     </ClInclude>
     <ClInclude Include="DDSTextureLoader.h">
       <Filter>Исходные файлы\Materials\Texture\DDSLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="lightCalc.h">
+      <Filter>Исходные файлы\Shaders\LightableObjs</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneConstantBuffer.h">
+      <Filter>Исходные файлы\Shaders\LightableObjs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -216,18 +216,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="box_PS.hlsl">
-      <Filter>Исходные файлы\Shaders\Box</Filter>
-    </FxCompile>
-    <FxCompile Include="box_VS.hlsl">
-      <Filter>Исходные файлы\Shaders\Box</Filter>
-    </FxCompile>
-    <FxCompile Include="sphere_PS.hlsl">
-      <Filter>Исходные файлы\Shaders\Light</Filter>
-    </FxCompile>
-    <FxCompile Include="sphere_VS.hlsl">
-      <Filter>Исходные файлы\Shaders\Light</Filter>
-    </FxCompile>
     <FxCompile Include="BrightnessCalc.hlsl">
       <Filter>Исходные файлы\Shaders\Postprocessing\Tonemapping</Filter>
     </FxCompile>
@@ -245,6 +233,18 @@
     </FxCompile>
     <FxCompile Include="skybox_VS.hlsl">
       <Filter>Исходные файлы\Shaders\Skybox</Filter>
+    </FxCompile>
+    <FxCompile Include="box_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\LightableObjs</Filter>
+    </FxCompile>
+    <FxCompile Include="box_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\LightableObjs</Filter>
+    </FxCompile>
+    <FxCompile Include="sphere_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\RawColorObjs</Filter>
+    </FxCompile>
+    <FxCompile Include="sphere_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\RawColorObjs</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

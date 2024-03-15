@@ -7,7 +7,7 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
   spheres.resize(square_size * square_size);
   for (int x = 0; x < square_size; x++)
     for (int y = 0; y < square_size; y++) {
-      spheres[x * square_size + y] = Sphere(XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), 5.5f, 15, 15, -5, -7.5f + 1.5f * x, -7.5f + 1.5f * y);
+      spheres[x * square_size + y] = Sphere(XMFLOAT4(0.1f * x, 0.1f * y, 0.0f, 1.0f), 5.5f, 15, 15, -5, -7.5f + 1.5f * x, -7.5f + 1.5f * y);
       hr = spheres[x * square_size + y].Init(device, context, screenWidth, screenHeight);
       if (FAILED(hr))
         return hr;
@@ -54,7 +54,7 @@ void Scene::Release() {
 }
 
 void Scene::Render(ID3D11DeviceContext* context) {
-  /*sb.Render(context);*/
+  sb.Render(context);
 
 #ifdef _DEBUG
   pAnnotation->BeginEvent((LPCWSTR)L"Draw Spheres");
@@ -75,7 +75,6 @@ bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX p
 
   for (auto& sphere : spheres)
     sphere.Update(context, viewMatrix, projectionMatrix, cameraPos);
-
 
   for (auto& light : lights)
     light.Update(context, viewMatrix, projectionMatrix, cameraPos);

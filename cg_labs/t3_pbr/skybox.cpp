@@ -1,4 +1,5 @@
 #include "skybox.h"
+#include "renderer.h"
 
 HRESULT Skybox::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight) {
   // Create index array
@@ -165,10 +166,11 @@ void Skybox::Resize(int screenWidth, int screenHeight) {
   float fov = XM_PI / 3;
   float halfW = tanf(fov / 2) * n;
   float halfH = float(screenHeight / screenWidth) * halfW;
-  radius = sqrtf(n * n + halfH * halfH + halfW * halfW) * 11.1f * 2.0f;
+  radius = sqrtf(n * n + halfH * halfH + halfW * halfW) * 30.1f * 2.0f;
 }
 
 void Skybox::Render(ID3D11DeviceContext* context) {
+  Renderer::GetInstance().EnableDepth(false);
   context->RSSetState(g_pRasterizerState);
 
   context->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
@@ -190,6 +192,7 @@ void Skybox::Render(ID3D11DeviceContext* context) {
   context->PSSetShader(g_pPixelShader, nullptr, 0);
 
   context->DrawIndexed(numSphereFaces * 3, 0, 0);
+  Renderer::GetInstance().EnableDepth(true);
 }
 
 bool Skybox::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMFLOAT3 cameraPos) {

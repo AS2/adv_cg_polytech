@@ -38,6 +38,9 @@ public:
   // Window resize method
   HRESULT ResizeWindow(const HWND& hWnd);
 
+  // Function to toggle depth
+  void EnableDepth(bool newState);
+
 private:
   // Private constructor (for singleton)
   Renderer() = default;
@@ -65,6 +68,8 @@ private:
 
   ID3D11Texture2D* pDepthBuffer = nullptr;
   ID3D11DepthStencilView* pDepthBufferDSV = nullptr;
+  ID3D11DepthStencilState* pDefaultDepthState = nullptr;
+  ID3D11DepthStencilState* pNoDepthState = nullptr;
 
   RenderTargetTexture* pRenderedSceneTexture;
   RenderTargetTexture* pPostProcessedTexture;
