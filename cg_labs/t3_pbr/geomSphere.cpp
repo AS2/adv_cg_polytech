@@ -16,13 +16,9 @@ void GeomSphere::GenerateSphere(unsigned int LatLines, unsigned int LongLines) {
 
   XMVECTOR currVertPos = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 
-  vertices[0].pos.x = 0.0f;
-  vertices[0].pos.y = 0.0f;
-  vertices[0].pos.z = 1.0f;
-
-  /*vertices[0].pos.x = vertices[0].norm.x = 0.0f;
+  vertices[0].pos.x = vertices[0].norm.x = 0.0f;
   vertices[0].pos.y = vertices[0].norm.y = 0.0f;
-  vertices[0].pos.z = vertices[0].norm.z = 1.0f;*/
+  vertices[0].pos.z = vertices[0].norm.z = 1.0f;
 
   for (unsigned int i = 0; i < LatLines - 2; i++) {
     spherePitch = (i + 1) * (XM_PI / (LatLines - 1));
@@ -32,23 +28,15 @@ void GeomSphere::GenerateSphere(unsigned int LatLines, unsigned int LongLines) {
       XMMATRIX Rotationy = XMMatrixRotationZ(sphereYaw);
       currVertPos = XMVector3TransformNormal(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), (Rotationx * Rotationy));
       currVertPos = XMVector3Normalize(currVertPos);
-      vertices[i * LongLines + j + 1].pos.x = XMVectorGetX(currVertPos);
-      vertices[i * LongLines + j + 1].pos.y = XMVectorGetY(currVertPos);
-      vertices[i * LongLines + j + 1].pos.z = XMVectorGetZ(currVertPos);
-
-      /*vertices[i * LongLines + j + 1].pos.x = vertices[i * LongLines + j + 1].norm.x = XMVectorGetX(currVertPos);
+      vertices[i * LongLines + j + 1].pos.x = vertices[i * LongLines + j + 1].norm.x = XMVectorGetX(currVertPos);
       vertices[i * LongLines + j + 1].pos.y = vertices[i * LongLines + j + 1].norm.y = XMVectorGetY(currVertPos);
-      vertices[i * LongLines + j + 1].pos.z = vertices[i * LongLines + j + 1].norm.z = XMVectorGetZ(currVertPos);*/
+      vertices[i * LongLines + j + 1].pos.z = vertices[i * LongLines + j + 1].norm.z = XMVectorGetZ(currVertPos);
     }
   }
-
-  vertices[numSphereVertices - 1].pos.x = 0.0f;
-  vertices[numSphereVertices - 1].pos.y = 0.0f;
-  vertices[numSphereVertices - 1].pos.z = -1.0f;
-
-  /*vertices[numSphereVertices - 1].pos.x = vertices[numSphereVertices - 1].norm.x = 0.0f;
+  
+  vertices[numSphereVertices - 1].pos.x = vertices[numSphereVertices - 1].norm.x = 0.0f;
   vertices[numSphereVertices - 1].pos.y = vertices[numSphereVertices - 1].norm.y = 0.0f;
-  vertices[numSphereVertices - 1].pos.z = vertices[numSphereVertices - 1].norm.z = -1.0f;*/
+  vertices[numSphereVertices - 1].pos.z = vertices[numSphereVertices - 1].norm.z = -1.0f;
 
   // generate indicies
   indices.resize(numSphereFaces * 3);
@@ -104,33 +92,8 @@ void GeomSphere::GenerateSphere(unsigned int LatLines, unsigned int LongLines) {
   return;
 }
 
-GeomSphere::GeomSphere(float radius, unsigned int LatLines, unsigned int LongLines, float xCenter, float yCenter, float zCenter) noexcept {
+GeomSphere::GeomSphere(unsigned int LatLines, unsigned int LongLines) noexcept {
   GenerateSphere(LatLines, LongLines);
-  Scale(radius);
-  Replace(xCenter, yCenter, zCenter);
-}
-
-void GeomSphere::Scale(float scale) noexcept {
-  scale = std::abs(scale);
-
-  for (size_t i = 0; i < vertices.size(); i++) {
-    vertices[i].pos.x *= scale;
-    vertices[i].pos.y *= scale;
-    vertices[i].pos.z *= scale;
-  }
-}
-
-void GeomSphere::Replace(float x, float y, float z) noexcept {
-  sphereCenterX += x;
-  sphereCenterY += y;
-  sphereCenterZ += z;
-
-  
-  for (size_t i = 0; i < vertices.size(); i++) {
-    vertices[i].pos.x += x;
-    vertices[i].pos.y += y;
-    vertices[i].pos.z += z;
-  }
 }
 
 GeomSphere::~GeomSphere() {

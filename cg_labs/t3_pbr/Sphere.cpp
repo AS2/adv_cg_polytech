@@ -4,6 +4,7 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   // Create index array
   static const D3D11_INPUT_ELEMENT_DESC InputDesc[] = {
       {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+      {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
   };
 
   D3D11_BUFFER_DESC descVert = {};
@@ -41,24 +42,35 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   // Compile shaders
   ID3D10Blob* vertexShaderBuffer = nullptr;
   ID3D10Blob* pixelShaderBuffer = nullptr;
-  int flags = 0;
-#ifdef _DEBUG
-  flags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
 
-  hr = D3DCompileFromFile(L"sphere_VS.hlsl", NULL, NULL, "main", "vs_5_0", flags, 0, &vertexShaderBuffer, NULL);
+  hr = CompileShaderFromFile(L"sphere_VS.hlsl", "main", "vs_5_0", &vertexShaderBuffer);
   if (FAILED(hr))
+  {
+    MessageBox(nullptr,
+      L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
     return hr;
+  }
 
-  hr = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &g_pVertexShader);
+  // Create the vertex shader
+  hr = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &g_pVertexShader);
   if (FAILED(hr))
+  {
+    vertexShaderBuffer->Release();
     return hr;
+  }
 
-  hr = D3DCompileFromFile(L"sphere_PS.hlsl", NULL, NULL, "main", "ps_5_0", flags, 0, &pixelShaderBuffer, NULL);
+  // Compile the pixel shader
+  hr = CompileShaderFromFile(L"sphere_PS.hlsl", "main", "ps_5_0", &pixelShaderBuffer);
   if (FAILED(hr))
+  {
+    MessageBox(nullptr,
+      L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
     return hr;
+  }
 
-  hr = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &g_pPixelShader);
+  // Create the pixel shader
+  hr = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, &g_pPixelShader);
+  pixelShaderBuffer->Release();
   if (FAILED(hr))
     return hr;
 
@@ -66,6 +78,9 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   hr = device->CreateInputLayout(InputDesc, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &g_pVertexLayout);
   if (FAILED(hr))
     return hr;
+
+
+  vertexShaderBuffer->Release();
 
   // Set constant buffers
   D3D11_BUFFER_DESC descWM = {};
@@ -152,24 +167,32 @@ void Sphere::Render(ID3D11DeviceContext* context) {
   context->DrawIndexed(numSphereFaces * 3, 0, 0);
 }
 
-bool Sphere::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
-  // Update world matrix
+HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights) {
+  // Update world matrix angle of first cube
   WorldMatrixBuffer worldMatrixBuffer;
-
-  worldMatrixBuffer.worldMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixTranslation(sphereCenterX, sphereCenterY, sphereCenterZ);
+  worldMatrixBuffer.worldMatrix = XMMatrixScaling(radius, radius, radius) * XMMatrixTranslation(pos.x, pos.y, pos.z);
   worldMatrixBuffer.color = color;
-
+  
   context->UpdateSubresource(g_pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
 
-  // Update Scene matrix
+  // Get the view matrix
   D3D11_MAPPED_SUBRESOURCE subresource;
   HRESULT hr = context->Map(g_pSceneMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
   if (FAILED(hr))
-    return hr;
+    return FAILED(hr);
 
   SceneMatrixBuffer& sceneBuffer = *reinterpret_cast<SceneMatrixBuffer*>(subresource.pData);
   sceneBuffer.viewProjectionMatrix = XMMatrixMultiply(viewMatrix, projectionMatrix);
+  sceneBuffer.cameraPos = XMFLOAT4(XMVectorGetX(cameraPos), XMVectorGetY(cameraPos), XMVectorGetZ(cameraPos), 1.0f);
+  sceneBuffer.ambientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+  sceneBuffer.lightCount = XMINT4((int32_t)lights.size(), 0, 0, 0);
+  for (int i = 0; i < lights.size(); i++) {
+    sceneBuffer.lightPos[i] = lights[i].GetLightPosition();
+    sceneBuffer.lightColor[i] = lights[i].GetLightColor();
+  }
+
   context->Unmap(g_pSceneMatrixBuffer, 0);
 
   return S_OK;
 }
+

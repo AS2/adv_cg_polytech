@@ -18,7 +18,7 @@ public:
   Skybox() {};
 
   Skybox(const std::wstring& texture_path, unsigned int LatLines = 10, unsigned intLongLines = 10)
-    : GeomSphere(1.0f, LatLines, intLongLines) {
+    : GeomSphere(LatLines, intLongLines) {
     txt_path = texture_path;
   };
 
@@ -42,6 +42,8 @@ private:
     XMMATRIX viewProjectionMatrix;
     XMFLOAT4 cameraPos;
   };
+
+  float radius = 1.0f;
 
   // dx11 vars
   ID3D11Buffer* g_pVertexBuffer = nullptr;

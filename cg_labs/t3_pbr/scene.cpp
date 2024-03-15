@@ -7,7 +7,7 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
   spheres.resize(square_size * square_size);
   for (int x = 0; x < square_size; x++)
     for (int y = 0; y < square_size; y++) {
-      spheres[x * square_size + y] = Sphere(XMFLOAT4(0.1f * x, 0.1f * y, 0.0f, 1.0f), 5.5f, 15, 15, -5, -7.5f + 1.5f * x, -7.5f + 1.5f * y);
+      spheres[x * square_size + y] = Sphere(XMFLOAT4(0.01f * x, 0.01f * y, 0.0f, 1.0f), 0.55f, XMFLOAT3(-5, -7.5f + 1.5f * x, -7.5f + 1.5f * y), 15, 15);
       hr = spheres[x * square_size + y].Init(device, context, screenWidth, screenHeight);
       if (FAILED(hr))
         return hr;
@@ -15,7 +15,7 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
 
   // Init lights
   lights.reserve(1);
-  lights.push_back(Light(XMFLOAT4(1.f, 1.f, 1.0f, 1.0f), 1.0f, 10U, 10U, 0.f, 0.0f, 0.0f));
+  lights.push_back(Light(XMFLOAT4(1.f, 1.f, 1.0f, 100.0f), 0.0f, 0.0f, 0.0f));
   
   hr = lights[0].Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
@@ -73,11 +73,12 @@ void Scene::Render(ID3D11DeviceContext* context) {
 bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
   sb.Update(context, viewMatrix, projectionMatrix, XMFLOAT3(XMVectorGetX(cameraPos), XMVectorGetY(cameraPos), XMVectorGetZ(cameraPos)));
 
-  for (auto& sphere : spheres)
-    sphere.Update(context, viewMatrix, projectionMatrix, cameraPos);
-
   for (auto& light : lights)
     light.Update(context, viewMatrix, projectionMatrix, cameraPos);
+  
+  for (auto& sphere : spheres)
+    sphere.Update(context, viewMatrix, projectionMatrix, cameraPos, lights);
+
   return true;
 }
 

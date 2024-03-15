@@ -2,7 +2,7 @@
 
 float3 CalculateColor(in float3 objColor, in float3 objNormal, in float3 pos, in float shine, in bool trans)
 {
-  float3 finalColor = float3(0, 0, 0);
+  float3 finalColor = objColor;
 
   [unroll]
   for (int i = 0; i < lightCount.x; i++) {

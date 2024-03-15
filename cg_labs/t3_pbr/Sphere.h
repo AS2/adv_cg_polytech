@@ -10,6 +10,9 @@
 #include "geomSphere.h"
 #include "D3DInclude.h"
 #include "input.h"
+#include "light.h"
+
+#define MAX_LIGHT_SOURCES 10
 
 using namespace DirectX;
 
@@ -17,15 +20,15 @@ class Sphere : public Rendered, GeomSphere {
 public:
   Sphere() {};
 
-  Sphere(XMFLOAT4 color, float radius, unsigned int LatLines = 10, unsigned intLongLines = 10, float xCenter = 0.0f, float yCenter = 0.0f, float zCenter = 0.0f)
-    : color(color), GeomSphere(radius, LatLines, intLongLines, xCenter, yCenter, zCenter) {};
+  Sphere(XMFLOAT4 color, float radius, XMFLOAT3 pos, unsigned int LatLines = 10, unsigned intLongLines = 10)
+    : color(color), GeomSphere(LatLines, intLongLines), pos(pos), radius(radius) {};
 
-  bool Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos);
-  
+  HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights);
+
 
   void SetWColor(float newW) { color.w = newW; };
-  XMFLOAT4 GetColor() { return color; };
-  XMFLOAT4 GetPosition() { return XMFLOAT4(sphereCenterX, sphereCenterY, sphereCenterZ, 1.f); };
+  XMFLOAT4 GetColor() const { return color; };
+  XMFLOAT4 GetPosition() const { return XMFLOAT4(pos.x, pos.y, pos.z, 1.f); };
 
   HRESULT Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight);
 
@@ -35,6 +38,11 @@ public:
 protected:
   struct SceneMatrixBuffer {
     XMMATRIX viewProjectionMatrix;
+    XMFLOAT4 cameraPos;
+    XMINT4 lightCount;
+    XMFLOAT4 lightPos[MAX_LIGHT_SOURCES];
+    XMFLOAT4 lightColor[MAX_LIGHT_SOURCES];
+    XMFLOAT4 ambientColor;
   };
 
   struct WorldMatrixBuffer {
@@ -55,4 +63,6 @@ protected:
 
   // Sphere object params
   XMFLOAT4 color;
+  float radius;
+  XMFLOAT3 pos;
 };

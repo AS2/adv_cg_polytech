@@ -5,6 +5,7 @@ HRESULT Skybox::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   // Create index array
   static const D3D11_INPUT_ELEMENT_DESC InputDesc[] = {
       {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+      {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
   };
 
   D3D11_BUFFER_DESC descVert = {};
@@ -180,7 +181,7 @@ void Skybox::Render(ID3D11DeviceContext* context) {
   ID3D11ShaderResourceView* resources[] = { txt.GetTexture() };
   context->PSSetShaderResources(0, 1, resources);
   ID3D11Buffer* vertexBuffers[] = { g_pVertexBuffer };
-  UINT strides[] = { 12 };
+  UINT strides[] = { sizeof(SphereVertex) };
   UINT offsets[] = { 0 };
 
   context->IASetVertexBuffers(0, 1, vertexBuffers, strides, offsets);

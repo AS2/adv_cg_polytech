@@ -24,7 +24,7 @@ private:
 
 public:
   Box(Material material, float xCenter = 0.0f, float yCenter = 0.0f, float zCenter = 0.0f, float scale = 1.0f, float xAngel = 0.0f, float yAngel = 0.0f, float zAngel = 0.0f)
-    : GeomBox(xCenter, yCenter, zCenter, scale, xAngel, yAngel, zAngel), boxMaterial(material) {};
+    : GeomBox(), boxMaterial(material), pos(XMFLOAT3(xCenter, yCenter, zCenter)) {};
 
   HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, std::vector<Light>& lights);
 
@@ -50,6 +50,7 @@ private:
 
   // Box data
   Material boxMaterial = { 0.0f };
+  XMFLOAT3 pos;
 
   // dx11 vars
   ID3D11VertexShader* g_pVertexShader = nullptr;
