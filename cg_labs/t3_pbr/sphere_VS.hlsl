@@ -1,10 +1,16 @@
 #include "sceneConstantBuffer.h"
 
 // Independet constant buffers for world and view projection matrixes
+struct PBRMaterial {
+  float3 albedo;
+  float roughness;
+  float metalness;
+};
+
 cbuffer WorldMatrixBuffer : register (b0)
 {
   float4x4 worldMatrix;
-  float4 color; // w - specular power
+  PBRMaterial pbrMaterial;
 };
 
 struct VS_INPUT

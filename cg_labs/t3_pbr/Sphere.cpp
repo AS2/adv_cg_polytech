@@ -172,7 +172,6 @@ HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMAT
   // Update world matrix angle of first cube
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = XMMatrixScaling(radius, radius, radius) * XMMatrixTranslation(pos.x, pos.y, pos.z);
-  worldMatrixBuffer.color = color;
   worldMatrixBuffer.pbrMaterial = pbrMaterial;
   
   context->UpdateSubresource(g_pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);

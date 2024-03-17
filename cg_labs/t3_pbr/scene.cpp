@@ -7,7 +7,7 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
   spheres.resize(square_size * square_size);
   for (int x = 0; x < square_size; x++)
     for (int y = 0; y < square_size; y++) {
-      spheres[x * square_size + y] = Sphere(XMFLOAT4(0.01f * x, 0.01f * y, 0.0f, 1.0f), 0.55f, XMFLOAT3(-5, -7.5f + 1.5f * x, -7.5f + 1.5f * y), 
+      spheres[x * square_size + y] = Sphere(0.55f, XMFLOAT3(-5, -7.5f + 1.5f * x, -7.5f + 1.5f * y), 
         XMFLOAT3(0.1f * x, 0.1f * y, 0.025f), 0.1f * x, 0.1f * y, 15, 15);
       hr = spheres[x * square_size + y].Init(device, context, screenWidth, screenHeight);
       if (FAILED(hr))

@@ -21,17 +21,15 @@ class Sphere : public Rendered, GeomSphere {
 public:
   Sphere() {};
 
-  Sphere(XMFLOAT4 color, float radius, XMFLOAT3 pos, XMFLOAT3 albedo, float roughness, float metalness,
+  Sphere(float radius, XMFLOAT3 pos, XMFLOAT3 albedo, float roughness, float metalness,
     unsigned int LatLines = 10, unsigned intLongLines = 10)
-    : color(color), GeomSphere(LatLines, intLongLines), pos(pos), radius(radius),
+    : GeomSphere(LatLines, intLongLines), pos(pos), radius(radius),
     pbrMaterial(albedo, roughness, metalness)
   {};
 
   HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights);
 
 
-  void SetWColor(float newW) { color.w = newW; };
-  XMFLOAT4 GetColor() const { return color; };
   XMFLOAT4 GetPosition() const { return XMFLOAT4(pos.x, pos.y, pos.z, 1.f); };
 
   HRESULT Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight);
@@ -51,7 +49,6 @@ protected:
 
   struct WorldMatrixBuffer {
     XMMATRIX worldMatrix;
-    XMFLOAT4 color;
     PBRMaterial pbrMaterial;
   };
 
@@ -67,7 +64,6 @@ protected:
   ID3D11PixelShader* g_pPixelShader = nullptr;
 
   // Sphere object params
-  XMFLOAT4 color;
   PBRMaterial pbrMaterial;
   float radius;
   XMFLOAT3 pos;
