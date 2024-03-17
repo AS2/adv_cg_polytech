@@ -156,11 +156,14 @@
     <ClInclude Include="lightCalc.h">
       <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
     </ClInclude>
-    <ClInclude Include="sceneConstantBuffer.h">
-      <Filter>Исходные файлы\Shaders\LightableModels</Filter>
-    </ClInclude>
     <ClInclude Include="materials.h">
       <Filter>Исходные файлы\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneConstantBuffer.h">
+      <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
+    </ClInclude>
+    <ClInclude Include="PBRBuffers.h">
+      <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
