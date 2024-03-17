@@ -29,6 +29,7 @@ public:
 
   HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights);
 
+  void ProvideInput(const Input& input);
 
   XMFLOAT4 GetPosition() const { return XMFLOAT4(pos.x, pos.y, pos.z, 1.f); };
 
@@ -47,9 +48,17 @@ protected:
     XMFLOAT4 ambientColor;
   };
 
+  enum PBRMode {
+    allPBR = 0,
+    normal,
+    geom,
+    fresnel
+  };
+
   struct WorldMatrixBuffer {
     XMMATRIX worldMatrix;
     PBRMaterial pbrMaterial;
+    PBRMode pbrMode;
   };
 
   // dx11 vars
@@ -65,6 +74,7 @@ protected:
 
   // Sphere object params
   PBRMaterial pbrMaterial;
+  PBRMode pbrMode = allPBR;
   float radius;
   XMFLOAT3 pos;
 };

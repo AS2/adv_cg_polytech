@@ -11,6 +11,7 @@ cbuffer WorldMatrixBuffer : register (b0)
 {
   float4x4 worldMatrix;
   PBRMaterial pbrMaterial;
+	int PBRMode;
 };
 
 struct PS_INPUT
@@ -48,7 +49,7 @@ float normalDistribution(float3 wPos, float3 norm, int lightIdx)
 	float alpha = min(max(pbrMaterial.roughness, 0.0001f), 1);
 	float alphaSqr = sqr(alpha);
 
-	float3 n = normalize(norm);//norm;
+	float3 n = norm;//normalize(norm);
 	return alphaSqr / (3.1415926 * sqr(sqr(posDot(n, h)) * (alphaSqr - 1) + 1));
 }
 
@@ -65,8 +66,8 @@ float geometry(float3 wPos, float3 norm, int lightIdx)
 	float3 h = normalize(l + v);
 	float alpha = min(max(pbrMaterial.roughness, 0.0001f), 1);
 	float k = sqr(alpha + 1) / 8;
-	
-	float3 n = normalize(norm);//norm
+
+	float3 n = norm;//normalize(norm);
 	return SchlickGGX(n, v, k) * SchlickGGX(n, l, k);
 }
 
@@ -82,20 +83,29 @@ float3 fresnel(float3 wPos, float3 norm, int lightIdx)
 
 float4 main(PS_INPUT input) : SV_Target0{
   float3 result = { 0.f, 0.f, 0.f };
-	for (uint i = 0; i < lightCount.x; ++i)
+	
+for (uint i = 0; i < lightCount.x; ++i)
 	{
 		float3 v = vecToCam(input.worldPos);
 		float3 l = vecToLight(lightPos[i].xyz, input.worldPos);
 		float3 n = normalize(input.normal.xyz);
 
-		float D = normalDistribution(input.worldPos.xyz, input.normal.xyz, i);
-		float G = geometry(input.worldPos.xyz, input.normal.xyz, i);
-		float3 F = fresnel(input.worldPos.xyz, input.normal.xyz, i);
+		float D = normalDistribution(input.worldPos.xyz, n, i);
+		float G = geometry(input.worldPos.xyz, n, i);
+		float3 F = fresnel(input.worldPos.xyz, n, i);
 
-		float3 result_add = (1 - F) * pbrMaterial.albedo / 3.1415926 * (1 - pbrMaterial.metalness) + D * F * G / (0.001f + 4 * (posDot(l, n) * posDot(v, n)));
-		
+		float3 result_add = {0.f, 0.f, 0.f};
+		if (PBRMode == 0) // all
+			result_add = (1 - F) * pbrMaterial.albedo / 3.1415926 * (1 - pbrMaterial.metalness) + D * F * G / (0.001f + 4 * (posDot(l, n) * posDot(v, n)));
+		else if (PBRMode == 1) // norm
+			result_add = D;
+		else if (PBRMode == 2)
+			result_add = G;
+		else
+			result_add = F;
+
 		result += result_add * (dot(l, n) > 0);
-	}
+}
 
   return float4(result, 1.0);
 }

@@ -173,6 +173,7 @@ HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMAT
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = XMMatrixScaling(radius, radius, radius) * XMMatrixTranslation(pos.x, pos.y, pos.z);
   worldMatrixBuffer.pbrMaterial = pbrMaterial;
+  worldMatrixBuffer.pbrMode = pbrMode;
   
   context->UpdateSubresource(g_pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
 
@@ -195,5 +196,16 @@ HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMAT
   context->Unmap(g_pSceneMatrixBuffer, 0);
 
   return S_OK;
+}
+
+void Sphere::ProvideInput(const Input& input) {
+  // Presets: Z - all PBR, X - normal, C - geom, V - frenzel
+  std::vector<UINT> keys_codes = { 
+    DIK_Z, DIK_X, DIK_C, DIK_V
+  };
+
+  for (int i = 0; i < keys_codes.size(); i++)
+    if (input.IsKeyPressed(keys_codes[i]))
+      pbrMode = PBRMode(i);
 }
 

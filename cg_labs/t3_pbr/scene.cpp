@@ -39,6 +39,9 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
 void Scene::ProvideInput(const Input& input) {
   for (auto& light : lights)
     light.ProvideInput(input);
+
+  for (auto& sphere : spheres)
+    sphere.ProvideInput(input);
 }
 
 void Scene::Release() {

@@ -11,6 +11,7 @@ cbuffer WorldMatrixBuffer : register (b0)
 {
   float4x4 worldMatrix;
   PBRMaterial pbrMaterial;
+  int PBRMode;
 };
 
 struct VS_INPUT
