@@ -46,7 +46,7 @@ float normalDistribution(float3 wPos, float3 norm, int lightIdx)
 	float3 v = vecToCam(wPos);
 	float3 l = vecToLight(lightPos[lightIdx].xyz, wPos);
 	float3 h = normalize(l + v);
-	float alpha = min(max(pbrMaterial.roughness, 0.0001f), 1);
+	float alpha = min(max(pbrMaterial.roughness, 0.01f), 1);
 	float alphaSqr = sqr(alpha);
 
 	float3 n = norm;//normalize(norm);
@@ -64,7 +64,7 @@ float geometry(float3 wPos, float3 norm, int lightIdx)
 	float3 v = vecToCam(wPos);
 	float3 l = vecToLight(lightPos[lightIdx].xyz, wPos);
 	float3 h = normalize(l + v);
-	float alpha = min(max(pbrMaterial.roughness, 0.0001f), 1);
+	float alpha = min(max(pbrMaterial.roughness, 0.01f), 1);
 	float k = sqr(alpha + 1) / 8;
 
 	float3 n = norm;//normalize(norm);
@@ -96,7 +96,7 @@ for (uint i = 0; i < lightCount.x; ++i)
 
 		float3 result_add = {0.f, 0.f, 0.f};
 		if (PBRMode == 0) // all
-			result_add = (1 - F) * pbrMaterial.albedo / 3.1415926 * (1 - pbrMaterial.metalness) + D * F * G / (0.001f + 4 * (posDot(l, n) * posDot(v, n)));
+			result_add = (1 - F) * pbrMaterial.albedo / 3.1415926 * (1 - pbrMaterial.metalness) + D * F * G / (0.01f + 4 * (posDot(l, n) * posDot(v, n)));
 		else if (PBRMode == 1) // norm
 			result_add = D;
 		else if (PBRMode == 2)
