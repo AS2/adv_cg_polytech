@@ -97,6 +97,15 @@
     <Filter Include="Исходные файлы\Shaders\LightableModels\PBRColorObjs">
       <UniqueIdentifier>{37248fdc-f3a3-4dd3-a0c1-2545e78002b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\ImGUIHandler">
+      <UniqueIdentifier>{dc102682-b812-4f6c-857a-dbdbc297844f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs">
+      <UniqueIdentifier>{9f085e88-e64a-4b23-b6d7-b72bf96bd6ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\ImGUI">
+      <UniqueIdentifier>{673f4ff8-4da2-476d-84f9-ff935d7c2333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h">
@@ -165,6 +174,33 @@
     <ClInclude Include="PBRBuffers.h">
       <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
     </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imconfig.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imgui.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imgui_impl_dx11.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imgui_impl_win32.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imgui_internal.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imstb_rectpack.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imstb_textedit.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ImGUI\imstb_truetype.h">
+      <Filter>libs\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGUIHandler.h">
+      <Filter>Исходные файлы\ImGUIHandler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -220,6 +256,24 @@
     </ClCompile>
     <ClCompile Include="DDSTextureLoader.cpp">
       <Filter>Исходные файлы\Materials\Texture\DDSLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ImGUI\imgui.cpp">
+      <Filter>libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ImGUI\imgui_demo.cpp">
+      <Filter>libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ImGUI\imgui_draw.cpp">
+      <Filter>libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ImGUI\imgui_impl_dx11.cpp">
+      <Filter>libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ImGUI\imgui_impl_win32.cpp">
+      <Filter>libs\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ImGUI\imgui_widgets.cpp">
+      <Filter>libs\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

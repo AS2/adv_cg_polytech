@@ -3,6 +3,14 @@
 
 using namespace DirectX;
 
+enum class PBRMode : int
+{
+	allPBR = 0,
+	normal = 1,
+	geom = 2,
+	fresnel = 3,
+};
+
 struct PBRMaterial {
 	XMFLOAT3 albedo;
 	float roughness;

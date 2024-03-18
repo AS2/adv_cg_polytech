@@ -48,13 +48,6 @@ protected:
     XMFLOAT4 ambientColor;
   };
 
-  enum PBRMode {
-    allPBR = 0,
-    normal,
-    geom,
-    fresnel
-  };
-
   struct WorldMatrixBuffer {
     XMMATRIX worldMatrix;
     PBRMaterial pbrMaterial;
@@ -74,7 +67,7 @@ protected:
 
   // Sphere object params
   PBRMaterial pbrMaterial;
-  PBRMode pbrMode = allPBR;
+  PBRMode pbrMode = PBRMode::allPBR;
   float radius;
   XMFLOAT3 pos;
 };

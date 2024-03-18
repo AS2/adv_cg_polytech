@@ -2,6 +2,7 @@
 #include <xstring>
 #include <mmsystem.h>
 
+#include "ImGUIHandler.h"
 #include "resource1.h"
 #include "renderer.h"
 
@@ -112,11 +113,17 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     return (int)msg.wParam;
 }
 
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 // Called every time the application receives a message
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     PAINTSTRUCT ps;
     HDC hdc;
+
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+      return true;
 
     switch (message)
     {

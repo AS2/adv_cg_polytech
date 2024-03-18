@@ -270,7 +270,8 @@ HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screen
   if (FAILED(hr))
     return hr;
 #endif
-
+    
+  ImGUIHandler::GetInstance().Init(hWnd, pd3dDevice, pImmediateContext);
   return S_OK;
 }
 
@@ -322,10 +323,14 @@ HRESULT Renderer::Render() {
 
   PP.applyTonemapEffect(pd3dDevice, pImmediateContext, pAnnotation, pRenderedSceneTexture, pPostProcessedTexture);
 
+  ImGUIHandler::GetInstance().Render();
+
   return pSwapChain->Present(0, 0);
 }
 
 void Renderer::CleanupDevice() {
+  ImGUIHandler::GetInstance().Release();
+
   PP.Release();
   camera.Release();
   input.Release();

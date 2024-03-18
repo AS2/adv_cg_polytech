@@ -8,6 +8,7 @@
 
 #include <ctime>
 
+#include "ImGUIHandler.h"
 #include "camera.h"
 #include "scene.h"
 #include "input.h"
@@ -52,6 +53,21 @@ private:
   HRESULT InitDepthBuffer();
 
   void HandleInput();
+
+  void InitImGUI(HWND window,
+    ID3D11Device* pDevice,
+    ID3D11DeviceContext* pContext)
+  {
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplWin32_Init(window);
+    ImGui_ImplDX11_Init(pDevice, pContext);
+  }
 
   // DirectX11 variables
   D3D_DRIVER_TYPE         driverType = D3D_DRIVER_TYPE_NULL;

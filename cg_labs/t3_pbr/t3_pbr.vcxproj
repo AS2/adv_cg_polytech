@@ -143,12 +143,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\libs\ImGUI\imconfig.h" />
+    <ClInclude Include="..\libs\ImGUI\imgui.h" />
+    <ClInclude Include="..\libs\ImGUI\imgui_impl_dx11.h" />
+    <ClInclude Include="..\libs\ImGUI\imgui_impl_win32.h" />
+    <ClInclude Include="..\libs\ImGUI\imgui_internal.h" />
+    <ClInclude Include="..\libs\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="..\libs\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="..\libs\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="D3DInclude.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="geomBox.h" />
     <ClInclude Include="geomSphere.h" />
+    <ClInclude Include="ImGUIHandler.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="lightCalc.h" />
@@ -167,6 +176,12 @@
     <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\libs\ImGUI\imgui.cpp" />
+    <ClCompile Include="..\libs\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="..\libs\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="..\libs\ImGUI\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\libs\ImGUI\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\libs\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="D3DInclude.cpp" />
