@@ -1,5 +1,4 @@
 #include "sphere.h"
-#include "ImGUIHandler.h"
 
 HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight) {
   // Create index array
@@ -169,12 +168,12 @@ void Sphere::Render(ID3D11DeviceContext* context) {
   context->DrawIndexed(numSphereFaces * 3, 0, 0);
 }
 
-HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights) {
+HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, const PBRMaterial& material, const PBRMode& mode) {
   // Update world matrix angle of first cube
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = XMMatrixScaling(radius, radius, radius) * XMMatrixTranslation(pos.x, pos.y, pos.z);
-  worldMatrixBuffer.pbrMaterial = ImGUIHandler::GetInstance().GetMaterial();// pbrMaterial;
-  worldMatrixBuffer.pbrMode = ImGUIHandler::GetInstance().GetMode();// pbrMode;
+  worldMatrixBuffer.pbrMaterial = material;// pbrMaterial;
+  worldMatrixBuffer.pbrMode = mode;// pbrMode;
   
   context->UpdateSubresource(g_pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
 

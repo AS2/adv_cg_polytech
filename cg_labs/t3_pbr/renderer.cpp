@@ -271,7 +271,7 @@ HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screen
     return hr;
 #endif
     
-  ImGUIHandler::GetInstance().Init(hWnd, pd3dDevice, pImmediateContext);
+  InitImGUI(hWnd, pd3dDevice, pImmediateContext);
   return S_OK;
 }
 
@@ -323,13 +323,15 @@ HRESULT Renderer::Render() {
 
   PP.applyTonemapEffect(pd3dDevice, pImmediateContext, pAnnotation, pRenderedSceneTexture, pPostProcessedTexture);
 
-  ImGUIHandler::GetInstance().Render();
+  PrepairImGuiFrame();
+  sc.RenderGUI();
+  RenderImGuiFrames();
 
   return pSwapChain->Present(0, 0);
 }
 
 void Renderer::CleanupDevice() {
-  ImGUIHandler::GetInstance().Release();
+  ReleaseImGui();
 
   PP.Release();
   camera.Release();

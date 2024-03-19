@@ -2,7 +2,6 @@
 #include <xstring>
 #include <mmsystem.h>
 
-#include "ImGUIHandler.h"
 #include "resource1.h"
 #include "renderer.h"
 

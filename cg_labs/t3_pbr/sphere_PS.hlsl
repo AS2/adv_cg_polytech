@@ -32,7 +32,7 @@ float normalDistribution(float3 wPos, float3 norm, int lightIdx)
 	float3 v = vecToCam(wPos);
 	float3 l = vecToLight(lightPos[lightIdx].xyz, wPos);
 	float3 h = normalize(l + v);
-	float alpha = min(max(pbrMaterial.roughness, 0.01f), 1);
+	float alpha = clamp(pbrMaterial.roughness, 0.001f, 1);
 	float alphaSqr = sqr(alpha);
 
 	float3 n = norm;//normalize(norm);
@@ -50,7 +50,7 @@ float geometry(float3 wPos, float3 norm, int lightIdx)
 	float3 v = vecToCam(wPos);
 	float3 l = vecToLight(lightPos[lightIdx].xyz, wPos);
 	float3 h = normalize(l + v);
-	float alpha = min(max(pbrMaterial.roughness, 0.01f), 1);
+	float alpha = clamp(pbrMaterial.roughness, 0.001f, 1);
 	float k = sqr(alpha + 1) / 8;
 
 	float3 n = norm;//normalize(norm);
@@ -82,7 +82,7 @@ float4 main(PS_INPUT input) : SV_Target0{
 
 		float3 result_add = {0.f, 0.f, 0.f};
 		if (PBRMode == 0)      // all
-			result_add = (1 - F) * pbrMaterial.albedo / 3.1415926 * (1 - pbrMaterial.metalness) + D * F * G / (0.01f + 4 * (posDot(l, n) * posDot(v, n)));
+			result_add = (1 - F) * pbrMaterial.albedo / 3.1415926 * (1 - pbrMaterial.metalness) + D * F * G / (0.001f + 4 * (posDot(l, n) * posDot(v, n)));
 		else if (PBRMode == 1) // norm distribution
 			result_add = D;
 		else if (PBRMode == 2) // geom
@@ -90,7 +90,8 @@ float4 main(PS_INPUT input) : SV_Target0{
 		else                   // fresnel
 			result_add = F;
 
-		result += result_add * (dot(l, n) > 0);
+		// dot(l, l) = ||l||^2 - как в законе обратных квадратов
+		result += clamp(lightColor[i] * result_add * lightColor[i].w / (dot(l, l) + 0.01f) * (dot(l, n) > 0), 0.0f, 1.0f);
 	}
 
   return float4(result, 1.0);

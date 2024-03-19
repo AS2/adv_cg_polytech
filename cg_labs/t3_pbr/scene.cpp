@@ -16,7 +16,7 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
 
   // Init lights
   lights.reserve(1);
-  lights.push_back(Light(XMFLOAT4(1.f, 1.f, 1.0f, 100.0f), 0.0f, 0.0f, 0.0f));
+  lights.push_back(Light(XMFLOAT4(1.f, 0.3f, 0.0f, 100.0f), 0.0f, 0.0f, 0.0f));
   
   hr = lights[0].Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
@@ -81,7 +81,7 @@ bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX p
     light.Update(context, viewMatrix, projectionMatrix, cameraPos);
   
   for (auto& sphere : spheres)
-    sphere.Update(context, viewMatrix, projectionMatrix, cameraPos, lights);
+    sphere.Update(context, viewMatrix, projectionMatrix, cameraPos, lights, pbrMaterial, pbrMode);
 
   return true;
 }
@@ -89,3 +89,34 @@ bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX p
 void Scene::Resize(int screenWidth, int screenHeight) {
   sb.Resize(screenWidth, screenHeight);
 };
+
+void Scene::RenderGUI() {
+  // Generate window
+  ImGui::Begin("Scene params");
+
+  // Enum pbr mode
+  ImGui::RadioButton("Full", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::allPBR));
+  ImGui::RadioButton("Normal distribution", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::normal));
+  ImGui::RadioButton("Geometry", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::geom));
+  ImGui::RadioButton("Fresnel", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::fresnel));
+
+  // PBR Materials params
+  ImGui::SliderFloat("Albedo-R", &pbrMaterial.albedo.x, 0, 1);
+  ImGui::SliderFloat("Albedo-G", &pbrMaterial.albedo.y, 0, 1);
+  ImGui::SliderFloat("Albedo-B", &pbrMaterial.albedo.z, 0, 1);
+  ImGui::SliderFloat("Roughness", &pbrMaterial.roughness, 0, 1);
+  ImGui::SliderFloat("Metalness ", &pbrMaterial.metalness, 0, 1);
+
+  for (int i = 0; i < lights.size(); i++) {
+    ImGui::Text((std::string("Light-") + std::to_string(i + 1)).c_str());
+    ImGui::SliderFloat("Color-R", &lights[i].GetLightColorRef()->x, 0, 1.f);
+    ImGui::SliderFloat("Color-G", &lights[i].GetLightColorRef()->y, 0, 1.f);
+    ImGui::SliderFloat("Color-B", &lights[i].GetLightColorRef()->z, 0, 1.f);
+    ImGui::SliderFloat("Intensity", &lights[i].GetLightColorRef()->w, 0, 10.0f);
+    ImGui::SliderFloat("Pos-X", &lights[i].GetLightPositionRef()->x, -100.f, 100.f);
+    ImGui::SliderFloat("Pos-Y", &lights[i].GetLightPositionRef()->y, -100.f, 100.f);
+    ImGui::SliderFloat("Pos-Z", &lights[i].GetLightPositionRef()->z, -100.f, 100.f);
+  }
+
+  ImGui::End();
+}

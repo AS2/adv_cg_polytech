@@ -157,7 +157,6 @@
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="geomBox.h" />
     <ClInclude Include="geomSphere.h" />
-    <ClInclude Include="ImGUIHandler.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="lightCalc.h" />

@@ -36,9 +36,9 @@ void Camera::Update() {
 void Camera::ProvideInput(const Input& input) {
   // handle camera rotations
   XMFLOAT3 mouseMove = input.IsMouseUsed();
-  Rotate(mouseMove.x * 2 / MOVEMENT_DOWNSHIFTING, mouseMove.y * 2 / MOVEMENT_DOWNSHIFTING, mouseMove.z * 2 / MOVEMENT_DOWNSHIFTING);
+  Rotate(mouseMove.x * 4 / MOVEMENT_DOWNSHIFTING, mouseMove.y * 4 / MOVEMENT_DOWNSHIFTING, mouseMove.z * 4 / MOVEMENT_DOWNSHIFTING);
 
-  float dx = 0, dy = 0, dz = 0;
+  float dx = 0, dz = 0;
   if (input.IsKeyPressed(DIK_W))  // forward
     dz += 1;
   if (input.IsKeyPressed(DIK_S))  // backward
@@ -49,15 +49,10 @@ void Camera::ProvideInput(const Input& input) {
   if (input.IsKeyPressed(DIK_D))  // left
     dx += 1;
 
-  if (input.IsKeyPressed(DIK_LCONTROL)) // down
-    dy -= 1;
-  if (input.IsKeyPressed(DIK_SPACE)) // up
-    dy += 1;
-
   XMVECTOR totalVec = XMVectorSet(dx, 0.0f, dz, 0.0f);
   auto viewVec = XMVector4Transform(totalVec, XMMatrixInverse(nullptr, viewMatrix));
 
-  Move(XMVectorGetX(viewVec) * 30 / MOVEMENT_DOWNSHIFTING, dy * 30 / MOVEMENT_DOWNSHIFTING, XMVectorGetZ(viewVec) * 30 / MOVEMENT_DOWNSHIFTING);
+  Move(XMVectorGetX(viewVec) * 30 / MOVEMENT_DOWNSHIFTING, 0, XMVectorGetZ(viewVec) * 30 / MOVEMENT_DOWNSHIFTING);
 }
 
 void Camera::Rotate(float dx, float dy, float wheel) {

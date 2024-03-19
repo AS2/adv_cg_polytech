@@ -8,7 +8,10 @@
 
 #include <ctime>
 
-#include "ImGUIHandler.h"
+#include "../libs/ImGUI/imgui.h"
+#include "../libs/ImGUI/imgui_impl_dx11.h"
+#include "../libs/ImGUI/imgui_impl_win32.h"
+
 #include "camera.h"
 #include "scene.h"
 #include "input.h"
@@ -67,6 +70,24 @@ private:
 
     ImGui_ImplWin32_Init(window);
     ImGui_ImplDX11_Init(pDevice, pContext);
+  }
+
+  void PrepairImGuiFrame() {
+    // Init new frame
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+  }
+
+  void RenderImGuiFrames() {
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+  }
+
+  void ReleaseImGui() {
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
   }
 
   // DirectX11 variables

@@ -34,6 +34,9 @@ public:
   XMFLOAT4 GetLightColor() const { return color; };
   XMFLOAT4 GetLightPosition() const { return pos; };
 
+  XMFLOAT4* GetLightColorRef() { return &color; };
+  XMFLOAT4* GetLightPositionRef() { return &pos; };
+
 private:
   void RenderSphere(ID3D11DeviceContext* context);
 

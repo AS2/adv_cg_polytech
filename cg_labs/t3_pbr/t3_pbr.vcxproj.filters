@@ -97,9 +97,6 @@
     <Filter Include="Исходные файлы\Shaders\LightableModels\PBRColorObjs">
       <UniqueIdentifier>{37248fdc-f3a3-4dd3-a0c1-2545e78002b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\ImGUIHandler">
-      <UniqueIdentifier>{dc102682-b812-4f6c-857a-dbdbc297844f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libs">
       <UniqueIdentifier>{9f085e88-e64a-4b23-b6d7-b72bf96bd6ab}</UniqueIdentifier>
     </Filter>
@@ -197,9 +194,6 @@
     </ClInclude>
     <ClInclude Include="..\libs\ImGUI\imstb_truetype.h">
       <Filter>libs\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGUIHandler.h">
-      <Filter>Исходные файлы\ImGUIHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
