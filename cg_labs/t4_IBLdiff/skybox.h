@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "HDRCubeMapGenerator.h"
+#include "IRRGenerator.h"
 #include "geomsphere.h"
 #include "rendered.h"
 #include "texture.h"
@@ -24,14 +25,16 @@ public:
   };
 
   HRESULT Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight);
-  
+
   void Release();
 
   void Render(ID3D11DeviceContext* context);
 
   void Resize(int screenWidth, int screenHeight);
-  
+
   bool Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMFLOAT3 cameraPos);
+
+  ID3D11ShaderResourceView* GetIrrSRV() { return irrSRV; }
 
 private:
   struct SBWorldMatrixBuffer {
@@ -59,8 +62,10 @@ private:
   ID3D11PixelShader* g_pPixelShader = nullptr;
 
   // Texture with skybox
-  HDRCubeMapGenerator gen;
+  HDRCubeMapGenerator hdrCMgen;
+  IRRGenerator irrMgen;
   std::wstring txt_path = L".";
   Texture txt;
   ID3D11ShaderResourceView* txtSRV = nullptr;
+  ID3D11ShaderResourceView* irrSRV = nullptr;
 };

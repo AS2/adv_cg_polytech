@@ -128,19 +128,30 @@ HRESULT Skybox::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   if (txt_path.find(std::wstring(L".dds")) != std::wstring::npos)
     txtSRV = txt.GetTexture();
   else if (txt_path.find(std::wstring(L".hdr")) != std::wstring::npos) {
-    hr = gen.Init(device, context);
+    hr = hdrCMgen.Init(device, context);
     if (FAILED(hr))
       return hr;
 
-    hr = gen.GenerateCubeMap(device, context, txt.GetTexture());
+    hr = hdrCMgen.GenerateCubeMap(device, context, txt.GetTexture());
     if (FAILED(hr))
       return hr;
 
-    txtSRV = gen.GetSRV();
-    //txtSRV = txt.GetTexture();
+    txtSRV = hdrCMgen.GetSRV();
   }
   else
     return E_FAIL;
+
+  // Generate irradience map
+  hr = irrMgen.Init(device, context);
+  if (FAILED(hr))
+    return hr;
+
+  hr = irrMgen.GenerateIrradienceMap(device, context, txtSRV);
+  if (FAILED(hr))
+    return hr;
+
+  irrSRV = irrMgen.GetIRRMapSRV();
+
 
   // Init sampler
   D3D11_SAMPLER_DESC descSmplr = {};
@@ -167,7 +178,8 @@ HRESULT Skybox::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
 }
 
 void Skybox::Release() {
-  gen.Release();
+  hdrCMgen.Release();
+  irrMgen.Release();
   txt.Release();
 
   if (g_pSamplerState) g_pSamplerState->Release();

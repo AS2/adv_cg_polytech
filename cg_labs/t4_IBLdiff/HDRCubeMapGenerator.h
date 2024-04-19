@@ -16,6 +16,8 @@ public:
 	void Release();
 
 private:
+	HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
+
 	void SetViewPort(ID3D11DeviceContext* context, UINT width, UINT hight);
 
 	ID3D11PixelShader* g_pPixelShader = nullptr;

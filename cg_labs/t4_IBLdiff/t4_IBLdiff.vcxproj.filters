@@ -79,6 +79,9 @@
     <ClCompile Include="HDRCubeMapGenerator.cpp">
       <Filter>Исходные файлы\Scene\Skybox\HDRCubeMapGenerator</Filter>
     </ClCompile>
+    <ClCompile Include="IRRGenerator.cpp">
+      <Filter>Исходные файлы\Scene\Skybox\IRRGenerator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\libs\ImGUI\imstb_truetype.h">
@@ -176,6 +179,9 @@
     </ClInclude>
     <ClInclude Include="HDRCubeMapGenerator.h">
       <Filter>Исходные файлы\Scene\Skybox\HDRCubeMapGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="IRRGenerator.h">
+      <Filter>Исходные файлы\Scene\Skybox\IRRGenerator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -290,6 +296,12 @@
     <Filter Include="Исходные файлы\Shaders\HDRToCubeMapGenerator">
       <UniqueIdentifier>{70d735b8-9ab1-49ec-91df-d31519719de0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Scene\Skybox\IRRGenerator">
+      <UniqueIdentifier>{37fe1095-ad96-413a-8199-49dc387093a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\CMToIRRMGenerator">
+      <UniqueIdentifier>{b7434b75-6fc1-4665-a652-bb6ee151aad4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="t4_IBLdiff.rc">
@@ -338,6 +350,9 @@
     </FxCompile>
     <FxCompile Include="HDRToCubeMap_PS.hlsl">
       <Filter>Исходные файлы\Shaders\HDRToCubeMapGenerator</Filter>
+    </FxCompile>
+    <FxCompile Include="CMToIRRMGenerator_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\CMToIRRMGenerator</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

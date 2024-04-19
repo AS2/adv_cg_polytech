@@ -2,7 +2,7 @@
 #include "D3DInclude.h"
 #include "renderer.h"
 
-HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+HRESULT HDRCubeMapGenerator::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 {
   HRESULT hr = S_OK;
 
@@ -237,5 +237,6 @@ void HDRCubeMapGenerator::Release() {
   if (g_pPixelShader) g_pPixelShader->Release();
   if (g_pVertexShader) g_pVertexShader->Release();
   if (g_pSamplerState) g_pSamplerState->Release();
+  if (g_pHDRTextureRTV) g_pHDRTextureRTV->Release();
   if (g_pHDRTexture) g_pHDRTexture->Release();
 }

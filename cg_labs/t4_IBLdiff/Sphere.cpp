@@ -115,6 +115,21 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   if (FAILED(hr))
     return hr;
 
+  // Init sampler
+  D3D11_SAMPLER_DESC descSmplr = {};
+
+  descSmplr.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  descSmplr.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+  descSmplr.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+  descSmplr.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+  descSmplr.MinLOD = 0;
+  descSmplr.MaxLOD = D3D11_FLOAT32_MAX;
+  descSmplr.MipLODBias = 0.0f;
+
+  hr = device->CreateSamplerState(&descSmplr, &g_pSamplerState);
+  if (FAILED(hr))
+    return hr;
+
   // Set rastrizer state
   D3D11_RASTERIZER_DESC descRast = {};
   descRast.AntialiasedLineEnable = false;
@@ -162,6 +177,8 @@ void Sphere::Render(ID3D11DeviceContext* context) {
   context->VSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
   context->VSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
   context->PSSetShader(g_pPixelShader, nullptr, 0);
+  context->PSSetShaderResources(0, 1, &irrSRV);
+  context->PSSetSamplers(0, 1, &g_pSamplerState);
   context->PSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
   context->PSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
 
@@ -171,7 +188,7 @@ void Sphere::Render(ID3D11DeviceContext* context) {
 HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, const PBRMaterial& material, const PBRMode& mode) {
   // Update world matrix angle of first cube
   WorldMatrixBuffer worldMatrixBuffer;
-  worldMatrixBuffer.worldMatrix = XMMatrixScaling(radius, radius, radius) * XMMatrixTranslation(pos.x, pos.y, pos.z);
+  worldMatrixBuffer.worldMatrix = XMMatrixTranslation(pos.x, pos.y, pos.z) * XMMatrixScaling(radius, radius, radius);
   worldMatrixBuffer.pbrMaterial = material;// pbrMaterial;
   worldMatrixBuffer.pbrMode = mode;// pbrMode;
   

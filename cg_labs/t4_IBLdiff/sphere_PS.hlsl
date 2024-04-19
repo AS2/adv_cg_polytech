@@ -1,5 +1,8 @@
 #include "PBRBuffers.h"
 
+TextureCube tex : register (t0);
+SamplerState smplr : register (s0);
+
 struct PS_INPUT
 {
   float4 position : SV_POSITION;
@@ -67,6 +70,14 @@ float3 fresnel(float3 wPos, float3 norm, int lightIdx)
 	return F0 + (1 - F0) * pow(1 - posDot(h, v), 5);
 }
 
+float3 FresnelSchlickRoughnessFunction(float3 wPos, float3 norm)
+{
+	float3 F0 = lerp(float3(0.04f, 0.04f, 0.04f), pbrMaterial.albedo, pbrMaterial.metalness);
+	float3 v = vecToCam(wPos);
+	float3 ir = float3(1.f, 1.f, 1.f) * max(1 - pbrMaterial.roughness, 10e-3);
+	return F0 + (max(ir, F0) - F0) * pow(1 - posDot(norm, v), 5);
+}
+
 float4 main(PS_INPUT input) : SV_Target0{
   float3 result = { 0.f, 0.f, 0.f };
 	
@@ -94,5 +105,15 @@ float4 main(PS_INPUT input) : SV_Target0{
 		result += clamp(lightColor[i] * result_add * lightColor[i].w / (dot(l, l) + 0.01f) * (dot(l, n) > 0), 0.0f, 1.0f);
 	}
 
-  return float4(result, 1.0);
+	float3 wPos = normalize(input.worldPos.xyz);
+	float3 n = normalize(input.normal.xyz);
+	float3 F = FresnelSchlickRoughnessFunction(wPos, n);
+	float3 kS = F;
+	float3 kD = float3(1.0, 1.0, 1.0) - kS;
+	kD *= 1.0 - pbrMaterial.metalness;
+	float3 irradiance = tex.Sample(smplr, n).rgb;
+	float3 diffuse = irradiance * pbrMaterial.albedo.xyz;
+	float3 ambient = kD * diffuse;
+
+  return float4(result + ambient, 1);
 }

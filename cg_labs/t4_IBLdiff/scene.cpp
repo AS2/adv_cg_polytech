@@ -1,30 +1,32 @@
 #include "scene.h"
 
 HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight) {
-  int square_size = 11;
+  int square_size = 1;
   HRESULT hr = S_OK;
+
+  //sb = Skybox(L"./src/skybox.dds", 30, 30);
+  sb = Skybox(L"./src/env_1k_3.hdr", 30, 30);
+  hr = sb.Init(device, context, screenWidth, screenHeight);
+  if (FAILED(hr))
+    return hr;
 
   spheres.resize(square_size * square_size);
   for (int x = 0; x < square_size; x++)
     for (int y = 0; y < square_size; y++) {
-      spheres[x * square_size + y] = Sphere(0.55f, XMFLOAT3(-5, -7.5f + 1.5f * x, -7.5f + 1.5f * y), 
-        XMFLOAT3(0.1f * x, 0.1f * y, 0.025f), 0.1f * x, 0.1f * y, 15, 15);
+      spheres[x * square_size + y] = Sphere(1.5f, XMFLOAT3(0, 0.0f + 1.5f * x, 0.0f + 1.5f * y), sb,
+        XMFLOAT3(0.1f * x, 0.1f * y, 0.025f), 0.1f * x, 0.1f * y, 50, 50);
       hr = spheres[x * square_size + y].Init(device, context, screenWidth, screenHeight);
       if (FAILED(hr))
         return hr;
+
+      spheres[x * square_size + y].SetIrrMapSRV(sb.GetIrrSRV());
     }
 
   // Init lights
   lights.reserve(1);
-  lights.push_back(Light(XMFLOAT4(1.f, 0.3f, 0.0f, 100.0f), 0.0f, 0.0f, 0.0f));
+  lights.push_back(Light(XMFLOAT4(1.f, 0.3f, 0.0f, 1.0f), 2.0f, 2.0f, 2.0f));
   
   hr = lights[0].Init(device, context, screenWidth, screenHeight);
-  if (FAILED(hr))
-    return hr;
-
-  //sb = Skybox(L"./src/skybox.dds", 30, 30);
-  sb = Skybox(L"./src/env_1k.hdr", 30, 30);
-  hr = sb.Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;
 
@@ -92,9 +94,10 @@ void Scene::Resize(int screenWidth, int screenHeight) {
 };
 
 void Scene::RenderGUI() {
-  /*static bool show = true;
+  /*
+  static bool show = true;
   ImGui::ShowDemoWindow(&show);
-*/
+  */
 
   // Generate window
   ImGui::Begin("Scene params");
