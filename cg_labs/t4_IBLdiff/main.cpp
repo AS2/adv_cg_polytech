@@ -69,7 +69,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     if (FAILED(InitWindow(hInstance, nCmdShow)))
       return 0;
 
-
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 
 

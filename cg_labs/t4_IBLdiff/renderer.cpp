@@ -248,7 +248,20 @@ HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screen
   HRESULT hr = input.InitInputs(hInstance, hWnd, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;
-
+#if 0
+  while (true)
+  {
+      if (IsDebuggerPresent())
+      {
+        __debugbreak();
+        break;
+      }
+      else
+      {
+        Sleep(0);
+      }
+  }
+#endif
   hr = camera.InitCamera();
   if (FAILED(hr))
     return hr;
@@ -256,6 +269,7 @@ HRESULT Renderer::Init(const HWND& hWnd, const HINSTANCE& hInstance, UINT screen
   hr = InitDevice(hWnd);
   if (FAILED(hr))
     return hr;
+  pSwapChain->Present(0, 0);
 
   hr = sc.Init(pd3dDevice, pImmediateContext, screenWidth, screenHeight);
   if (FAILED(hr))

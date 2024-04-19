@@ -40,7 +40,7 @@ float4 main(PSInput i) : SV_Target
 	float3 color = SceneTexture.Sample(SceneTextureSampler, i.texcoord).rgb;
 
 	float E = getExposition();
-	float3 toneMappedCol = Uncharted2Tonemap(color * E);
+	float3 toneMappedCol = Uncharted2Tonemap(color * E * 8);
 	float3 whiteScale = 1.0f / Uncharted2Tonemap(WhiteLumen);
 
 	float4 final_color = float4(pow(abs(toneMappedCol * whiteScale), 1.0f / 2.2f), 1.0f);

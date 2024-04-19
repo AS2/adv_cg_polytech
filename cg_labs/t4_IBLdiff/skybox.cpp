@@ -124,6 +124,24 @@ HRESULT Skybox::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   if (FAILED(hr))
     return hr;
 
+  // init texture shader resource view
+  if (txt_path.find(std::wstring(L".dds")) != std::wstring::npos)
+    txtSRV = txt.GetTexture();
+  else if (txt_path.find(std::wstring(L".hdr")) != std::wstring::npos) {
+    hr = gen.Init(device, context);
+    if (FAILED(hr))
+      return hr;
+
+    hr = gen.GenerateCubeMap(device, context, txt.GetTexture());
+    if (FAILED(hr))
+      return hr;
+
+    txtSRV = gen.GetSRV();
+    //txtSRV = txt.GetTexture();
+  }
+  else
+    return E_FAIL;
+
   // Init sampler
   D3D11_SAMPLER_DESC descSmplr = {};
 
@@ -149,6 +167,7 @@ HRESULT Skybox::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
 }
 
 void Skybox::Release() {
+  gen.Release();
   txt.Release();
 
   if (g_pSamplerState) g_pSamplerState->Release();
@@ -178,7 +197,7 @@ void Skybox::Render(ID3D11DeviceContext* context) {
   ID3D11SamplerState* samplers[] = { g_pSamplerState };
   context->PSSetSamplers(0, 1, samplers);
 
-  ID3D11ShaderResourceView* resources[] = { txt.GetTexture() };
+  ID3D11ShaderResourceView* resources[] = { txtSRV };
   context->PSSetShaderResources(0, 1, resources);
   ID3D11Buffer* vertexBuffers[] = { g_pVertexBuffer };
   UINT strides[] = { sizeof(SphereVertex) };

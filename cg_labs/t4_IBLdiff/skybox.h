@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "HDRCubeMapGenerator.h"
 #include "geomsphere.h"
 #include "rendered.h"
 #include "texture.h"
@@ -58,6 +59,8 @@ private:
   ID3D11PixelShader* g_pPixelShader = nullptr;
 
   // Texture with skybox
+  HDRCubeMapGenerator gen;
   std::wstring txt_path = L".";
   Texture txt;
+  ID3D11ShaderResourceView* txtSRV = nullptr;
 };

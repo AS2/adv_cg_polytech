@@ -76,6 +76,9 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>Исходные файлы\Materials\Texture\HDRLoader</Filter>
     </ClCompile>
+    <ClCompile Include="HDRCubeMapGenerator.cpp">
+      <Filter>Исходные файлы\Scene\Skybox\HDRCubeMapGenerator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\libs\ImGUI\imstb_truetype.h">
@@ -170,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="..\libs\stb_image.h">
       <Filter>libs\STB_Image</Filter>
+    </ClInclude>
+    <ClInclude Include="HDRCubeMapGenerator.h">
+      <Filter>Исходные файлы\Scene\Skybox\HDRCubeMapGenerator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +284,12 @@
     <Filter Include="Исходные файлы\Materials\Texture\HDRLoader">
       <UniqueIdentifier>{a5cfc890-80c5-433f-9cf3-c5565623dc64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Scene\Skybox\HDRCubeMapGenerator">
+      <UniqueIdentifier>{fcaa87f2-9fa7-4d51-8adf-95a26fec10f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\HDRToCubeMapGenerator">
+      <UniqueIdentifier>{70d735b8-9ab1-49ec-91df-d31519719de0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="t4_IBLdiff.rc">
@@ -320,6 +332,12 @@
     </FxCompile>
     <FxCompile Include="box_PS.hlsl">
       <Filter>Исходные файлы\Shaders\LightableModels\LightableObjs</Filter>
+    </FxCompile>
+    <FxCompile Include="HDRToCubeMap_VS.hlsl">
+      <Filter>Исходные файлы\Shaders\HDRToCubeMapGenerator</Filter>
+    </FxCompile>
+    <FxCompile Include="HDRToCubeMap_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\HDRToCubeMapGenerator</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

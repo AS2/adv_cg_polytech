@@ -35,6 +35,9 @@ HRESULT Texture::CreateHDRTextureFromFile(ID3D11Device* device, const wchar_t* f
   auto imgData = stbi_loadf(tmpPath, &w, &h, &c, 4);
   delete[] tmpPath;
 
+  if (c == 0)
+    return E_FAIL;
+
   // create texture
   D3D11_TEXTURE2D_DESC txtDesc;
   txtDesc.Width = w;

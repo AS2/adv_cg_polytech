@@ -1,6 +1,6 @@
 ﻿//{{NO_DEPENDENCIES}}
 // Включаемый файл, созданный в Microsoft Visual C++.
-// Используется t1_debugger.rc
+// Используется t4_IBLdiff.rc
 //
 #define IDS_APP_TITLE                   101
 
