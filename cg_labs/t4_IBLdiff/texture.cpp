@@ -161,8 +161,8 @@ ID3D11ShaderResourceView* Texture::GetTexture() {
 
 void Texture::Release() {
   if (g_pTexture) {
-    g_pTextureView->Release();
-    g_pTextureView = nullptr;
+    g_pTexture->Release();
+    g_pTexture = nullptr;
   }
   if (g_pTextureView) {
     g_pTextureView->Release();

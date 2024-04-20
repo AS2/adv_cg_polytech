@@ -151,6 +151,7 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
 }
 
 void Sphere::Release() {
+  if (g_pSamplerState) g_pSamplerState->Release();
   if (g_pRasterizerState) g_pRasterizerState->Release();
   if (g_pWorldMatrixBuffer) g_pWorldMatrixBuffer->Release();
   if (g_pSceneMatrixBuffer) g_pSceneMatrixBuffer->Release();
