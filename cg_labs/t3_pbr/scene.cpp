@@ -91,6 +91,9 @@ void Scene::Resize(int screenWidth, int screenHeight) {
 };
 
 void Scene::RenderGUI() {
+  static bool show = true;
+  ImGui::ShowDemoWindow(&show);
+
   // Generate window
   ImGui::Begin("Scene params");
 
