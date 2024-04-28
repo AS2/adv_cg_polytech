@@ -154,6 +154,23 @@ HRESULT IBLMapsGenerator::Init(ID3D11Device* device, ID3D11DeviceContext* contex
   if (FAILED(hr))
     return hr;
 
+  D3D11_BUFFER_DESC descICB = { 0 };
+  descICB.Usage = D3D11_USAGE_DEFAULT;
+  descICB.ByteWidth = sizeof(IRRConstantBuffer);
+  descICB.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  descICB.CPUAccessFlags = 0;
+  descICB.MiscFlags = 0;
+  descICB.StructureByteStride = 0;
+
+  PrefilConstantBuffer icb;
+  memset(&icb, 0, sizeof(icb));
+
+  D3D11_SUBRESOURCE_DATA irrData;
+  irrData.pSysMem = &icb;
+  hr = device->CreateBuffer(&descICB, &irrData, &g_pIRRConstantBuffer);
+  if (FAILED(hr))
+    return hr;
+
   // Init sampler
   D3D11_SAMPLER_DESC descSmplr = {};
 
@@ -345,6 +362,9 @@ HRESULT IBLMapsGenerator::GenerateIrranienceMap(ID3D11Device* device, ID3D11Devi
 
   float clearColor[4] = { 0.9f, 0.3f, 0.1f, 1.0f };
   ConstantBuffer cb = {};
+  IRRConstantBuffer icb = {};
+  icb.param.x = N1;
+  icb.param.y = N2;
 
   for (UINT i = 0; i < 6; ++i)
   {
@@ -352,8 +372,10 @@ HRESULT IBLMapsGenerator::GenerateIrranienceMap(ID3D11Device* device, ID3D11Devi
     XMStoreFloat4x4(&cb.projectionMatrix, XMMatrixTranspose(g_mMatrises[i]));
     XMStoreFloat4x4(&cb.viewProjectionMatrix, XMMatrixTranspose(mViews[i] * mProjection));
 
+    context->UpdateSubresource(g_pIRRConstantBuffer, 0, nullptr, &icb, 0, 0);
     context->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb, 0, 0);
     context->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+    context->PSSetConstantBuffers(0, 1, &g_pIRRConstantBuffer);
     context->Draw(4, 0);
     context->CopySubresourceRegion(g_pIRRMap, i, 0, 0, 0, g_pIRRTexture, 0, nullptr);
   }
@@ -470,6 +492,7 @@ void IBLMapsGenerator::Release() {
 
   if (g_pPrefilConstantBuffer) g_pPrefilConstantBuffer->Release();
   if (g_pConstantBuffer) g_pConstantBuffer->Release();
+  if (g_pIRRConstantBuffer) g_pIRRConstantBuffer->Release();
   if (g_pIrrCMPixelShader) g_pIrrCMPixelShader->Release();
   if (g_pBRDFPixelShader) g_pBRDFPixelShader->Release();
   if (g_pPrefilPixelShader) g_pPrefilPixelShader->Release();

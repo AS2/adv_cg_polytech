@@ -43,6 +43,7 @@ private:
 #endif
   PBRMaterial pbrMaterial;
   PBRMode pbrMode;
+  IBLMode iblMode;
 
   std::vector<Sphere> spheres;
   std::vector<Light> lights;

@@ -204,12 +204,13 @@ void Sphere::Render(ID3D11DeviceContext* context) {
   context->DrawIndexed(numSphereFaces * 3, 0, 0);
 }
 
-HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, const PBRMaterial& material, const PBRMode& mode) {
+HRESULT Sphere::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, const PBRMaterial& material, const PBRMode& pbrMode, const IBLMode& iblMode) {
   // Update world matrix angle of first cube
   WorldMatrixBuffer worldMatrixBuffer;
   worldMatrixBuffer.worldMatrix = XMMatrixTranslation(pos.x, pos.y, pos.z) * XMMatrixScaling(radius, radius, radius);
   worldMatrixBuffer.pbrMaterial = material;// pbrMaterial;
-  worldMatrixBuffer.pbrMode = mode;// pbrMode;
+  worldMatrixBuffer.pbrMode = pbrMode;// pbrMode;
+  worldMatrixBuffer.iblMode = iblMode;// pbrMode;
   
   context->UpdateSubresource(g_pWorldMatrixBuffer, 0, nullptr, &worldMatrixBuffer, 0, 0);
 

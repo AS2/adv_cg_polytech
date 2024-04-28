@@ -26,12 +26,12 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
     }
 
   // Init lights
-  /*lights.reserve(1);
-  lights.push_back(Light(XMFLOAT4(1.f, 0.3f, 0.0f, 1.0f), 2.0f, 2.0f, 2.0f));
+  lights.reserve(1);
+  lights.push_back(Light(XMFLOAT4(0.f, 0.0f, 0.0f, 1.0f), 2.0f, 2.0f, 2.0f));
   
   hr = lights[0].Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
-    return hr;*/
+    return hr;
 
 #ifdef _DEBUG
   hr = context->QueryInterface(__uuidof(pAnnotation), reinterpret_cast<void**>(&pAnnotation));
@@ -87,7 +87,7 @@ bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX p
     light.Update(context, viewMatrix, projectionMatrix, cameraPos);
   
   for (auto& sphere : spheres)
-    sphere.Update(context, viewMatrix, projectionMatrix, cameraPos, lights, pbrMaterial, pbrMode);
+    sphere.Update(context, viewMatrix, projectionMatrix, cameraPos, lights, pbrMaterial, pbrMode, iblMode);
 
   return true;
 }
@@ -97,20 +97,22 @@ void Scene::Resize(int screenWidth, int screenHeight) {
 };
 
 void Scene::RenderGUI() {
-  /*
-  static bool show = true;
-  ImGui::ShowDemoWindow(&show);
-  */
-
   // Generate window
   ImGui::Begin("Scene params");
 
   // Enum pbr mode
+  ImGui::Text("PBR params");
   ImGui::RadioButton("Full", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::allPBR));
   ImGui::RadioButton("Normal distribution", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::normal));
   ImGui::RadioButton("Geometry", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::geom));
   ImGui::RadioButton("Fresnel", reinterpret_cast<int*>(&pbrMode), static_cast<int>(PBRMode::fresnel));
 
+  ImGui::Text("Switching diffuse/specular components");
+  ImGui::RadioButton("Full IBL", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::full));
+  ImGui::RadioButton("Diffuse only", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::diffuse));
+  ImGui::RadioButton("Specular only", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::specular));
+  ImGui::RadioButton("No IBL", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::nothing));
+  
   // PBR Materials params
   ImGui::ColorEdit3("Albedo", &((&pbrMaterial.albedo)->x));
   ImGui::SliderFloat("Roughness", &pbrMaterial.roughness, 0, 1);

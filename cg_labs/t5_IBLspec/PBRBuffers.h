@@ -9,6 +9,7 @@ cbuffer WorldMatrixBuffer : register (b0)
   float4x4 worldMatrix;
   PBRMaterial pbrMaterial;
   int PBRMode;
+  int IBLMode;
 };
 
 cbuffer SceneMatrixBuffer : register (b1)

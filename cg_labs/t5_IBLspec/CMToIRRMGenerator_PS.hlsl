@@ -1,5 +1,10 @@
 #include "IBLheader.h"
 
+cbuffer PrefilConstantbuffer : register(b0)
+{
+  int4 params;  // N1 = params.x, N2 = params.y, 
+};
+
 TextureCube tex : register(t0);
 SamplerState smplr : register(s0);
 
@@ -10,8 +15,8 @@ float4 main(PS_INPUT input) : SV_TARGET{
     float3 binormal = cross(normal, tangent);
 
     float3 irradiance = float3(0.0, 0.0, 0.0);
-    const int N1 = 200;
-    const int N2 = 50;
+    int N1 = params.x;
+    int N2 = params.y;
     float PI = acos(-1);
 
     for (int i = 0; i < N1; i++)

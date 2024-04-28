@@ -30,7 +30,7 @@ public:
     maps = sb.GetMaps();
   };
 
-  HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, const PBRMaterial& material, const PBRMode& mode);
+  HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, const PBRMaterial& material, const PBRMode& pbrMode, const IBLMode& iblMode);
 
   void ProvideInput(const Input& input);
 
@@ -59,6 +59,7 @@ protected:
     XMMATRIX worldMatrix;
     PBRMaterial pbrMaterial;
     PBRMode pbrMode;
+    IBLMode iblMode;
   };
 
   // dx11 vars
@@ -80,6 +81,7 @@ protected:
   // Sphere object params
   PBRMaterial pbrMaterial;
   PBRMode pbrMode = PBRMode::allPBR;
+  IBLMode iblMode = IBLMode::full;
   float radius;
   XMFLOAT3 pos;
 };

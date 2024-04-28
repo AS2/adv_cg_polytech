@@ -14,6 +14,8 @@ struct IBLMaps {
 class IBLMapsGenerator {
 public:
 	IBLMapsGenerator() {
+		N1 = 200;
+		N2 = 200;
 		g_irradienceTextureSize = 32;
 		g_prefilTextureSize = 128;
 		g_BRDFTextureSize = 128;
@@ -21,7 +23,9 @@ public:
 		InitMatricies();
 	};
 
-	IBLMapsGenerator(UINT irradienceTextureSize, UINT prefilTextureSize, UINT BRDFTextureSize, UINT prefilMipMapLevels) {
+	IBLMapsGenerator(UINT irradienceTextureSize, UINT irrN1, UINT irrN2, UINT prefilTextureSize, UINT BRDFTextureSize, UINT prefilMipMapLevels) {
+		N1 = irrN1;
+		N2 = irrN2;
 		g_irradienceTextureSize = irradienceTextureSize;
 		g_prefilTextureSize = prefilTextureSize;
 		g_BRDFTextureSize = BRDFTextureSize;
@@ -97,10 +101,18 @@ private:
 	};
 	ID3D11Buffer* g_pPrefilConstantBuffer = nullptr;
 
+	struct IRRConstantBuffer
+	{
+		XMINT4 param; // roughness.r - roughness
+	};
+	ID3D11Buffer* g_pIRRConstantBuffer = nullptr;
+
 
 	XMMATRIX mProjection;
 	XMMATRIX mViews[6];
 	XMMATRIX g_mMatrises[6];
+
+	INT N1 = 200, N2 = 200;
 
 	UINT g_irradienceTextureSize = 32;
 	UINT g_prefilTextureSize = 128;
