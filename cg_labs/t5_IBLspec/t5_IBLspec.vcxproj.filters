@@ -103,12 +103,6 @@
     <Filter Include="Исходные файлы\Shaders\LightableModels">
       <UniqueIdentifier>{40123228-b001-4362-b594-0d3daf677f08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\Shaders\HDRToCubeMapGenerator">
-      <UniqueIdentifier>{05beccef-9119-4687-b624-ecfb5f0d4bde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Shaders\CMToIRRMGenerator">
-      <UniqueIdentifier>{f7cd592b-b55b-43fb-925f-dd746ef6b365}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Исходные файлы\Shaders\LightableModels\PBRColorObjs">
       <UniqueIdentifier>{1677e32f-d135-4e3f-8b4d-ae1a874349ca}</UniqueIdentifier>
     </Filter>
@@ -120,6 +114,15 @@
     </Filter>
     <Filter Include="Исходные файлы\Renderer\ScreenPlane">
       <UniqueIdentifier>{27b5875d-074b-42fa-a3ee-baea34ccffde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\HDRToCubeMap">
+      <UniqueIdentifier>{05beccef-9119-4687-b624-ecfb5f0d4bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Shaders\IBLMapsGenerator">
+      <UniqueIdentifier>{f7cd592b-b55b-43fb-925f-dd746ef6b365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Common">
+      <UniqueIdentifier>{3a1b7e0f-1f93-4450-980c-86ea7787f364}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,9 +165,6 @@
     <ClCompile Include="HDRCubeMapGenerator.cpp">
       <Filter>Исходные файлы\Scene\Skybox\HDRCubeMapGenerator</Filter>
     </ClCompile>
-    <ClCompile Include="IRRGenerator.cpp">
-      <Filter>Исходные файлы\Scene\Skybox\IRRGenereator</Filter>
-    </ClCompile>
     <ClCompile Include="skybox.cpp">
       <Filter>Исходные файлы\Scene\Skybox</Filter>
     </ClCompile>
@@ -203,6 +203,12 @@
     </ClCompile>
     <ClCompile Include="screenplane.cpp">
       <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
+    </ClCompile>
+    <ClCompile Include="IBLMapsGenerator.cpp">
+      <Filter>Исходные файлы\Scene\Skybox\IRRGenereator</Filter>
+    </ClCompile>
+    <ClCompile Include="common.cpp">
+      <Filter>Исходные файлы\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +260,6 @@
     <ClInclude Include="HDRCubeMapGenerator.h">
       <Filter>Исходные файлы\Scene\Skybox\HDRCubeMapGenerator</Filter>
     </ClInclude>
-    <ClInclude Include="IRRGenerator.h">
-      <Filter>Исходные файлы\Scene\Skybox\IRRGenereator</Filter>
-    </ClInclude>
     <ClInclude Include="skybox.h">
       <Filter>Исходные файлы\Scene\Skybox</Filter>
     </ClInclude>
@@ -305,6 +308,15 @@
     <ClInclude Include="screenplane.h">
       <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
     </ClInclude>
+    <ClInclude Include="IBLMapsGenerator.h">
+      <Filter>Исходные файлы\Scene\Skybox\IRRGenereator</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Исходные файлы\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="IBLheader.h">
+      <Filter>Исходные файлы\Shaders\IBLMapsGenerator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="t5_IBLspec.rc">
@@ -313,13 +325,13 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CMToIRRMGenerator_PS.hlsl">
-      <Filter>Исходные файлы\Shaders\CMToIRRMGenerator</Filter>
+      <Filter>Исходные файлы\Shaders\IBLMapsGenerator</Filter>
     </FxCompile>
     <FxCompile Include="HDRToCubeMap_PS.hlsl">
-      <Filter>Исходные файлы\Shaders\HDRToCubeMapGenerator</Filter>
+      <Filter>Исходные файлы\Shaders\HDRToCubeMap</Filter>
     </FxCompile>
     <FxCompile Include="HDRToCubeMap_VS.hlsl">
-      <Filter>Исходные файлы\Shaders\HDRToCubeMapGenerator</Filter>
+      <Filter>Исходные файлы\Shaders\HDRToCubeMap</Filter>
     </FxCompile>
     <FxCompile Include="sphere_PS.hlsl">
       <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
@@ -356,6 +368,15 @@
     </FxCompile>
     <FxCompile Include="skybox_VS.hlsl">
       <Filter>Исходные файлы\Shaders\Skybox</Filter>
+    </FxCompile>
+    <FxCompile Include="CMToPrefilMGenerator_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\IBLMapsGenerator</Filter>
+    </FxCompile>
+    <FxCompile Include="BRDFGenerator_PS.hlsl">
+      <Filter>Исходные файлы\Shaders\IBLMapsGenerator</Filter>
+    </FxCompile>
+    <FxCompile Include="IBLMapsGenerator_vs.hlsl">
+      <Filter>Исходные файлы\Shaders\IBLMapsGenerator</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

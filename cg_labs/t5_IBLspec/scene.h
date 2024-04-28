@@ -47,4 +47,5 @@ private:
   std::vector<Sphere> spheres;
   std::vector<Light> lights;
   Skybox sb;
+  IBLMaps maps;
 };

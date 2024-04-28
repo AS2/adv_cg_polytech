@@ -160,7 +160,7 @@
     <ClInclude Include="geomSphere.h" />
     <ClInclude Include="HDRCubeMapGenerator.h" />
     <ClInclude Include="input.h" />
-    <ClInclude Include="IRRGenerator.h" />
+    <ClInclude Include="IBLMapsGenerator.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="lightCalc.h" />
     <ClInclude Include="materials.h" />
@@ -192,7 +192,7 @@
     <ClCompile Include="geomSphere.cpp" />
     <ClCompile Include="HDRCubeMapGenerator.cpp" />
     <ClCompile Include="input.cpp" />
-    <ClCompile Include="IRRGenerator.cpp" />
+    <ClCompile Include="IBLMapsGenerator.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="postprocessing.cpp" />

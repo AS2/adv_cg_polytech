@@ -1,7 +1,11 @@
 #include "PBRBuffers.h"
 
-TextureCube tex : register (t0);
+TextureCube irrTex : register (t0);
+TextureCube prefTex : register (t1);
+Texture2D brdfTex : register (t2);
+
 SamplerState smplr : register (s0);
+SamplerState brdfSmplr : register (s1);
 
 struct PS_INPUT
 {
@@ -35,6 +39,7 @@ float normalDistribution(float3 wPos, float3 norm, int lightIdx)
 	float3 v = vecToCam(wPos);
 	float3 l = vecToLight(lightPos[lightIdx].xyz, wPos);
 	float3 h = normalize(l + v);
+
 	float alpha = clamp(pbrMaterial.roughness, 0.001f, 1);
 	float alphaSqr = sqr(alpha);
 
@@ -107,13 +112,22 @@ float4 main(PS_INPUT input) : SV_Target0{
 
 	float3 wPos = normalize(input.worldPos.xyz);
 	float3 n = normalize(input.normal.xyz);
+
+	float3 v = vecToCam(input.worldPos);
+	float3 r = normalize(2.0f * dot(v, n) * n - v);
+	static const float MAX_REFLECTION_LOD = 4.0;
+	float3 prefilteredColor = prefTex.SampleLevel(smplr, r, pbrMaterial.roughness * MAX_REFLECTION_LOD);
+	float3 F0 = lerp(float3(0.04, 0.04, 0.04), pbrMaterial.albedo.xyz, pbrMaterial.metalness);
+	float2 envBRDF = brdfTex.Sample(brdfSmplr, float2(max(dot(n, v), 0.0), pbrMaterial.roughness));
+	float3 specular = prefilteredColor * (F0 * envBRDF.x + envBRDF.y);
+
 	float3 F = FresnelSchlickRoughnessFunction(wPos, n);
 	float3 kS = F;
 	float3 kD = float3(1.0, 1.0, 1.0) - kS;
 	kD *= 1.0 - pbrMaterial.metalness;
-	float3 irradiance = tex.Sample(smplr, n).rgb;
+	float3 irradiance = irrTex.Sample(smplr, n).rgb;
 	float3 diffuse = irradiance * pbrMaterial.albedo.xyz;
-	float3 ambient = kD * diffuse;
+	float3 ambient = kD * diffuse + specular;
 
   return float4(result + ambient, 1);
 }

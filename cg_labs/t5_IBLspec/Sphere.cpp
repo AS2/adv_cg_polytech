@@ -115,10 +115,10 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   if (FAILED(hr))
     return hr;
 
-  // Init sampler
+  // Init samplers
   D3D11_SAMPLER_DESC descSmplr = {};
 
-  descSmplr.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  descSmplr.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
   descSmplr.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
   descSmplr.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
   descSmplr.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -127,6 +127,20 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   descSmplr.MipLODBias = 0.0f;
 
   hr = device->CreateSamplerState(&descSmplr, &g_pSamplerState);
+  if (FAILED(hr))
+    return hr;
+
+  D3D11_SAMPLER_DESC descBRDFSmplr = {};
+
+  descBRDFSmplr.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  descBRDFSmplr.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+  descBRDFSmplr.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+  descBRDFSmplr.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+  descBRDFSmplr.MinLOD = 0;
+  descBRDFSmplr.MaxLOD = D3D11_FLOAT32_MAX;
+  descBRDFSmplr.MipLODBias = 0.0f;
+
+  hr = device->CreateSamplerState(&descBRDFSmplr, &g_pBRDFSamplerState);
   if (FAILED(hr))
     return hr;
 
@@ -151,6 +165,7 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
 }
 
 void Sphere::Release() {
+  if (g_pBRDFSamplerState) g_pBRDFSamplerState->Release();
   if (g_pSamplerState) g_pSamplerState->Release();
   if (g_pRasterizerState) g_pRasterizerState->Release();
   if (g_pWorldMatrixBuffer) g_pWorldMatrixBuffer->Release();
@@ -178,8 +193,11 @@ void Sphere::Render(ID3D11DeviceContext* context) {
   context->VSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
   context->VSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
   context->PSSetShader(g_pPixelShader, nullptr, 0);
-  context->PSSetShaderResources(0, 1, &irrSRV);
+  context->PSSetShaderResources(0, 1, &maps.pIRRMapSRV);
+  context->PSSetShaderResources(1, 1, &maps.pPrefilMapSRV);
+  context->PSSetShaderResources(2, 1, &maps.pBRDFMapSRV);
   context->PSSetSamplers(0, 1, &g_pSamplerState);
+  context->PSSetSamplers(1, 1, &g_pBRDFSamplerState);
   context->PSSetConstantBuffers(0, 1, &g_pWorldMatrixBuffer);
   context->PSSetConstantBuffers(1, 1, &g_pSceneMatrixBuffer);
 

@@ -195,6 +195,8 @@ void HDRCubeMapGenerator::SetViewPort(ID3D11DeviceContext* context, UINT width, 
 }
 
 HRESULT HDRCubeMapGenerator::GenerateCubeMap(ID3D11Device* device, ID3D11DeviceContext* context, ID3D11ShaderResourceView* txtSRV) {
+  beginEvent(L"Generating cube map from HDR cylinder texture");
+  
   context->ClearState();
   context->OMSetRenderTargets(1, &g_pHDRTextureRTV, nullptr);
   Renderer::GetInstance().EnableDepth(false);
@@ -227,6 +229,9 @@ HRESULT HDRCubeMapGenerator::GenerateCubeMap(ID3D11Device* device, ID3D11DeviceC
   // Create subresource
   HRESULT hr = device->CreateShaderResourceView(g_pCubeMapTexture, nullptr, &g_pCMSRV);
   Renderer::GetInstance().EnableDepth(true);
+
+  endEvent();
+
   return hr;
 }
 

@@ -54,8 +54,11 @@ void Postprocessing::Update(
 		createDownsamplingRTT((int)vp.Width, (int)vp.Height, pDevice, pContext);
 	}
 
+
+	beginEvent(L"Clearing postprocessing RTV");
 	for (auto& rtt : scaledHDRTargets)
 		rtt->clear(1.f, 1.f, 1.f, pDevice, pContext);
+	endEvent();
 }
 
 HRESULT Postprocessing::Init(
@@ -198,13 +201,10 @@ void Postprocessing::createDownsamplingRTT(
 HRESULT Postprocessing::applyTonemapEffect(
 	ID3D11Device* pDevice,
 	ID3D11DeviceContext* pContext,
-	ID3DUserDefinedAnnotation* pAnnotation,
 	RenderTargetTexture* inputRTT,
 	RenderTargetTexture* resultRTT)
 {
-#ifdef _DEBUG
-	pAnnotation->BeginEvent(L"Average Brightness");
-#endif
+	beginEvent(L"Count average brightness");
 
 	// Convert input RTT into BW texture
 	pContext->PSSetShader(PSBrightness, nullptr, 0u);
@@ -235,14 +235,11 @@ HRESULT Postprocessing::applyTonemapEffect(
 	float expGain = (1 - std::exp(-duration / eyeAdaptationS));
 	prevExposure += (averageLogBrightness - prevExposure) * expGain;
 
-#ifdef _DEBUG
-	pAnnotation->EndEvent(); // Average Brightness
-#endif
+	endEvent();
 
 	// Implementing tonemap
-#ifdef _DEBUG
-	pAnnotation->BeginEvent(L"Tonemaping");
-#endif
+	beginEvent(L"Apply tonemap");
+
 	pContext->PSSetShader(PSHdr, nullptr, 0u);
 
 	// Update data in buffer
@@ -259,9 +256,7 @@ HRESULT Postprocessing::applyTonemapEffect(
 	pContext->PSSetConstantBuffers(0u, 1u, &PSConstantBuffer);
 	processTexture(inputRTT, resultRTT, pDevice, pContext);
 
-#ifdef _DEBUG
-	pAnnotation->EndEvent(); // Average Brightness
-#endif
+	endEvent();
 
 	return hr;
 }
@@ -287,7 +282,7 @@ void Postprocessing::processTexture(
 
 void Postprocessing::Release() {
 	clearScaledHDRTargets();
-
+	
 	if (PSConstantBuffer) PSConstantBuffer->Release();
 
 	screenPlane.Release();
