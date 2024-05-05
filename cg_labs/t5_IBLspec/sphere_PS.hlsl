@@ -115,12 +115,13 @@ float4 main(PS_INPUT input) : SV_Target0{
 
 	float3 specular = (0, 0, 0);
 	if (IBLMode != 1 && IBLMode != 3) {     // if not only-diffuse
-		float3 v = vecToCam(input.worldPos);
+		float3 v = vecToCam(input.worldPos.xyz);
 		float3 r = normalize(2.0f * dot(v, n) * n - v);
-		static const float MAX_REFLECTION_LOD = 4.0;
+		static const float MAX_REFLECTION_LOD = 5.0;
 		float3 prefilteredColor = prefTex.SampleLevel(smplr, r, pbrMaterial.roughness * MAX_REFLECTION_LOD);
 		float3 F0 = lerp(float3(0.04, 0.04, 0.04), pbrMaterial.albedo.xyz, pbrMaterial.metalness);
-		float2 envBRDF = brdfTex.Sample(brdfSmplr, float2(max(dot(n, v), 0.0), pbrMaterial.roughness));
+		float2 splArg = float2(max(dot(n, v), 0.0), pbrMaterial.roughness);
+		float2 envBRDF = brdfTex.Sample(brdfSmplr, splArg);
 		specular = prefilteredColor * (F0 * envBRDF.x + envBRDF.y);
 	}
 
