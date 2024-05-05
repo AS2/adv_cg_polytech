@@ -118,7 +118,7 @@ HRESULT Sphere::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scr
   // Init samplers
   D3D11_SAMPLER_DESC descSmplr = {};
 
-  descSmplr.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+  descSmplr.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
   descSmplr.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
   descSmplr.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
   descSmplr.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
