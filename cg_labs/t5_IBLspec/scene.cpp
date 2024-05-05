@@ -10,8 +10,9 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
   if (FAILED(hr))
     return hr;
   maps = sb.GetMaps();
-  pbrMaterial.metalness = 0.9f;
+  pbrMaterial.metalness = 0.1f;
   pbrMaterial.roughness = 0.1f;
+  pbrMaterial.albedo = XMFLOAT3(0.25f, 0.25f, 0.25f);
 
   spheres.resize(square_size * square_size);
   for (int x = 0; x < square_size; x++)
