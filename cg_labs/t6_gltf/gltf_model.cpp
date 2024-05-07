@@ -255,8 +255,14 @@ HRESULT Model::LoadSpecificTypeArray(const tinygltf::Accessor& accessor, FILE* b
       return hr;
 
     verticiesToLoad = std::vector<VertexType>(dataToLoad.size());
-    for (int i = 0; i < dataToLoad.size(); i++)
+    float minX = 100, minY = 100;
+    for (int i = 0; i < dataToLoad.size(); i++) {
       std::memcpy(&(verticiesToLoad[i]), &(dataToLoad[i]), min(sizeof(XMFLOAT2), sizeof(VertexType)));
+      minX = minX > dataToLoad[i].x ? dataToLoad[i].x : minX;
+      minY = minY > dataToLoad[i].y ? dataToLoad[i].y : minY;
+    }
+    float huynya = 1000;
+    minX = huynya;
   }
   else if (accessor.type == TINYGLTF_TYPE_VEC3) {
     std::vector<XMFLOAT3> dataToLoad;
@@ -317,6 +323,8 @@ HRESULT Model::GenerateVerticiesArray(std::vector<XMFLOAT3>& posVec, std::vector
     verticiesRes[i].norm = normVec.size() > i ? normVec[i] : XMFLOAT3(0, 0, 0);
     verticiesRes[i].tangent = tangentVec.size() > i ? tangentVec[i] : XMFLOAT3(0, 0, 0);
     verticiesRes[i].texUV = texUVVec.size() > i ? texUVVec[i] : XMFLOAT2(0, 0);
+
+    verticiesRes[i].pos.x *= -1, verticiesRes[i].norm.x *= -1, verticiesRes[i].tangent.x *= -1;
   }
   return S_OK;
 }
@@ -568,6 +576,10 @@ HRESULT Model::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
 
   // Init shaders' pipeline
   hr = InitShadersPipeline(device);
+  if (FAILED(hr))
+    return hr;
+
+  hr = InitDX11Vars(device);
   if (FAILED(hr))
     return hr;
 

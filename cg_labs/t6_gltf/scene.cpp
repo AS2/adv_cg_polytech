@@ -12,7 +12,7 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
 
   // Init model
   model = Model("./src/models/rgo/scene.gltf", "./src/models/rgo/scene.bin", sb, PBRPoorMaterial(0.2, 0.3, 0.04));
-  //model = Model("./src/models/Fallout 10mm/scene.gltf", "./src/models/Fallout 10mm/scene.bin", sb);
+  //model = Model("./src/models/Fallout 10mm/scene.gltf", "./src/models/Fallout 10mm/scene.bin", sb, PBRPoorMaterial(0.2, 0.3, 0.04));
   hr = model.Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;

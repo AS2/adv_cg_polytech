@@ -7,7 +7,7 @@ PS_INPUT main(VS_INPUT input) {
   output.position = mul(viewProjectionMatrix, output.worldPos);
   output.normal = mul(worldMatrix, input.normal);
   output.tangent = mul(worldMatrix, input.tangent);
-  output.texUV = mul(worldMatrix, input.tangent);
+  output.texUV = input.texUV;
   
   return output;
 }

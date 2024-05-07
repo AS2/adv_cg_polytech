@@ -2,7 +2,7 @@
 
 // Initialization camera method
 HRESULT Camera::InitCamera() {
-  float phi = XM_PI * (-0.75);
+  float phi = XM_PI * 0.55f;
   float theta = XM_PIDIV2 * 0.15f;
   float distanceToPoint = 3.0f;
   pointOfInterest = XMVectorSet(0.0f, 2.0f, 0.0f, 1.0f);

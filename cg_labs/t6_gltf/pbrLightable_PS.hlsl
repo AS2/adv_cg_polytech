@@ -143,7 +143,7 @@ float4 main(PS_INPUT input) : SV_Target0{
 	float metalness = pbr.y * mr.r;
 	float3 albedo = FTex.Sample(FTexSmplr, input.texUV);
 
-	//float3 color = CountPBRColor(input.worldPos.xyz, n, v, roughness, metalness, albedo);
-	float3 color = (n + 1.0) / 2.0;
+	float3 color = CountPBRColor(input.worldPos.xyz, n, v, roughness, metalness, albedo);
+	//float3 color = (n + 1.0) / 2.0;
 	return float4(color, 1);
 }
