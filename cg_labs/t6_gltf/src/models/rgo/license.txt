@@ -1,0 +1,11 @@
+Model Information:
+* title:	RGO Grenade
+* source:	https://sketchfab.com/3d-models/rgo-grenade-c27ef1220eb6463c9fbbbb68b52cf4f6
+* author:	miqasasuqasa (https://sketchfab.com/miqasasuqasa)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "RGO Grenade" (https://sketchfab.com/3d-models/rgo-grenade-c27ef1220eb6463c9fbbbb68b52cf4f6) by miqasasuqasa (https://sketchfab.com/miqasasuqasa) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

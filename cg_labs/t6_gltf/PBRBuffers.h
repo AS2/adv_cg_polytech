@@ -1,15 +1,7 @@
-struct PBRMaterial {
-  float3 albedo;
-  float roughness;
-  float metalness;
-};
-
 cbuffer WorldMatrixBuffer : register (b0)
 {
   float4x4 worldMatrix;
-  PBRMaterial pbrMaterial;
-  int PBRMode;
-  int IBLMode;
+  float4 pbr;
 };
 
 cbuffer SceneMatrixBuffer : register (b1)
@@ -19,5 +11,21 @@ cbuffer SceneMatrixBuffer : register (b1)
   int4 lightCount; // x - light count (max 10)
   float4 lightPos[10];
   float4 lightColor[10];
-  float4 ambientColor;
+};
+
+struct VS_INPUT
+{
+  float3 position : POSITION;
+  float3 normal : NORMAL;
+  float3 tangent : TANGENT;
+  float2 texUV : TEXCOORD;
+};
+
+struct PS_INPUT
+{
+  float4 position : SV_POSITION;
+  float4 worldPos : POSITION;
+  float3 normal : NORMAL;
+  float3 tangent : TANGENT;
+  float2 texUV : TEXCOORD;
 };

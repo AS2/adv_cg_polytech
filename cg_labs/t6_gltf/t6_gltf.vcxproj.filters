@@ -112,29 +112,29 @@
     <Filter Include="Исходные файлы\GeomPrimitives\Sphere">
       <UniqueIdentifier>{02a95b57-705b-4b15-adfa-74ef0820e279}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\Model">
-      <UniqueIdentifier>{eb80a34d-75ec-4392-8200-6b193f30ef46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Model\GLTFLoader">
-      <UniqueIdentifier>{afd8b194-9ab1-4241-9530-f02cb26ff3c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Scene\Renderer">
-      <UniqueIdentifier>{c83b18be-c141-4bd6-a817-fc943842b0a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Scene\Renderer\Postprocessing">
-      <UniqueIdentifier>{98e987c2-45a9-4b19-ab1d-0fec04ae00c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Scene\Renderer\RenderTarget">
-      <UniqueIdentifier>{2f91c35f-01f4-4e1a-85d6-e62e00f2e899}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Scene\Renderer\ScreenPlane">
-      <UniqueIdentifier>{907d2a79-4619-4c1e-9fc9-964e0ed00fe9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libs\tinyGLTF">
       <UniqueIdentifier>{a4024c21-4975-4bb9-8621-c1fb9f757393}</UniqueIdentifier>
     </Filter>
     <Filter Include="libs\JSON">
       <UniqueIdentifier>{b1ceac3e-67a6-4047-b929-8d0436ce2389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer">
+      <UniqueIdentifier>{c83b18be-c141-4bd6-a817-fc943842b0a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer\Postprocessing">
+      <UniqueIdentifier>{98e987c2-45a9-4b19-ab1d-0fec04ae00c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer\RenderTarget">
+      <UniqueIdentifier>{2f91c35f-01f4-4e1a-85d6-e62e00f2e899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Renderer\ScreenPlane">
+      <UniqueIdentifier>{907d2a79-4619-4c1e-9fc9-964e0ed00fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered model">
+      <UniqueIdentifier>{eb80a34d-75ec-4392-8200-6b193f30ef46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Scene\Rendered model\GLTF model">
+      <UniqueIdentifier>{afd8b194-9ab1-4241-9530-f02cb26ff3c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -208,16 +208,16 @@
       <Filter>Исходные файлы\Scene\Base class</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
-      <Filter>Исходные файлы\Scene\Renderer</Filter>
+      <Filter>Исходные файлы\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="screenplane.h">
-      <Filter>Исходные файлы\Scene\Renderer\ScreenPlane</Filter>
+      <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
     </ClInclude>
     <ClInclude Include="renderTargetTexture.h">
-      <Filter>Исходные файлы\Scene\Renderer\RenderTarget</Filter>
+      <Filter>Исходные файлы\Renderer\RenderTarget</Filter>
     </ClInclude>
     <ClInclude Include="postprocessing.h">
-      <Filter>Исходные файлы\Scene\Renderer\Postprocessing</Filter>
+      <Filter>Исходные файлы\Renderer\Postprocessing</Filter>
     </ClInclude>
     <ClInclude Include="texture.h">
       <Filter>Исходные файлы\Materials\Texture</Filter>
@@ -243,9 +243,6 @@
     <ClInclude Include="camera.h">
       <Filter>Исходные файлы\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>Исходные файлы\Model</Filter>
-    </ClInclude>
     <ClInclude Include="..\libs\tiny_gltf.h">
       <Filter>libs\tinyGLTF</Filter>
     </ClInclude>
@@ -254,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="..\libs\json.hpp">
       <Filter>libs\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="gltf_model.h">
+      <Filter>Исходные файлы\Scene\Rendered model\GLTF model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -306,16 +306,16 @@
       <Filter>Исходные файлы\Scene\Base class</Filter>
     </ClCompile>
     <ClCompile Include="renderer.cpp">
-      <Filter>Исходные файлы\Scene\Renderer</Filter>
+      <Filter>Исходные файлы\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="screenplane.cpp">
-      <Filter>Исходные файлы\Scene\Renderer\ScreenPlane</Filter>
+      <Filter>Исходные файлы\Renderer\ScreenPlane</Filter>
     </ClCompile>
     <ClCompile Include="renderTargetTexture.cpp">
-      <Filter>Исходные файлы\Scene\Renderer\RenderTarget</Filter>
+      <Filter>Исходные файлы\Renderer\RenderTarget</Filter>
     </ClCompile>
     <ClCompile Include="postprocessing.cpp">
-      <Filter>Исходные файлы\Scene\Renderer\Postprocessing</Filter>
+      <Filter>Исходные файлы\Renderer\Postprocessing</Filter>
     </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>Исходные файлы\Materials\Texture</Filter>
@@ -341,11 +341,8 @@
     <ClCompile Include="camera.cpp">
       <Filter>Исходные файлы\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>Исходные файлы\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="tiny_gltf.cpp">
-      <Filter>Исходные файлы\Model\GLTFLoader</Filter>
+    <ClCompile Include="gltf_model.cpp">
+      <Filter>Исходные файлы\Scene\Rendered model\GLTF model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,10 +381,10 @@
     <FxCompile Include="skybox_VS.hlsl">
       <Filter>Исходные файлы\Shaders\Skybox</Filter>
     </FxCompile>
-    <FxCompile Include="sphere_PS.hlsl">
+    <FxCompile Include="pbrLightable_PS.hlsl">
       <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
     </FxCompile>
-    <FxCompile Include="sphere_VS.hlsl">
+    <FxCompile Include="pbrLightable_VS.hlsl">
       <Filter>Исходные файлы\Shaders\LightableModels\PBRColorObjs</Filter>
     </FxCompile>
     <FxCompile Include="no_lightning_PS.hlsl">
