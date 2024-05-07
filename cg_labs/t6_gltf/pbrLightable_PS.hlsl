@@ -142,8 +142,8 @@ float4 main(PS_INPUT input) : SV_Target0{
 	float metalness = pbr.y;
 	float2 mr = roughnessTex.Sample(roughnessSmplr, input.texUV).rg;
 	if (viewMode.z == 0) {
-		roughness = max(pbr.x * mr.g, 0.001);
-		metalness = pbr.y * mr.r;
+		roughness = max(mr.g, 0.001);
+		metalness = mr.r;
 	}
 
 	float dielectricF0 = pbr.z;

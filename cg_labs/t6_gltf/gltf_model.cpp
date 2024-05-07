@@ -612,10 +612,9 @@ void Model::Release() {
   if (g_pVertexShader) g_pVertexShader->Release();
   if (g_pVertexLayout) g_pVertexLayout->Release();
 
-
-  ID3D11RasterizerState* g_pRasterizerState = nullptr;
-  ID3D11SamplerState* g_pEnvSamplerState = nullptr;
-  ID3D11SamplerState* g_pBRDFSamplerState = nullptr;
+  if (g_pRasterizerState) g_pRasterizerState->Release();
+  if (g_pEnvSamplerState) g_pEnvSamplerState->Release();
+  if (g_pBRDFSamplerState) g_pBRDFSamplerState->Release();
 }
 
 void Model::Render(ID3D11DeviceContext* context) {
