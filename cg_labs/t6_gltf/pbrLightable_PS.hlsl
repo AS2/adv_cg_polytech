@@ -133,12 +133,17 @@ float4 main(PS_INPUT input) : SV_Target0{
 	float3 n = normalize(input.normal.xyz);
 	float3 v = vecToCam(input.worldPos);
 
+	float3 binorm = normalize(cross(input.normal, input.tangent));
+	float3 localNorm = normalTex.Sample(normalSmplr, input.texUV).xyz * 2.0 - 1.0;
+	n = localNorm.x * normalize(input.tangent) + localNorm.y * binorm + localNorm.z * normalize(input.normal);
+
 	// TODO : Написать расчет параметров материала через текстуры
 	float2 mr = roughnessTex.Sample(roughnessSmplr, input.texUV).rg;
 	float roughness = max(pbr.x * mr.g, 0.001);
 	float metalness = pbr.y * mr.r;
 	float3 albedo = FTex.Sample(FTexSmplr, input.texUV);
 
-	float3 color = CountPBRColor(input.worldPos.xyz, n, v, roughness, metalness, albedo);
-  return float4(color, 1);
+	//float3 color = CountPBRColor(input.worldPos.xyz, n, v, roughness, metalness, albedo);
+	float3 color = (n + 1.0) / 2.0;
+	return float4(color, 1);
 }
