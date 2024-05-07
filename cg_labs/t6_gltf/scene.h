@@ -42,6 +42,8 @@ private:
   float intensity = 1.0f;
 
   Model model;
+  PBRRichMaterial pbrMaterial;
+  ViewMode viewMode;
   std::vector<Light> lights;
   Skybox sb;
   IBLMaps maps;

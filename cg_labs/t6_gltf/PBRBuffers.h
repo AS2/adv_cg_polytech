@@ -2,6 +2,7 @@ cbuffer WorldMatrixBuffer : register (b0)
 {
   float4x4 worldMatrix;
   float4 pbr;
+  float4 albedo;
 };
 
 cbuffer SceneMatrixBuffer : register (b1)
@@ -11,6 +12,7 @@ cbuffer SceneMatrixBuffer : register (b1)
   int4 lightCount; // x - light count (max 10)
   float4 lightPos[10];
   float4 lightColor[10];
+  float4 viewMode;
 };
 
 struct VS_INPUT

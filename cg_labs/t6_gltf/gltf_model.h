@@ -13,6 +13,8 @@
 
 #define MAX_LIGHT_SOURCES 10
 
+
+
 class Model : public Rendered {
 public:
   Model() = default;
@@ -20,13 +22,13 @@ public:
   Model(const std::string& gltffile, 
     const std::string& binfile, 
     Skybox& sb, 
-    PBRPoorMaterial poorPBRParams) {
+    PBRRichMaterial richPBRParams) {
     m_gltffile = gltffile;
     m_binfile = binfile;
 
     m_modelpath = gltffile.substr(0, gltffile.find_last_of("/\\"));
     maps = sb.GetMaps();
-    PBRParams = poorPBRParams;
+    PBRParams = richPBRParams;
   };
 
   void SetIBLMaps(const IBLMaps& _maps) {
@@ -36,7 +38,7 @@ public:
   HRESULT Init(ID3D11Device* device, ID3D11DeviceContext* context, int screenWidth, int screenHeight);
   void Release();
   void Render(ID3D11DeviceContext* context);
-  HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights);
+  HRESULT Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, PBRRichMaterial pbrMaterial, ViewMode viewMode);
 
 private:
   struct Vertex
@@ -89,14 +91,16 @@ private:
     XMINT4 lightCount;
     XMFLOAT4 lightPos[MAX_LIGHT_SOURCES];
     XMFLOAT4 lightColor[MAX_LIGHT_SOURCES];
+    XMFLOAT4 viewMode;
   };
 
   struct WorldMatrixBuffer {
     XMMATRIX worldMatrix;
     XMFLOAT4 pbrParams;
+    XMFLOAT4 albedo;
   };
   HRESULT InitConstantBuffersFromlMetadata(ID3D11Device* device);
-  void CountMatrixTransformation(int nodeId, const XMMATRIX& parentTransformation, std::vector<WorldMatrixBuffer>& wnBuffers);
+  void CountMatrixTransformation(int nodeId, const XMMATRIX& parentTransformation);
 
   // methods to init shaders
   HRESULT InitShadersPipeline(ID3D11Device* device);
@@ -112,7 +116,7 @@ private:
 
   // var for outer resources (no need to release them)
   IBLMaps maps;
-  PBRPoorMaterial PBRParams;
+  PBRRichMaterial PBRParams;
 
   // dx11 vars for shaders
   ID3D11VertexShader* g_pVertexShader = nullptr;
@@ -121,6 +125,7 @@ private:
 
   // dx11 vars for buffers
   ID3D11Buffer* g_pSMBuffer = nullptr;
+  std::vector<WorldMatrixBuffer> meshesWM = std::vector<WorldMatrixBuffer>(0);
   std::vector<ID3D11Buffer*> g_pWMBuffers = std::vector<ID3D11Buffer*>(0, nullptr);
   std::vector<ID3D11Buffer*> g_pVertexBuffers = std::vector<ID3D11Buffer*>(0, nullptr);
   std::vector<ID3D11Buffer*> g_pIndexBuffers = std::vector<ID3D11Buffer*>(0, nullptr);

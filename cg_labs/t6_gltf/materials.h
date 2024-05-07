@@ -20,11 +20,12 @@ struct PBRMaterial {
 		: albedo(albedo), roughness(roughness), metalness(metalness) {};
 };
 
-struct PBRPoorMaterial {
+struct PBRRichMaterial {
 	float roughness;
 	float metalness;
 	float dielectricF0;
+	XMFLOAT3 albedo;
 
-	PBRPoorMaterial(float roughness = 0.5f, float metalness = 0.5f, float dielectricF0 = 0.5f)
-		: roughness(roughness), metalness(metalness), dielectricF0(dielectricF0){};
+	PBRRichMaterial(float roughness = 0.5f, float metalness = 0.5f, float dielectricF0 = 0.5f, XMFLOAT3 albedo = XMFLOAT3(1.0f, 1.0f, 1.0f))
+		: roughness(roughness), metalness(metalness), dielectricF0(dielectricF0), albedo(albedo) {};
 };

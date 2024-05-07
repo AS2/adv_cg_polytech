@@ -420,13 +420,15 @@ HRESULT Model::InitShadersPipeline(ID3D11Device* device) {
 
 HRESULT Model::InitConstantBuffersFromlMetadata(ID3D11Device* device) {
   // Init all ConstantBuffers as XMMatrixIdentity(); matricies
-  std::vector<WorldMatrixBuffer> wnBuffers = std::vector<WorldMatrixBuffer>(model.meshes.size(), { XMMatrixIdentity(), XMFLOAT4(PBRParams.roughness, PBRParams.metalness,PBRParams.dielectricF0, 0.0f) });
+  meshesWM = std::vector<WorldMatrixBuffer>(model.meshes.size(), { XMMatrixIdentity(), 
+                                                                   XMFLOAT4(PBRParams.roughness, PBRParams.metalness, PBRParams.dielectricF0, 0.0f),
+                                                                   XMFLOAT4(PBRParams.albedo.x, PBRParams.albedo.y, PBRParams.albedo.z, 0.0f) });
   g_pWMBuffers = std::vector<ID3D11Buffer*>(model.meshes.size(), nullptr);
 
   // Go throw all nodes and save transformation
   for (auto& nodeId : model.scenes[model.defaultScene].nodes) {
     XMMATRIX startedMatr = XMMatrixIdentity();
-    CountMatrixTransformation(nodeId, startedMatr, wnBuffers);
+    CountMatrixTransformation(nodeId, startedMatr);
   }
 
   // Set constant buffers
@@ -441,8 +443,8 @@ HRESULT Model::InitConstantBuffersFromlMetadata(ID3D11Device* device) {
     descWM.StructureByteStride = 0;
 
     D3D11_SUBRESOURCE_DATA data;
-    data.pSysMem = &(wnBuffers[i]);
-    data.SysMemPitch = sizeof(wnBuffers[i]);
+    data.pSysMem = &(meshesWM[i]);
+    data.SysMemPitch = sizeof(meshesWM[i]);
     data.SysMemSlicePitch = 0;
 
     hr = device->CreateBuffer(&descWM, &data, &(g_pWMBuffers[i]));
@@ -465,7 +467,7 @@ HRESULT Model::InitConstantBuffersFromlMetadata(ID3D11Device* device) {
   return S_OK;
 }
 
-void Model::CountMatrixTransformation(int nodeId, const XMMATRIX& parentTransformation, std::vector<WorldMatrixBuffer>& wnBuffers) {
+void Model::CountMatrixTransformation(int nodeId, const XMMATRIX& parentTransformation) {
   XMMATRIX currentTransformation = parentTransformation;
   if (model.nodes[nodeId].matrix.size() == 16)
     currentTransformation *= XMMATRIX(model.nodes[nodeId].matrix[0],  model.nodes[nodeId].matrix[1],  model.nodes[nodeId].matrix[2],  model.nodes[nodeId].matrix[3], 
@@ -486,10 +488,10 @@ void Model::CountMatrixTransformation(int nodeId, const XMMATRIX& parentTransfor
     currentTransformation *= XMMatrixScaling(model.nodes[nodeId].scale[0], model.nodes[nodeId].scale[1], model.nodes[nodeId].scale[2]);
 
   if (model.nodes[nodeId].mesh != -1)
-    wnBuffers[model.nodes[nodeId].mesh].worldMatrix = currentTransformation;
+    meshesWM[model.nodes[nodeId].mesh].worldMatrix = currentTransformation;
 
   for (auto& childID : model.nodes[nodeId].children)
-    CountMatrixTransformation(childID, currentTransformation, wnBuffers);
+    CountMatrixTransformation(childID, currentTransformation);
 }
 
 HRESULT Model::InitDX11Vars(ID3D11Device* device) {
@@ -609,6 +611,11 @@ void Model::Release() {
   if (g_pPixelShader) g_pPixelShader->Release();
   if (g_pVertexShader) g_pVertexShader->Release();
   if (g_pVertexLayout) g_pVertexLayout->Release();
+
+
+  ID3D11RasterizerState* g_pRasterizerState = nullptr;
+  ID3D11SamplerState* g_pEnvSamplerState = nullptr;
+  ID3D11SamplerState* g_pBRDFSamplerState = nullptr;
 }
 
 void Model::Render(ID3D11DeviceContext* context) {
@@ -666,7 +673,17 @@ void Model::Render(ID3D11DeviceContext* context) {
   }
 }
 
-HRESULT Model::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights) {
+HRESULT Model::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix, XMVECTOR& cameraPos, const std::vector<Light>& lights, PBRRichMaterial pbrMaterial, ViewMode viewMode) {
+  // Update world matrix angle of first cube
+  WorldMatrixBuffer worldMatrixBuffer;
+  for (int i = 0; i < model.meshes.size(); i++) {
+    worldMatrixBuffer.worldMatrix = meshesWM[i].worldMatrix;
+    worldMatrixBuffer.pbrParams = XMFLOAT4(pbrMaterial.roughness, pbrMaterial.metalness, pbrMaterial.dielectricF0, 0.0);// pbrMaterial;
+    worldMatrixBuffer.albedo = XMFLOAT4(pbrMaterial.albedo.x, pbrMaterial.albedo.y, pbrMaterial.albedo.z, 0.0);
+    
+    context->UpdateSubresource(g_pWMBuffers[i], 0, nullptr, &worldMatrixBuffer, 0, 0);
+  }
+  
   // Get the view matrix
   D3D11_MAPPED_SUBRESOURCE subresource;
   HRESULT hr = context->Map(g_pSMBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
@@ -674,6 +691,7 @@ HRESULT Model::Update(ID3D11DeviceContext* context, XMMATRIX& viewMatrix, XMMATR
     return FAILED(hr);
 
   SceneMatrixBuffer& sceneBuffer = *reinterpret_cast<SceneMatrixBuffer*>(subresource.pData);
+  sceneBuffer.viewMode = XMFLOAT4(viewMode.modelViewMode, viewMode.isPlainNormal, viewMode.isPlainMetalRough, viewMode.isPlainColor);
   sceneBuffer.viewProjectionMatrix = XMMatrixMultiply(viewMatrix, projectionMatrix);
   sceneBuffer.cameraPos = XMFLOAT4(XMVectorGetX(cameraPos), XMVectorGetY(cameraPos), XMVectorGetZ(cameraPos), 1.0f);
   sceneBuffer.lightCount = XMINT4((int32_t)lights.size(), 0, 0, 0);

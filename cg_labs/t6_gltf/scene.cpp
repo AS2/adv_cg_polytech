@@ -11,8 +11,9 @@ HRESULT Scene::Init(ID3D11Device* device, ID3D11DeviceContext* context, int scre
   maps = sb.GetMaps();
 
   // Init model
-  model = Model("./src/models/rgo/scene.gltf", "./src/models/rgo/scene.bin", sb, PBRPoorMaterial(0.2, 0.3, 0.04));
-  //model = Model("./src/models/Fallout 10mm/scene.gltf", "./src/models/Fallout 10mm/scene.bin", sb, PBRPoorMaterial(0.2, 0.3, 0.04));
+  pbrMaterial = PBRRichMaterial(0.2, 0.3, 0.04, XMFLOAT3(1, 1, 1));
+  model = Model("./src/models/rgo/scene.gltf", "./src/models/rgo/scene.bin", sb, pbrMaterial);
+  //model = Model("./src/models/Fallout 10mm/scene.gltf", "./src/models/Fallout 10mm/scene.bin", sb, pbrMaterial);
   hr = model.Init(device, context, screenWidth, screenHeight);
   if (FAILED(hr))
     return hr;
@@ -56,7 +57,7 @@ void Scene::Render(ID3D11DeviceContext* context) {
 bool Scene::Update(ID3D11DeviceContext* context, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, XMVECTOR cameraPos) {
   sb.Update(context, viewMatrix, projectionMatrix, XMFLOAT3(XMVectorGetX(cameraPos), XMVectorGetY(cameraPos), XMVectorGetZ(cameraPos)));
 
-  model.Update(context, viewMatrix, projectionMatrix, cameraPos, lights);
+  model.Update(context, viewMatrix, projectionMatrix, cameraPos, lights, pbrMaterial, viewMode);
 
   for (auto& light : lights) {
     light.Update(context, viewMatrix, projectionMatrix, cameraPos);
@@ -77,13 +78,23 @@ void Scene::RenderGUI() {
   // Generate window
   ImGui::Begin("Scene params");
 
-  // TODO : make different options for viewing (regular, only normals and so on)
-  ImGui::Text("View mode");
-  /*ImGui::RadioButton("Full IBL", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::full));
-  ImGui::RadioButton("Diffuse only", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::diffuse));
-  ImGui::RadioButton("Specular only", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::specular));
-  ImGui::RadioButton("No IBL", reinterpret_cast<int*>(&iblMode), static_cast<int>(IBLMode::nothing));
-  */
+  // PBR Materials params
+  ImGui::Text("Sphere materials params");
+  ImGui::SliderFloat("Roughness", &pbrMaterial.roughness, 0, 1);
+  ImGui::SliderFloat("Metalness ", &pbrMaterial.metalness, 0, 1);
+  ImGui::SliderFloat("DielectricF0 ", &pbrMaterial.dielectricF0, 0, 0.1);
+  ImGui::ColorEdit3("Albedo", &((&pbrMaterial.albedo)->x));
+
+  ImGui::Text("View mode controlling");
+  ImGui::RadioButton("Full model", reinterpret_cast<int*>(&viewMode.modelViewMode), static_cast<int>(ModelViewMode::all));
+  ImGui::RadioButton("Normals", reinterpret_cast<int*>(&viewMode.modelViewMode), static_cast<int>(ModelViewMode::normal));
+  ImGui::RadioButton("Roughness/Metalness", reinterpret_cast<int*>(&viewMode.modelViewMode), static_cast<int>(ModelViewMode::rm));
+  ImGui::RadioButton("Diffuse color", reinterpret_cast<int*>(&viewMode.modelViewMode), static_cast<int>(ModelViewMode::texture));
+  ImGui::Text("Switching plain/texture pbr params"); 
+  ImGui::Checkbox("Is plain normal", &(viewMode.isPlainNormal));
+  ImGui::Checkbox("Is plain metal/rough", &(viewMode.isPlainMetalRough));
+  ImGui::Checkbox("Is plain color", &(viewMode.isPlainColor));
+  
   ImGui::Text("Lights params");
   ImGui::Checkbox("Off light", &isOff);
   for (int i = 0; i < lights.size(); i++) {
